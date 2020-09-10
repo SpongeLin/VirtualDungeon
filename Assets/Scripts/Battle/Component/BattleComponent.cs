@@ -2,6 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class CharTeam
+{
+    public CharData front;
+    public CharData middle;
+    public CharData back;
+}
+
+public enum TriggerType
+{
+    DamageCheck,
+    DamageTotalCheck,
+    DamageFinalCheck,
+    DamageAfter,
+    DamageBefore,
+    UseCardCheck,
+    UseCardAfter,
+    UseCardBefore,
+    TurnStarting,
+    TurnStartBefore,
+    TurnEnding,
+    TurnEndBefore,
+
+}
 
 public enum SkillTarget
 {

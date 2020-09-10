@@ -14,6 +14,8 @@ public abstract class Skill
     public int coolDown;
     public int currentCoolDown;
 
+    public CharData character;
+
     public SkillTarget target = SkillTarget.All;
 
     public Skill(string name,int ap,int cd)
@@ -24,18 +26,20 @@ public abstract class Skill
 
     }
 
-    public abstract void Excite();
+    public abstract void Excite(CharData target);
     
 }
 
 public class NormalAttack : Skill
 {
-    public NormalAttack(string name, int ap, int cd):base(name,ap,cd)
+    int damageValue;
+    public NormalAttack(string name, int ap, int cd,int _damageValue):base(name,ap,cd)
     {
-
+        skillShowName = "普通打擊";
+        damageValue = _damageValue;
     }
-    public override void Excite()
+    public override void Excite(CharData target)
     {
-        throw new System.NotImplementedException();
+        FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical,character);
     }
 }

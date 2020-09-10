@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class CharData
 {
+    public CharView charView;
 
     public string charName;
+    public string charShowName;
 
     public int health;
     public int maxHealth;

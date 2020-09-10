@@ -41,5 +41,25 @@ namespace sysOrder
             Debug.Log(text);
         }
     }
+    public class DamageOrder : Order
+    {
+        CharData character;
+        CharData damagerChar;
+        int damageValue;
+        DamageType damageType;
+        public DamageOrder(CharData _character,int _damageValue,DamageType _damageType,CharData _damagerChar)
+        {
+            character = _character;
+            damageValue = _damageValue;
+            damageType = _damageType;
+
+            damagerChar = _damagerChar;
+        }
+        public override void Execution()
+        {
+            //進行防禦計算!!
+            Debug.Log(character.charShowName + " 受到 " + damageValue + " 點傷害!");
+        }
+    }
 
 }

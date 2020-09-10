@@ -2,22 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TriggerType
-{
-    DamageCheck,
-    DamageTotalCheck,
-    DamageFinalCheck,
-    DamageAfter,
-    DamageBefore,
-    UseCardCheck,
-    UseCardAfter,
-    UseCardBefore,
-    TurnStarting,
-    TurnStartBefore,
-    TurnEnding,
-    TurnEndBefore,
-
-}
 
 public abstract class TriggerInfo
 {
@@ -43,6 +27,7 @@ public abstract class TriggerInfo
     public abstract void Reset();
     public TriggerInfo SubscriptionButton(TriggerType type, int port, Subscriber s)
     {
+        //Debug.Log("SUB!");
         subscriberDatas.Add(new SubscriberData(s, type, port));
         return this;
     }
@@ -83,9 +68,10 @@ public abstract class TriggerInfo
 public class DamageInfo : TriggerInfo
 {
     public CharData damagedChar;
+    public CharData damagerChar;
     public int damageValue;
 
-    public bool trueDamage;
+    public DamageType damageType;
 
     public DamageInfo() : base()
     {
@@ -94,14 +80,19 @@ public class DamageInfo : TriggerInfo
 
     public override void Reset()
     {
-        throw new System.NotImplementedException();
+        damagedChar = null;
+        damagerChar = null;
+        damageValue = 0;
+        damageType = DamageType.Null;
     }
 
-    public void SetInfo(CharData chara, int _damageValue, bool _trueDamage = false)
+    public void SetInfo(CharData chara, int _damageValue, DamageType _damageType ,CharData  _damager)
     {
         damagedChar = chara;
+        damagerChar = _damager;
+
         damageValue = _damageValue;
-        trueDamage = _trueDamage;
+        damageType = _damageType;
 
     }
 }

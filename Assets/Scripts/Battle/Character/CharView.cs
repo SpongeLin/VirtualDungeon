@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class CharView : MonoBehaviour
 {
+    public CharData character;
+    bool canClick = false;
+
+    public CharAvatar charAvatar;//??
+    public Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +20,29 @@ public class CharView : MonoBehaviour
     void Update()
     {
         
+    }
+
+
+    public void SetClickTarget(bool active)
+    {
+        canClick = active;
+        if (active)
+        {
+            animator.SetTrigger("selected");
+        }
+        else
+        {
+            animator.SetTrigger("notSelected");
+        }
+    }
+
+    void MouseDown()
+    {
+        Debug.Log("CLICK!!");
+        SetClickTarget(!canClick);
+    }
+    private void OnMouseDown()
+    {
+        MouseDown();
     }
 }

@@ -4,15 +4,6 @@ using UnityEngine;
 
 public class CharAvatar : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+// what do this do? 
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
