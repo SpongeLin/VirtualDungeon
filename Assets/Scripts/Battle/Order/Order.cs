@@ -17,6 +17,16 @@ namespace sysOrder
             FieldManager.instance.GameStart();
         }
     }
+    public class TurnEndOrder : Order
+    {
+
+        public override void Execution()
+        {
+            FieldManager.instance.RealTurnEnd();
+        }
+    }
+
+
     public class WaitOrder : Order
     {
         float time;
@@ -65,13 +75,21 @@ namespace sysOrder
             Debug.Log(character.charShowName + " 受到 " + damageValue + " 點傷害!");
         }
     }
-
-    public class TurnEndOrder : Order
+    public class UseSkillOrder : Order
     {
+        Skill skill;
+        CharData target;
 
+        public UseSkillOrder(Skill _skill,CharData _target)
+        {
+            skill = _skill;
+            target = _target;
+        }
         public override void Execution()
         {
-            FieldManager.instance.RealTurnEnd();
+            skill.Excite(target);
         }
     }
+
+
 }

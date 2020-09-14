@@ -19,6 +19,7 @@ public class TriggerManager : MonoBehaviour
         triggerInfoList.Add(new DamageInfo());
         triggerInfoList.Add(new UseCardInfo());
         triggerInfoList.Add(new TurnInfo());
+        triggerInfoList.Add(new SkillInfo());
     }
 
     // Update is called once per frame
@@ -38,11 +39,11 @@ public class TriggerManager : MonoBehaviour
     }
     public void CardUpdate()
     {
-        //foreach updatelist Subscriber.Update() 
         updateList.RemoveAll(DontWorkSubscriber);
+        foreach (Subscriber s in updateList)
+            s.Update();
 
-        //CardManager.instance.CardUpdate();
-        //FieldManager.instance.CardUpdate();
+        FieldManager.instance.GameUpdate();
     }
 
     public T GetTriggerInfo<T>() where T : TriggerInfo

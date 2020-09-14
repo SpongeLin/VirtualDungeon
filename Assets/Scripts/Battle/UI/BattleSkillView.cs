@@ -18,6 +18,16 @@ public class BattleSkillView : MonoBehaviour
     public bool canClick;
     public bool highLight;
 
+    public bool sysCanClick = true; // can click by FieldManager 
+
+    private void Update()
+    {
+        if (skill != null)
+        {
+            SetCanClick(skill.CanUseSkill() && sysCanClick && OrderManager.instance.IsEmptyStack());
+        }
+    }
+
     public void SetSkill(Skill _skill)
     {
         if (_skill == null)
@@ -27,7 +37,7 @@ public class BattleSkillView : MonoBehaviour
             skillName.text = "";
             ap.text = "";
             cd.text = "";
-            SetClick(false);
+            SetActiveSkill(false);
 
             return;
         }
@@ -37,13 +47,28 @@ public class BattleSkillView : MonoBehaviour
         ap.text = skill.actionPoint.ToString();
         cd.text = skill.coolDown.ToString();
 
-        SetClick(true);
+        SetActiveSkill(true);
     }
     public void Click()
     {
+        if (!canClick) return;
+        FieldManager.instance.SkillSelecctTarget(skill);
 
     }
-    public void SetClick(bool active)
+    public void SetCanClick(bool active)
+    {
+        if (active)
+        {
+            skillImage.color = Color.white;
+            canClick = true;
+        }
+        else
+        {
+            skillImage.color = Color.gray;
+            canClick = false;
+        }
+    }
+    public void SetActiveSkill(bool active)
     {
         canClick = active;
         button.interactable = active;

@@ -24,6 +24,10 @@ public enum TriggerType
     TurnEnding,
     TurnEndBefore,
 
+    UseSkillCheck,
+    UseSkillAfter,
+    UseSkillBefore,
+
 }
 
 public enum SkillTarget

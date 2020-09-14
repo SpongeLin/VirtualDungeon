@@ -6,22 +6,10 @@ public class CharView : MonoBehaviour
 {
     public CharViewUI charViewUI;
     public CharData character;
-    bool canClick = false;
+    public bool canClick = false;
 
     public CharAvatar charAvatar;//??
     public Animator animator;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
 
     public void SetClickTarget(bool active)
@@ -39,8 +27,11 @@ public class CharView : MonoBehaviour
 
     void MouseDown()
     {
+        if (!canClick) return;
         Debug.Log("CLICK!!");
-        SetClickTarget(!canClick);
+        //SetClickTarget(!canClick);
+
+        FieldManager.instance.ClickCharTarget(character);
     }
     void MouseEnter()
     {

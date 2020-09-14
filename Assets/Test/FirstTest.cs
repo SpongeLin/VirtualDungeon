@@ -18,7 +18,7 @@ public class FirstTest : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         Debug.Log("Start");
 
@@ -34,8 +34,8 @@ public class FirstTest : MonoBehaviour
         character1.GetComponent<CharView>().character = data;
         //character1.GetComponent<CharView>().charViewUI.character = data;
         FieldManager.instance.heros.front = data;
-        data.skill1 = new testSkill.NormalAttack("x", 1, 1, 15);
-        data.skill2 = new testSkill.AttackSelf("x", 2, 2, 12);
+        data.skill1 = new testSkill.NormalAttack("x", 1, 1, 15).SetChar(data);
+        data.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(data);
 
 
         data = new CharData();
@@ -49,8 +49,8 @@ public class FirstTest : MonoBehaviour
         character2.GetComponent<CharView>().character = data;
         //character2.GetComponent<CharView>().charViewUI.character = data;
         FieldManager.instance.heros.middle = data;
-        data.skill1 = new testSkill.NormalAttack("x", 1, 1, 15);
-        data.skill2 = new testSkill.JustTest("x", 2, 2);
+        data.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(data);
+        data.skill2 = new testSkill.JustTest("x", 2, 2).SetChar(data);
 
         data = new CharData();
         data.charShowName = "惠";
@@ -63,9 +63,9 @@ public class FirstTest : MonoBehaviour
         character3.GetComponent<CharView>().character = data;
         //character3.GetComponent<CharView>().charViewUI.character = data;
         FieldManager.instance.heros.back = data;
-        data.skill1 = new testSkill.NormalAttack("x", 1, 1, 15);
-        data.skill2 = new testSkill.AttackSelf("x", 2, 2, 12);
-        data.skill3 = new testSkill.JustTest("x", 2, 2);
+        data.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(data);
+        data.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(data);
+        data.skill3 = new testSkill.JustTest("x", 2, 2).SetChar(data);
 
         data = new CharData();
         data.charShowName = "敵人1";
@@ -75,6 +75,7 @@ public class FirstTest : MonoBehaviour
         data.actionPoint = 2;
         data.maxActionPoint = 4;
         data.agility = 21;
+        data.skill3 = new testSkill.JustTest("x", 1, 0).SetChar(data);
         data.charView = enemy1.GetComponent<CharView>();
         enemy1.GetComponent<CharView>().character = data;
         FieldManager.instance.enemies.front = data;
@@ -86,6 +87,7 @@ public class FirstTest : MonoBehaviour
         data.actionPoint = 2;
         data.maxActionPoint = 4;
         data.agility = 25;
+        data.skill2 = new testSkill.AttackSelf("x", 2, 2, 30).SetChar(data);
         data.charView = enemy2.GetComponent<CharView>();
         enemy2.GetComponent<CharView>().character = data;
         FieldManager.instance.enemies.middle = data;

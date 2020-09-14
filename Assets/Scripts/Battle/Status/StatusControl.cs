@@ -40,7 +40,7 @@ public class StatusControl : Subscriber
         return false;
 
     }
-    public void CardUpdate()
+    public void StatusUpdate()
     {
         foreach (Status s in statusList)
         {
@@ -92,7 +92,7 @@ public class StatusControl : Subscriber
 
     public override void Update()
     {
-        CardUpdate();
+        StatusUpdate();
     }
 }
 

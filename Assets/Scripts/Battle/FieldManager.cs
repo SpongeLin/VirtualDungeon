@@ -15,6 +15,8 @@ public class FieldManager : MonoBehaviour
     public bool playerTurn;
     public bool isWorking = false;
 
+    public Skill selectingSkill = null;
+
     public CharData currentActionCharacter;
 
     //public List<CharData> heros;
@@ -23,12 +25,14 @@ public class FieldManager : MonoBehaviour
 
     public CharTeam heros;
     public CharTeam enemies;
+    public List<CharData> allChar;
 
     private void Awake()
     {
         instance = this;
         heros = new CharTeam();
         enemies = new CharTeam();
+        allChar = new List<CharData>();
 
         charLineControl = new CharLineControl();
 
@@ -38,21 +42,31 @@ public class FieldManager : MonoBehaviour
         isWorking = true;
         OrderManager.instance.isWaiting = false;
 
-        GameStart();//TEST!
+        //GameStart();//TEST!
+        OrderManager.instance.AddOrder(new sysOrder.GameStart());
     }
-
-
 
 
     public void GameStart()
     {
-        isWorking = true;
 
         //character create!!
+        allChar.Add(heros.front);
+        allChar.Add(heros.middle);
+        allChar.Add(heros.back);
+        allChar.Add(enemies.front);
+        allChar.Add(enemies.middle);
+        allChar.Add(enemies.back);
 
         charLineControl.LoadAllCharacters();
         CharTurnStart(charLineControl.Next());
     }
+
+    public void GameUpdate()
+    {
+
+    }
+
 
     public void CharTurnStart(CharData character)
     {
@@ -86,6 +100,8 @@ public class FieldManager : MonoBehaviour
     }
     public void RealTurnEnd()
     {
+        currentActionCharacter.TurnEnd();
+
         charViewUIControl.ShowCurrentTurnMark(currentActionCharacter, false);
         currentActionCharacter = null;
         if (!OrderManager.instance.IsEmptyStack())
@@ -94,7 +110,113 @@ public class FieldManager : MonoBehaviour
         CharTurnStart(charLineControl.Next());
     }
 
+    //---------------------------------------------------------------------
 
+    public void SkillSelecctTarget(Skill skill)
+    {
+        if (selectingSkill==null)
+        {
+            selectingSkill = skill;
+            SetCharTarget(skill);
+            // this Skill need to HighLight
+
+            
+        }
+        else
+        {
+            selectingSkill = skill;
+            CancelCharTarget();
+            SetCharTarget(skill);
+            // this Skill need to HighLight, original skill need to cancel HighLight
+        }
+    }
+    public void CancelSkillSelectTarget()
+    {
+        selectingSkill = null;
+        CancelCharTarget();
+        //cancel HighLight
+    }
+
+
+
+    public void SetCharTarget(Skill skill)
+    {
+        //Debug.Log("SELECT!!");
+        switch (skill.target)
+        {
+            case SkillTarget.All:
+                foreach (CharData charData in allChar)
+                {
+                    charData.charView.SetClickTarget(true);
+
+                }
+                break;
+            case SkillTarget.Self:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData == skill.character)
+                        charData.charView.SetClickTarget(true);
+
+                }
+                break;
+            case SkillTarget.Allies:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isEnemy == skill.character.isEnemy)
+                        charData.charView.SetClickTarget(true);
+
+                }
+                break;
+            case SkillTarget.Enemies:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isEnemy != skill.character.isEnemy)
+                        charData.charView.SetClickTarget(true);
+
+                }
+                break;
+            case SkillTarget.FrontEnemy:
+                foreach (CharData charData in allChar)
+                {
+                    if ((charData.isEnemy != skill.character.isEnemy) && ((charData==heros.front) || (charData == enemies.front)))
+                        charData.charView.SetClickTarget(true);
+
+                }
+                break;
+        }
+
+
+    }
+    public void CancelCharTarget()
+    {
+        foreach(CharData charData in allChar)
+        {
+            if (charData.charView.canClick)
+                charData.charView.SetClickTarget(false);
+        }
+    }
+
+    public void ClickCharTarget(CharData target)
+    {
+        CancelCharTarget();
+        //再次CHECK 目標可行性
+
+        selectingSkill.character.actionPoint -= selectingSkill.actionPoint;
+        selectingSkill.currentCoolDown = selectingSkill.coolDown;
+
+        SkillInfo sif = TriggerManager.instance.GetTriggerInfo<SkillInfo>();
+        sif.SetInfo(selectingSkill, target);
+
+        sif.GOTrigger(TriggerType.UseSkillCheck);
+
+        sif.GOTrigger(TriggerType.UseSkillAfter);
+        OrderManager.instance.AddOrder(new sysOrder.UseSkillOrder(selectingSkill,target));
+        sif.GOTrigger(TriggerType.UseSkillBefore);
+    
+    }
+
+
+    //---------------------------------------------------------------------
     public void DamageChar(CharData character, int damageValue,DamageType type,CharData damager=null)
     {
         DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
@@ -109,6 +231,14 @@ public class FieldManager : MonoBehaviour
         dif.GOTrigger(TriggerType.DamageBefore);
     }
 
-
+    //---------------------------------------------------
+    public bool CheckCharIsFront(CharData chara)
+    {
+        return true; // 待確認!!
+    }
+    public bool CheckCharIsAlive(CharData chara)
+    {
+        return !chara.isDie;
+    }
 
 }

@@ -126,3 +126,27 @@ public class TurnInfo : TriggerInfo
         character = null;
     }
 }
+
+public class SkillInfo : TriggerInfo
+{
+    public Skill skill;
+    public CharData target;
+
+    public SkillInfo() : base()
+    {
+        test = "Damage";
+    }
+
+    public override void Reset()
+    {
+        skill = null;
+        target = null;
+    }
+
+    public void SetInfo(Skill _skill,CharData _target)
+    {
+        skill = _skill;
+        target = _target;
+
+    }
+}

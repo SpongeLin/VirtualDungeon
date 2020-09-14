@@ -7,11 +7,19 @@ public class CharData
 {
     public CharView charView;
     public CharStatusControl charStatusControl;
+    public SkillControl skillControl; // 尚未確定
+
+    public CharData()
+    {
+        charStatusControl = new CharStatusControl(this);
+        skillControl = new SkillControl(this);
+    }
 
     public string charName;
     public string charShowName;
 
     public bool isEnemy;
+    public bool isDie;
 
     public int health;
     public int maxHealth;
@@ -36,5 +44,16 @@ public class CharData
     public int magicDefense;
     public int agility;
 
+
+    public void TurnEnd()
+    {
+        //處理狀態減少!?
+
+        if(skill1!=null )skill1.CoolDown();
+        if (skill2 != null) skill2.CoolDown();
+        if (skill3 != null) skill3.CoolDown();
+        if (superSkill != null) superSkill.CoolDown();
+        if (extraSkill != null) extraSkill.CoolDown();
+    }
 
 }
