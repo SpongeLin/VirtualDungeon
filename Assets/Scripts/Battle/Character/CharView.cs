@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharView : MonoBehaviour
 {
+    public CharViewUI charViewUI;
     public CharData character;
     bool canClick = false;
 
@@ -41,8 +42,17 @@ public class CharView : MonoBehaviour
         Debug.Log("CLICK!!");
         SetClickTarget(!canClick);
     }
+    void MouseEnter()
+    {
+        FieldManager.instance.battleHubControl.ShowCharInfo(character);
+    }
+
     private void OnMouseDown()
     {
         MouseDown();
+    }
+    private void OnMouseEnter()
+    {
+        MouseEnter();
     }
 }

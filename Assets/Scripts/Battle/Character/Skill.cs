@@ -30,16 +30,51 @@ public abstract class Skill
     
 }
 
-public class NormalAttack : Skill
+
+namespace testSkill
 {
-    int damageValue;
-    public NormalAttack(string name, int ap, int cd,int _damageValue):base(name,ap,cd)
+    public class NormalAttack : Skill
     {
-        skillShowName = "普通打擊";
-        damageValue = _damageValue;
+        int damageValue;
+        public NormalAttack(string name, int ap, int cd, int _damageValue) : base(name, ap, cd)
+        {
+            skillShowName = "普通打擊";
+            damageValue = _damageValue;
+        }
+        public override void Excite(CharData target)
+        {
+            FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical, character);
+        }
     }
-    public override void Excite(CharData target)
+    public class AttackSelf : Skill
     {
-        FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical,character);
+        int damageValue;
+        public AttackSelf(string name, int ap, int cd, int _damageValue) : base(name, ap, cd)
+        {
+            skillShowName = "自殘";
+            damageValue = _damageValue;
+
+            target = SkillTarget.Self;
+        }
+        public override void Excite(CharData target)
+        {
+            FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical, character);
+        }
     }
+    public class JustTest : Skill
+    {
+        public JustTest(string name, int ap, int cd) : base(name, ap, cd)
+        {
+            skillShowName = "測試";
+
+            target = SkillTarget.Self;
+        }
+        public override void Excite(CharData target)
+        {
+            //FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical, character);
+            Debug.Log("Test object : " + target.charShowName);
+        }
+    }
+
 }
+

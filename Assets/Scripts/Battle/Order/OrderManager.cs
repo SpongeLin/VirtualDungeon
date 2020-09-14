@@ -49,7 +49,7 @@ public class OrderManager : MonoBehaviour
     }
     public bool IsEmptyStack()
     {
-        if (orderStack.Count == 0)
+        if (orderStack.Count == 0 && waitTime<=0)
             return true;
         return false;
     }

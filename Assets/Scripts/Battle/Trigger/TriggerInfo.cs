@@ -110,12 +110,19 @@ public class UseCardInfo : TriggerInfo
 }
 public class TurnInfo : TriggerInfo
 {
+    public CharData character;
+    public bool isEnemyTurn;
     public TurnInfo() : base()
     {
 
     }
+    public void SetInfo(CharData _character)
+    {
+        character = _character;
+        isEnemyTurn = character.isEnemy;
+    }
     public override void Reset()
     {
-        throw new System.NotImplementedException();
+        character = null;
     }
 }

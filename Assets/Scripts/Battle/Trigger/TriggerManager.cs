@@ -27,9 +27,9 @@ public class TriggerManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
         {
             UseCardInfo uc = GetTriggerInfo<UseCardInfo>();
-            Debug.Log(uc.test);
+            //Debug.Log(uc.test);
             DamageInfo dif = GetTriggerInfo<DamageInfo>();
-            Debug.Log(dif.test);
+            //Debug.Log(dif.test);
         }
     }
     public void AddUpdateList(Subscriber s)

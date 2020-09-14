@@ -5,9 +5,17 @@ using UnityEngine;
 public class FieldManager : MonoBehaviour
 {
     public static FieldManager instance { get; private set; }
+    public SlotControl slotControl;
+    public BattleTextControl battleTextControl;
+    public CharViewUIControl charViewUIControl;
+    public BattleHubControl battleHubControl;
+
+    public CharLineControl charLineControl;
 
     public bool playerTurn;
     public bool isWorking = false;
+
+    public CharData currentActionCharacter;
 
     //public List<CharData> heros;
     //public List<CharData> enemies;
@@ -22,6 +30,8 @@ public class FieldManager : MonoBehaviour
         heros = new CharTeam();
         enemies = new CharTeam();
 
+        charLineControl = new CharLineControl();
+
     }
     private void Start()
     {
@@ -33,9 +43,55 @@ public class FieldManager : MonoBehaviour
 
 
 
+
     public void GameStart()
     {
         isWorking = true;
+
+        //character create!!
+
+        charLineControl.LoadAllCharacters();
+        CharTurnStart(charLineControl.Next());
+    }
+
+    public void CharTurnStart(CharData character)
+    {
+        Debug.Log("現在是" + character.charShowName + "的回合了!!");
+        charViewUIControl.ShowCurrentTurnMark(character, true);
+        battleHubControl.SetCharSkill(character);
+
+        currentActionCharacter = character;
+
+        TurnInfo tif = TriggerManager.instance.GetTriggerInfo<TurnInfo>();
+        tif.SetInfo(character);
+        tif.GOTrigger(TriggerType.TurnStarting);
+        tif.GOTrigger(TriggerType.TurnStartBefore);
+
+        character.actionPoint = character.maxActionPoint;
+
+        //character turn start trigger
+        //character turn start excutive
+    }
+    public void CharTurnEnd()
+    {
+        if (!OrderManager.instance.IsEmptyStack()) return;
+
+        OrderManager.instance.AddOrder(new sysOrder.TurnEndOrder());
+        OrderManager.instance.AddOrder(new sysOrder.WaitOrder(0.35f));
+
+        TurnInfo tif = TriggerManager.instance.GetTriggerInfo<TurnInfo>();
+        tif.SetInfo(currentActionCharacter);
+        tif.GOTrigger(TriggerType.TurnEnding);
+        tif.GOTrigger(TriggerType.TurnEndBefore);
+    }
+    public void RealTurnEnd()
+    {
+        charViewUIControl.ShowCurrentTurnMark(currentActionCharacter, false);
+        currentActionCharacter = null;
+        if (!OrderManager.instance.IsEmptyStack())
+            Debug.LogWarning("Can't be any Order exist while End Turn!!!!");
+
+        CharTurnStart(charLineControl.Next());
     }
 
 
@@ -52,5 +108,7 @@ public class FieldManager : MonoBehaviour
         OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
         dif.GOTrigger(TriggerType.DamageBefore);
     }
+
+
 
 }

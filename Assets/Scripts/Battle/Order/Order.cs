@@ -58,8 +58,20 @@ namespace sysOrder
         public override void Execution()
         {
             //進行防禦計算!!
+
+            character.health -= damageValue;
+
+            FieldManager.instance.battleTextControl.ShowDamageText(character, damageValue, TextType.Damage);
             Debug.Log(character.charShowName + " 受到 " + damageValue + " 點傷害!");
         }
     }
 
+    public class TurnEndOrder : Order
+    {
+
+        public override void Execution()
+        {
+            FieldManager.instance.RealTurnEnd();
+        }
+    }
 }
