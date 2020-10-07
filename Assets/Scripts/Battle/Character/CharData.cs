@@ -34,9 +34,6 @@ public class CharData
     public Skill skill1;
     public Skill skill2;
     public Skill skill3;
-    public Skill superSkill;
-
-    public Skill extraSkill;
 
     public int physicalDamage;
     public int magicDamage;
@@ -52,8 +49,6 @@ public class CharData
         if(skill1!=null )skill1.CoolDown();
         if (skill2 != null) skill2.CoolDown();
         if (skill3 != null) skill3.CoolDown();
-        if (superSkill != null) superSkill.CoolDown();
-        if (extraSkill != null) extraSkill.CoolDown();
     }
 
 }

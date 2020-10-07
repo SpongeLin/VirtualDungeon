@@ -91,5 +91,19 @@ namespace sysOrder
         }
     }
 
+    public class DealthOrder : Order
+    {
+        CharData character;
+
+        public DealthOrder(CharData _chara)
+        {
+            character = _chara;
+        }
+        public override void Execution()
+        {
+            FieldManager.instance.RealDealth(character);
+        }
+    }
+
 
 }

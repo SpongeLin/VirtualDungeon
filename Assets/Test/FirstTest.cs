@@ -115,6 +115,12 @@ public class FirstTest : MonoBehaviour
         //s = new TestStatus();
         //s.Enter();
 
+        CardData card = new CardData();
+        card.cardShowName = "TEST";
+        card.cardDescription = "測試卡牌1號";
+        card.cardCost = 5;
+        CardManager.instance.deck.Add(card);
+        CardManager.instance.Draw();
 
     }
     

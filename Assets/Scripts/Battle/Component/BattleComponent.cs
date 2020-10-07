@@ -7,6 +7,32 @@ public class CharTeam
     public CharData front;
     public CharData middle;
     public CharData back;
+    public CharData GetChar(TeamPos pos)
+    {
+        if (pos == TeamPos.Front)
+            return front;
+        if (pos == TeamPos.Middle)
+            return middle;
+        if (pos == TeamPos.Back)
+            return back;
+        return null;
+    }
+}
+
+public enum CardPos
+{
+    Hand,
+    Deck,
+    Cemetery,
+    Banish,
+    Null
+}
+
+public enum TeamPos
+{
+    Front,
+    Middle,
+    Back,
 }
 
 public enum TriggerType
@@ -27,6 +53,9 @@ public enum TriggerType
     UseSkillCheck,
     UseSkillAfter,
     UseSkillBefore,
+
+    DealthBefore,
+    DealthAfter,
 
 }
 

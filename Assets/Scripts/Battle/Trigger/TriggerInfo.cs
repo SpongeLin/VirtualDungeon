@@ -31,7 +31,7 @@ public abstract class TriggerInfo
         subscriberDatas.Add(new SubscriberData(s, type, port));
         return this;
     }
-    public void GOTrigger(TriggerType type)
+    public void GoTrigger(TriggerType type)
     {
         subscriberDatas.RemoveAll(DontWorkSubscriber);
         foreach (SubscriberData data in subscriberDatas)
@@ -148,5 +148,21 @@ public class SkillInfo : TriggerInfo
         skill = _skill;
         target = _target;
 
+    }
+}
+public class DealthInfo : TriggerInfo
+{
+    public CharData character;
+    public DealthInfo() : base()
+    {
+
+    }
+    public override void Reset()
+    {
+        character = null;
+    }
+    public void SetInfo(CharData _chara)
+    {
+        character = _chara;
     }
 }

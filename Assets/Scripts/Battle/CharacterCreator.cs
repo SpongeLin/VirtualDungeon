@@ -10,8 +10,22 @@ public static class CharacterCreator
         CharData data = new CharData();
         data.charName = charName;
         data.charShowName = charName;
+
+        SetChar(data, charName);//Set SKILL
+        //Set ability
+
         data.charView = view;
         view.character = data;
+    }
+
+    static void SetChar(CharData charData, string charName)
+    {
+
+
+
+
+
+        //Debug.LogWarning("Can't create character !!!");
     }
 
 }

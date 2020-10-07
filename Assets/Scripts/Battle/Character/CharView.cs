@@ -35,7 +35,7 @@ public class CharView : MonoBehaviour
     }
     void MouseEnter()
     {
-        FieldManager.instance.battleHubControl.ShowCharInfo(character);
+        
     }
 
     private void OnMouseDown()

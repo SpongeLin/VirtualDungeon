@@ -43,6 +43,7 @@ public class CharLineControl
         AddCharList(FieldManager.instance.enemies.back);
         Debug.Log(linePackList.Count);
     }
+
     public CharData Next()
     {
         if (currentPack != null)
@@ -90,13 +91,20 @@ public class CharLineControl
         if (!charList.Contains(charData))
         {
             charList.Add(charData);
+            linePackList.Add(new LinePack(charData));
         }
-        linePackList.Add(new LinePack(charData));
+
     }
-
-    public void RemoveChar()
+    public void RemoveChar(CharData charData)
     {
+        charList.Remove(charData);
 
+        LinePack willRemovePack = null;
+        foreach (LinePack lp in linePackList)
+            if (lp.character == charData)
+                willRemovePack = lp;
+        if (willRemovePack != null)
+            linePackList.Remove(willRemovePack);
     }
 
 }

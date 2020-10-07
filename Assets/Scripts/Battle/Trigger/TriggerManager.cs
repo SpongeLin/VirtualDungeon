@@ -20,6 +20,7 @@ public class TriggerManager : MonoBehaviour
         triggerInfoList.Add(new UseCardInfo());
         triggerInfoList.Add(new TurnInfo());
         triggerInfoList.Add(new SkillInfo());
+        triggerInfoList.Add(new DealthInfo());
     }
 
     // Update is called once per frame

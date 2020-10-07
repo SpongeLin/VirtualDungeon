@@ -44,6 +44,15 @@ public class FieldManager : MonoBehaviour
 
         //GameStart();//TEST!
         OrderManager.instance.AddOrder(new sysOrder.GameStart());
+
+        //Create hero by GameData
+        //instatiate(CharView)
+        //CharCreator(CharView,name)
+        //chardata set heros.front
+        
+        //Create enemy by EnemyManager
+
+
     }
 
 
@@ -58,12 +67,31 @@ public class FieldManager : MonoBehaviour
         allChar.Add(enemies.middle);
         allChar.Add(enemies.back);
 
+
+        //Hero go to field
+        //slotControl.SetSlotPos(heros.front.charView, TeamPos.Front, false);
+        //slotControl.SetSlotPos(heros.middle.charView, TeamPos.Middle, false);
+        //slotControl.SetSlotPos(heros.back.charView, TeamPos.Back, false);
+
         charLineControl.LoadAllCharacters();
         CharTurnStart(charLineControl.Next());
     }
 
     public void GameUpdate()
     {
+        foreach(CharData chara in allChar)
+        {
+            if (!chara.isDie)
+                if (chara.health <= 0)
+                    OrderManager.instance.AddOrder(new sysOrder.DealthOrder(chara));
+        }
+
+        battleHubControl.Gameupdate();
+
+        if (CheckTeamLose(true))
+            Debug.Log("Player is Win！！！");
+        else if(CheckTeamLose(false))
+            Debug.Log("Player is Lose！！！");
 
     }
 
@@ -78,8 +106,8 @@ public class FieldManager : MonoBehaviour
 
         TurnInfo tif = TriggerManager.instance.GetTriggerInfo<TurnInfo>();
         tif.SetInfo(character);
-        tif.GOTrigger(TriggerType.TurnStarting);
-        tif.GOTrigger(TriggerType.TurnStartBefore);
+        tif.GoTrigger(TriggerType.TurnStarting);
+        tif.GoTrigger(TriggerType.TurnStartBefore);
 
         character.actionPoint = character.maxActionPoint;
 
@@ -95,8 +123,8 @@ public class FieldManager : MonoBehaviour
 
         TurnInfo tif = TriggerManager.instance.GetTriggerInfo<TurnInfo>();
         tif.SetInfo(currentActionCharacter);
-        tif.GOTrigger(TriggerType.TurnEnding);
-        tif.GOTrigger(TriggerType.TurnEndBefore);
+        tif.GoTrigger(TriggerType.TurnEnding);
+        tif.GoTrigger(TriggerType.TurnEndBefore);
     }
     public void RealTurnEnd()
     {
@@ -141,51 +169,9 @@ public class FieldManager : MonoBehaviour
 
     public void SetCharTarget(Skill skill)
     {
-        //Debug.Log("SELECT!!");
-        switch (skill.target)
-        {
-            case SkillTarget.All:
-                foreach (CharData charData in allChar)
-                {
-                    charData.charView.SetClickTarget(true);
-
-                }
-                break;
-            case SkillTarget.Self:
-                foreach (CharData charData in allChar)
-                {
-                    if (charData == skill.character)
-                        charData.charView.SetClickTarget(true);
-
-                }
-                break;
-            case SkillTarget.Allies:
-                foreach (CharData charData in allChar)
-                {
-                    if (charData.isEnemy == skill.character.isEnemy)
-                        charData.charView.SetClickTarget(true);
-
-                }
-                break;
-            case SkillTarget.Enemies:
-                foreach (CharData charData in allChar)
-                {
-                    if (charData.isEnemy != skill.character.isEnemy)
-                        charData.charView.SetClickTarget(true);
-
-                }
-                break;
-            case SkillTarget.FrontEnemy:
-                foreach (CharData charData in allChar)
-                {
-                    if ((charData.isEnemy != skill.character.isEnemy) && ((charData==heros.front) || (charData == enemies.front)))
-                        charData.charView.SetClickTarget(true);
-
-                }
-                break;
-        }
-
-
+        CharData[] targets = GetCharTarget(skill);
+        foreach (CharData chara in targets)
+            chara.charView.SetClickTarget(true);
     }
     public void CancelCharTarget()
     {
@@ -194,6 +180,68 @@ public class FieldManager : MonoBehaviour
             if (charData.charView.canClick)
                 charData.charView.SetClickTarget(false);
         }
+    }
+
+    public bool CheckCharTargetExist(Skill skill)
+    {
+        return true;
+    }
+    CharData[] GetCharTarget(Skill skill)
+    {
+        List<CharData> targets = new List<CharData>();
+        switch (skill.target)
+        {
+            case SkillTarget.All:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    targets.Add(charData);
+
+                }
+                break;
+            case SkillTarget.Self:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    if (charData == skill.character)
+                        targets.Add(charData);
+
+                }
+                break;
+            case SkillTarget.Allies:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    if (charData.isEnemy == skill.character.isEnemy)
+                        targets.Add(charData);
+
+                }
+                break;
+            case SkillTarget.Enemies:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    if (charData.isEnemy != skill.character.isEnemy)
+                        targets.Add(charData);
+
+                }
+                break;
+            case SkillTarget.FrontEnemy:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    if ((charData.isEnemy != skill.character.isEnemy) && CheckCharIsFront(charData))
+                        targets.Add(charData);
+
+                }
+                break;
+        }
+        return targets.ToArray();
     }
 
     public void ClickCharTarget(CharData target)
@@ -207,11 +255,11 @@ public class FieldManager : MonoBehaviour
         SkillInfo sif = TriggerManager.instance.GetTriggerInfo<SkillInfo>();
         sif.SetInfo(selectingSkill, target);
 
-        sif.GOTrigger(TriggerType.UseSkillCheck);
+        sif.GoTrigger(TriggerType.UseSkillCheck);
 
-        sif.GOTrigger(TriggerType.UseSkillAfter);
+        sif.GoTrigger(TriggerType.UseSkillAfter);
         OrderManager.instance.AddOrder(new sysOrder.UseSkillOrder(selectingSkill,target));
-        sif.GOTrigger(TriggerType.UseSkillBefore);
+        sif.GoTrigger(TriggerType.UseSkillBefore);
     
     }
 
@@ -222,23 +270,88 @@ public class FieldManager : MonoBehaviour
         DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
         dif.SetInfo(character, damageValue, type, damager);
 
-        dif.GOTrigger(TriggerType.DamageCheck);
-        dif.GOTrigger(TriggerType.DamageTotalCheck);
-        dif.GOTrigger(TriggerType.DamageFinalCheck);
+        dif.GoTrigger(TriggerType.DamageCheck);
+        dif.GoTrigger(TriggerType.DamageTotalCheck);
+        dif.GoTrigger(TriggerType.DamageFinalCheck);
 
-        dif.GOTrigger(TriggerType.DamageAfter);
+        dif.GoTrigger(TriggerType.DamageAfter);
         OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
-        dif.GOTrigger(TriggerType.DamageBefore);
+        dif.GoTrigger(TriggerType.DamageBefore);
+    }
+    public void DealthChar(CharData character)
+    {
+        DealthInfo dif = TriggerManager.instance.GetTriggerInfo<DealthInfo>();
+        dif.SetInfo(character);
+
+        dif.GoTrigger(TriggerType.DealthAfter);
+        OrderManager.instance.AddOrder(new sysOrder.DealthOrder(character));
+        dif.GoTrigger(TriggerType.DealthBefore);
+
+    }
+    //--------------------------------------------------
+    public void RealDamage(CharData character, int damageValue, DamageType type, CharData damager = null)
+    {
+
+    }
+    public void RealDealth(CharData character)
+    {
+        if (character.isDie)
+            Debug.LogError("Something is wrong, character was died twice.");
+
+        character.isDie = true;
+        charViewUIControl.CloseCharViewUI(character.charView);
+        charLineControl.RemoveChar(character);
+        character.charStatusControl.ExitAll();
+        //skillControl.???
     }
 
     //---------------------------------------------------
     public bool CheckCharIsFront(CharData chara)
     {
-        return true; // 待確認!!
+        CharTeam charTeam;
+        if (chara.isEnemy)
+            charTeam = enemies;
+        else
+            charTeam = heros;
+
+        if (!charTeam.front.isDie)
+            if (chara == charTeam.front)
+                return true;
+        if (charTeam.front.isDie)
+            if (chara == charTeam.middle)
+                return true;
+        if (charTeam.front.isDie)
+            if (charTeam.middle.isDie)
+                if (chara == charTeam.back)
+                    return true;
+
+        return false;
     }
     public bool CheckCharIsAlive(CharData chara)
     {
         return !chara.isDie;
+    }
+
+
+    bool CheckTeamLose(bool isEnemy)
+    {
+        CharTeam temp;
+        if (isEnemy)
+            temp = enemies;
+        else
+            temp = heros;
+
+        if (temp.front != null)
+            if (!temp.front.isDie)
+                return false;
+        if (temp.middle != null)
+            if (!temp.middle.isDie)
+                return false;
+        if (temp.back != null)
+            if (!temp.back.isDie)
+                return false;
+
+        return true;
     }
 
 }

@@ -31,6 +31,14 @@ public class CharViewUIControl : MonoBehaviour
         cvu.character = charView.character;
         cvu.transform.position = charView.transform.position;
     }
+    public void CloseCharViewUI(CharView charView)
+    {
+        CharViewUI cvu = GetView(charView.character);
+        cvu.character = null;
+        cvu.transform.localPosition = Vector3.zero;
+
+        cvu.isWorking = false;
+    }
 
     CharViewUI GetView()
     {

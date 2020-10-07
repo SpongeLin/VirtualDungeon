@@ -20,11 +20,12 @@ public class BattleSkillView : MonoBehaviour
 
     public bool sysCanClick = true; // can click by FieldManager 
 
-    private void Update()
+
+    public void Gameupdate()
     {
         if (skill != null)
         {
-            SetCanClick(skill.CanUseSkill() && sysCanClick && OrderManager.instance.IsEmptyStack());
+            SetCanClick(skill.CanUseSkill() && sysCanClick && OrderManager.instance.IsEmptyStack() && FieldManager.instance.CheckCharTargetExist(skill));
         }
     }
 
