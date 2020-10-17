@@ -14,7 +14,6 @@ public class FirstTest : MonoBehaviour
 
     public Status s;
 
-    int ddd = 15;
 
 
     // Start is called before the first frame update
@@ -26,9 +25,8 @@ public class FirstTest : MonoBehaviour
         data.charShowName = "理事";
         data.maxHealth = 64;
         data.health = 52;
-        data.actionPoint = 1;
-        data.maxActionPoint = 3;
-        data.physicalDamage = 35;
+        data.energy = 1;
+        data.maxEnergy = 3;
         data.agility = 23;
         data.charView = character1.GetComponent<CharView>();
         character1.GetComponent<CharView>().character = data;
@@ -42,8 +40,8 @@ public class FirstTest : MonoBehaviour
         data.charShowName = "麻耶";
         data.maxHealth = 100;
         data.health = 35;
-        data.actionPoint = 2;
-        data.maxActionPoint = 4;
+        data.energy = 2;
+        data.maxEnergy = 4;
         data.agility = 12;
         data.charView = character2.GetComponent<CharView>();
         character2.GetComponent<CharView>().character = data;
@@ -56,8 +54,8 @@ public class FirstTest : MonoBehaviour
         data.charShowName = "惠";
         data.maxHealth = 75;
         data.health = 35;
-        data.actionPoint = 2;
-        data.maxActionPoint = 3;
+        data.energy = 2;
+        data.maxEnergy = 3;
         data.agility = 35;
         data.charView = character3.GetComponent<CharView>();
         character3.GetComponent<CharView>().character = data;
@@ -69,11 +67,12 @@ public class FirstTest : MonoBehaviour
 
         data = new CharData();
         data.charShowName = "敵人1";
-        data.isEnemy = true;
+        data.enemyStrategy = new EnemyStrategy();
+        data.enemyStrategy.AddAction(new nEnemyAction.DamageSelf(10));
         data.maxHealth = 80;
         data.health = 75;
-        data.actionPoint = 2;
-        data.maxActionPoint = 4;
+        data.energy = 2;
+        data.maxEnergy = 4;
         data.agility = 21;
         data.skill3 = new testSkill.JustTest("x", 1, 0).SetChar(data);
         data.charView = enemy1.GetComponent<CharView>();
@@ -81,11 +80,12 @@ public class FirstTest : MonoBehaviour
         FieldManager.instance.enemies.front = data;
         data = new CharData();
         data.charShowName = "敵人2";
-        data.isEnemy = true;
+        data.enemyStrategy = new EnemyStrategy();
+        data.enemyStrategy.AddAction(new nEnemyAction.DamageSelf(15));
         data.maxHealth = 100;
         data.health = 75;
-        data.actionPoint = 2;
-        data.maxActionPoint = 4;
+        data.energy = 2;
+        data.maxEnergy = 4;
         data.agility = 25;
         data.skill2 = new testSkill.AttackSelf("x", 2, 2, 30).SetChar(data);
         data.charView = enemy2.GetComponent<CharView>();
@@ -93,11 +93,12 @@ public class FirstTest : MonoBehaviour
         FieldManager.instance.enemies.middle = data;
         data = new CharData();
         data.charShowName = "敵人3";
-        data.isEnemy = true;
+        data.enemyStrategy = new EnemyStrategy();
+        data.enemyStrategy.AddAction(new nEnemyAction.DamageSelf(30));
         data.maxHealth = 50;
         data.health = 30;
-        data.actionPoint = 2;
-        data.maxActionPoint = 4;
+        data.energy = 2;
+        data.maxEnergy = 4;
         data.agility = 16;
         data.charView = enemy3.GetComponent<CharView>();
         enemy3.GetComponent<CharView>().character = data;
@@ -115,12 +116,6 @@ public class FirstTest : MonoBehaviour
         //s = new TestStatus();
         //s.Enter();
 
-        CardData card = new CardData();
-        card.cardShowName = "TEST";
-        card.cardDescription = "測試卡牌1號";
-        card.cardCost = 5;
-        CardManager.instance.deck.Add(card);
-        CardManager.instance.Draw();
 
     }
     
@@ -128,14 +123,17 @@ public class FirstTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
+        }
         if (Input.GetKeyDown(KeyCode.C))
         {
             Debug.Log("now is his turn : " + FieldManager.instance.charLineControl.Next().charShowName);
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            FieldManager.instance.DamageChar(character1.GetComponent<CharView>().character, ddd, DamageType.Magic);
-            ddd++;
+
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
@@ -182,6 +180,11 @@ public class TestStatus : CharStatus
     {
         throw new System.NotImplementedException();
     }
+
+    public override void Exit()
+    {
+        throw new System.NotImplementedException();
+    }
 }
 public class TestStatus2 : CharStatus
 {
@@ -201,6 +204,11 @@ public class TestStatus2 : CharStatus
     }
 
     public override void Update()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Exit()
     {
         throw new System.NotImplementedException();
     }

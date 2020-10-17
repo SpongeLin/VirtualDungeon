@@ -13,6 +13,7 @@ public class CharInfoHub : MonoBehaviour
     }
     public void SetInfo(CharData character)
     {
+        /*
         string content = character.charShowName;
         content += "\n";
         content += "物理攻擊 : "+character.physicalDamage.ToString();
@@ -24,6 +25,7 @@ public class CharInfoHub : MonoBehaviour
         content += "魔法防禦 : " + character.magicDefense.ToString();
 
         info.text = content;
+        */
     }
 
     public void Clear()

@@ -69,7 +69,7 @@ namespace sysOrder
         {
             //進行防禦計算!!
 
-            character.health -= damageValue;
+            character.ReduceHealth(damageValue);
 
             FieldManager.instance.battleTextControl.ShowDamageText(character, damageValue, TextType.Damage);
             Debug.Log(character.charShowName + " 受到 " + damageValue + " 點傷害!");
@@ -90,6 +90,19 @@ namespace sysOrder
             skill.Excite(target);
         }
     }
+    public class UseCardOrder : Order
+    {
+        CardData card;
+        public UseCardOrder(CardData _card)
+        {
+            card = _card;
+        }
+
+        public override void Execution()
+        {
+            CardManager.instance.RealUseCard(card);
+        }
+    }
 
     public class DealthOrder : Order
     {
@@ -104,6 +117,52 @@ namespace sysOrder
             FieldManager.instance.RealDealth(character);
         }
     }
+    public class DrawOrder : Order
+    {
+        public DrawOrder()
+        {
+        }
+        public override void Execution()
+        {
+            CardManager.instance.Draw();
+        }
+    }
+    public class DiscardOrder : Order
+    {
+        CardData card;
+        public DiscardOrder(CardData _card)
+        {
+            card = _card;
+        }
+        public override void Execution()
+        {
+            CardManager.instance.DiscardHandCard(card);
+        }
+    }
 
 
+}
+
+namespace pOrder
+{
+    public class EnemyActionOrder : Order
+    {
+        EnemyAction action;
+        public EnemyActionOrder(EnemyAction _action)
+        {
+            action = _action;
+        }
+        public override void Execution()
+        {
+            action.Action();
+        }
+    }
+    public class TurnEndButton : Order
+    {
+        public override void Execution()
+        {
+            //if this order is not first orer in stack, this order is not available
+            FieldManager.instance.CharTurnEnd();
+        }
+    }
 }

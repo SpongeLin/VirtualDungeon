@@ -19,7 +19,9 @@ public class CharViewUIControl : MonoBehaviour
     }
     public void ShowCurrentTurnMark(CharData character,bool active)
     {
-        GetView(character).SetCurrentTurnMark(active);
+        CharViewUI cvu = GetView(character);
+        if (cvu != null)
+            cvu.SetCurrentTurnMark(active);
     }
 
 
@@ -38,6 +40,9 @@ public class CharViewUIControl : MonoBehaviour
         cvu.transform.localPosition = Vector3.zero;
 
         cvu.isWorking = false;
+
+        //temp
+        cvu.currentMark.gameObject.SetActive(false);
     }
 
     CharViewUI GetView()
@@ -50,7 +55,7 @@ public class CharViewUIControl : MonoBehaviour
                 return cvu;
             }
         }
-        Debug.LogError("Dont Found CharViewUI");
+        Debug.LogWarning("Dont Found CharViewUI");
         return null;
     }
     CharViewUI GetView(CharData charData)
@@ -64,7 +69,7 @@ public class CharViewUIControl : MonoBehaviour
         }
 
 
-        Debug.LogError("Dont Found this character's CharViewUI");
+        Debug.LogWarning("Dont Found this character's CharViewUI");
         return null;
     }
 

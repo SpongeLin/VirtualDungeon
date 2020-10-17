@@ -27,10 +27,7 @@ public class CardViewControl : MonoBehaviour
         }
     }
 
-    public void MouseDownInCard(CardView view)
-    {
 
-    }
 
 
     public void OpenCard(CardData card)

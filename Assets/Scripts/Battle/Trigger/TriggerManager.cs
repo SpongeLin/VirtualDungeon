@@ -45,6 +45,7 @@ public class TriggerManager : MonoBehaviour
             s.Update();
 
         FieldManager.instance.GameUpdate();
+        CardManager.instance.CardUpdate();
     }
 
     public T GetTriggerInfo<T>() where T : TriggerInfo

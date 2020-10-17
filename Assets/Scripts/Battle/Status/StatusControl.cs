@@ -17,7 +17,7 @@ public class StatusControl : Subscriber
     public bool CheckStatus(Status status)
     {
 
-        bool repeat = false;
+        bool willAdd = true;
         foreach (Status s in statusList)
         {
             if (s.statusName == status.statusName)
@@ -25,12 +25,14 @@ public class StatusControl : Subscriber
                 if (s.canRepeat)
                 {
                     s.Repeat(status);
+                    willAdd = false;
                 }
-                repeat = true;
+                if(s.onlyOne)
+                    willAdd = false;
                 break;
             }
         }
-        if (!repeat)
+        if (willAdd)
         {
             statusList.Add(status);
             status.isWorking = true;
@@ -47,7 +49,11 @@ public class StatusControl : Subscriber
             if (s.isWorking)
             {
                 if ((s.num <= 0 || s.time <= 0) && !s.eternal)
+                {
+                    s.isWorking = false;
                     s.Exit();
+                }
+                    
                 s.Update();
             }
         }
@@ -71,21 +77,12 @@ public class StatusControl : Subscriber
     }
     public void ExitAll()
     {
-        foreach (CharStatus cs in statusList)
-        {
-            if (cs.isWorking) cs.Exit();
-        }
-    }
-
-    public override void Trigger1()
-    {
-        if (FieldManager.instance.playerTurn == isEnemy)
-            return;
         foreach (Status s in statusList)
         {
-            if (!s.eternal)
+            if (s.isWorking)
             {
-                s.time--;
+                s.isWorking = false;
+                s.Exit();
             }
         }
     }
@@ -107,5 +104,61 @@ public class CharStatusControl : StatusControl
     {
         if (CheckStatus(status))
             status.character = chara;
+    }
+    public override void Trigger1()
+    {
+        if (FieldManager.instance.currentActionCharacter != chara)
+            return;
+        foreach (Status s in statusList)
+        {
+            if (!s.eternal)
+            {
+                s.time--;
+            }
+        }
+    }
+}
+public class CardStatusControl : StatusControl
+{
+    public CardData card;
+    public CardStatusControl(CardData _card) : base()
+    {
+        card = _card;
+    }
+    public void EnterStatus(CardStatus status)
+    {
+        if (CheckStatus(status))
+            status.card = card;
+    }
+    public override void Trigger1()
+    {
+        foreach (Status s in statusList)
+        {
+            if (!s.eternal)
+            {
+                s.time--;
+            }
+        }
+    }
+}
+public class FieldStatusControl : StatusControl
+{
+    public FieldStatusControl() : base()
+    {
+
+    }
+    public void EnterStatus(FieldStatus status)
+    {
+        CheckStatus(status);
+    }
+    public override void Trigger1()
+    {
+        foreach (Status s in statusList)
+        {
+            if (!s.eternal)
+            {
+                s.time--;
+            }
+        }
     }
 }

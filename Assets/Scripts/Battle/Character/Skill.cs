@@ -13,10 +13,12 @@ public class SkillControl // need to inheritance subscriber??
     }
 }
 
-public abstract class Skill
+public abstract class Skill : Subscriber
 {
     public string skillName;
     public string skillShowName;
+
+    public bool talent;
 
     public int actionPoint;
     public int magicPoint;
@@ -37,10 +39,12 @@ public abstract class Skill
         actionPoint = ap;
         coolDown = cd;
 
+        isWorking = true;
     }
+    public abstract void Enter();
     public bool CanUseSkill()
     {
-        if (character.actionPoint < actionPoint)
+        if (character.energy < actionPoint)
             return false;
         if (currentCoolDown > 0)
             return false;
@@ -77,9 +81,19 @@ namespace testSkill
             damageValue = _damageValue;
             target = SkillTarget.Enemies;
         }
+
         public override void Excite(CharData target)
         {
-            FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical, character);
+            FieldManager.instance.DamageChar(target, damageValue, DamageType.Normal, character);
+        }
+
+        public override void Update()
+        {
+            
+        }
+        public override void Enter()
+        {
+
         }
     }
     public class AttackSelf : Skill
@@ -94,7 +108,15 @@ namespace testSkill
         }
         public override void Excite(CharData target)
         {
-            FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical, character);
+            FieldManager.instance.DamageChar(target, damageValue, DamageType.Normal, character);
+        }
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+
         }
     }
     public class JustTest : Skill
@@ -109,6 +131,14 @@ namespace testSkill
         {
             //FieldManager.instance.DamageChar(target, damageValue, DamageType.Physical, character);
             Debug.Log("Test object : " + target.charShowName);
+        }
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+
         }
     }
 

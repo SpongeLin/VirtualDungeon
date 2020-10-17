@@ -35,12 +35,9 @@ public class CharLineControl
 
     public void LoadAllCharacters()
     {
-        AddCharList(FieldManager.instance.heros.front);
-        AddCharList(FieldManager.instance.heros.middle);
-        AddCharList(FieldManager.instance.heros.back);
-        AddCharList(FieldManager.instance.enemies.front);
-        AddCharList(FieldManager.instance.enemies.middle);
-        AddCharList(FieldManager.instance.enemies.back);
+        foreach (CharData chara in FieldManager.instance.allChar)
+            AddCharList(chara);
+
         Debug.Log(linePackList.Count);
     }
 
@@ -73,6 +70,9 @@ public class CharLineControl
             return leastPack.character;
         }
 
+
+        UpdateCharLineView();
+
         Debug.LogError("CharLineControl must have something wrong!!");
         return null;
     }
@@ -81,6 +81,11 @@ public class CharLineControl
 
 
         return null;
+    }
+    void UpdateCharLineView()
+    {
+        //slot
+        FieldManager.instance.UpdateCharLineView();
     }
 
 
@@ -94,6 +99,7 @@ public class CharLineControl
             linePackList.Add(new LinePack(charData));
         }
 
+        UpdateCharLineView();
     }
     public void RemoveChar(CharData charData)
     {
@@ -104,7 +110,18 @@ public class CharLineControl
             if (lp.character == charData)
                 willRemovePack = lp;
         if (willRemovePack != null)
+        {
             linePackList.Remove(willRemovePack);
+            //Debug.Log("移除" + charData.charShowName);
+        }
+        else if (currentPack.character == charData)
+            currentPack = null;
+
+
+        UpdateCharLineView();
     }
+
+
+
 
 }

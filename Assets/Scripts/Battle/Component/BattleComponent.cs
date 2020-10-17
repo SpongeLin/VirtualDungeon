@@ -67,11 +67,17 @@ public enum SkillTarget
     Enemies,
     FrontEnemy,
 }
+public enum CardTarget
+{
+    All,
+    Allies,
+    Enemies,
+    CardSelf
+}
 
 public enum DamageType
 {
     Null,
-    Physical,
-    Magic,
-    True
+    Normal,
+
 }

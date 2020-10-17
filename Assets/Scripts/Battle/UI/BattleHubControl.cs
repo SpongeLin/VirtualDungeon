@@ -7,6 +7,8 @@ public class BattleHubControl : MonoBehaviour
 {
     public Text cardInfo;
 
+    public GameObject turnEndButton;
+
     public BattleSkillView skillView1;
     public BattleSkillView skillView2;
     public BattleSkillView skillView3;
@@ -18,6 +20,7 @@ public class BattleHubControl : MonoBehaviour
         skillView3.Gameupdate();
 
         cardInfo.text = "牌組：" + CardManager.instance.deck.Count + "\n棄牌：" + CardManager.instance.cemetery.Count;
+        cardInfo.text += "\n能量：" + FieldManager.instance.currentActionCharacter.energy + "/" + FieldManager.instance.currentActionCharacter.maxEnergy;
     }
 
     public void SetCharSkill(CharData character)
@@ -41,6 +44,10 @@ public class BattleHubControl : MonoBehaviour
     }
     */
 
+    public void SetTurnEndButton(bool active)
+    {
+        turnEndButton.SetActive(active);
+    }
     public void TurnEndButton()
     {
         FieldManager.instance.CharTurnEnd();

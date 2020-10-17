@@ -28,10 +28,73 @@ public class CardManager : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void CardUpdate()
     {
-        
+        foreach (CardData card in handCards)
+            card.canUse = CheckCardCanUse(card);
+    }
+    bool CheckCardCanUse(CardData card)
+    {
+        if (!FieldManager.instance.playerTurn)
+            return false;
+        if (!OrderManager.instance.IsEmptyStack())
+            return false;
+        if (FieldManager.instance.currentActionCharacter == null)
+            return false;
+        if (FieldManager.instance.currentActionCharacter.energy < card.cardCost)
+            return false;
+        if (card.banCount >= 1)
+            return false;
+        if (!CardTargetExist(card))
+            return false;
+        return true;
+    }
+    bool CardTargetExist(CardData card)
+    {
+        return true;
+    }
+
+
+    public void UseCard(CardData card)
+    {
+        Debug.Log("Use Card!!!!!!!!");
+
+
+        FieldManager.instance.currentActionCharacter.energy -= card.cardCost;
+        UseCardInfo cif = TriggerManager.instance.GetTriggerInfo<UseCardInfo>();
+        cif.SetInfo(card);
+
+        cif.GoTrigger(TriggerType.UseCardCheck);
+
+        cif.GoTrigger(TriggerType.UseCardAfter);
+        OrderManager.instance.AddOrder(new sysOrder.UseCardOrder(card));
+        cif.GoTrigger(TriggerType.UseCardBefore);
+
+        //OrderManager.instance.AddOrder(new sysOrder.DiscardOrder(card));
+        DiscardHandCard(card);
+    }
+    void ClearCard(CardData card)
+    {
+        card.targetChar = null;
+        //cardStatus clear!!
+    }
+    public void RealUseCard(CardData card)
+    {
+        for(int i = card.cardEffects.Count - 1; i >= 0; i--)
+        {
+            if (card.cardEffects[i].CanUseCardEffect())
+                card.cardEffects[i].UseCardEffect();
+        }
+        ClearCard(card);
+    }
+
+    public void MouseDownInCard(CardView view)
+    {
+        //DiscardHandCard(view.card);
+        //FieldManager.instance.GameUpdate();
+
+        FieldManager.instance.CardSelectTarget(view);
     }
 
 
@@ -57,6 +120,18 @@ public class CardManager : MonoBehaviour
             }
         }
         //        cardViewControl.HandCardPosUpdate();
+    }
+    public void DiscardHandCard(CardData card)
+    {
+        if(GetCardPosition(card) == CardPos.Hand)
+        {
+            ExitHand(card);
+            cemetery.Add(card);
+        }
+        else
+        {
+            Debug.LogWarning("The card not in hand will be discard form hand");
+        }
     }
 
     void EnterHand(CardData card)
@@ -87,7 +162,7 @@ public class CardManager : MonoBehaviour
     }
     public void Shuffle()
     {
-        if (deck.Count == 0) return;
+        if (deck.Count == 0 || deck.Count==1) return;
         int num = deck.Count;
         for (int i = 0; i < 35; i++)
         {

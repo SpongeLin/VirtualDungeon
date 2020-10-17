@@ -13,4 +13,20 @@ public class CardData
     public string cardDescription;
     public int cardCost;
 
+    public bool canUse;
+    public int banCount;
+
+    public CardTarget cardTarget;
+    public CharData targetChar;
+
+    public List<CardEffect> cardEffects;
+
+    public CardStatusControl cardStatusControl;
+
+    public CardData()
+    {
+        cardEffects = new List<CardEffect>();
+        cardStatusControl = new CardStatusControl(this);
+    }
+
 }

@@ -17,7 +17,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     public CardData card;
 
     //Tween tween = null;
-    public bool isSelected;
+    public bool clickTarget;
 
 
     public void SetCard(CardData setCard)
@@ -28,7 +28,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
         cost.text = card.cardCost.ToString();
 
         enable = true;
-        isSelected = false;
+        clickTarget = false;
     }
     public void ClearCard()
     {
@@ -51,12 +51,24 @@ public class CardView : MonoBehaviour,IPointerDownHandler
                 tween.Kill();
          */
     }
+    public void SetCkickTarget(bool active)
+    {
+        clickTarget = active;
+        //aniamtion play
+    }
 
 
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!enable) return;
+        if (!card.canUse) return;
         //Debug.Log(card.cardName + " down now  ");
-        CardManager.instance.cardViewControl.MouseDownInCard(this);
+        if (clickTarget)
+        {
+            FieldManager.instance.UseCardPrepare();
+            return;
+        }
+
+        CardManager.instance.MouseDownInCard(this);
     }
 }

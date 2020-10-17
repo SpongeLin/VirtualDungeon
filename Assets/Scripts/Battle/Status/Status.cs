@@ -5,13 +5,15 @@ using UnityEngine;
 public abstract class Status : Subscriber
 {
     public string statusName;
+    public string statusShowName;
     public int time = 1;
     public int num = 1;
 
     public bool byTime;
     public bool byNum;
+    public bool onlyOne;
     public bool eternal;
-    public bool canRepeat;
+    public bool canRepeat { get { return byTime || byNum; } }
     public void Repeat(Status s)
     {
         if (byTime)
@@ -23,7 +25,7 @@ public abstract class Status : Subscriber
     public bool display = false;
 
     public abstract void Enter();
-    public virtual void Exit() { isWorking = false; }
+    public abstract void Exit();
 
     public string statusImage;
     public string showName;
@@ -47,4 +49,12 @@ public abstract class CharStatus : Status
     public CharData character;
 
 
+}
+public abstract class FieldStatus : Status
+{
+
+}
+public abstract class CardStatus : Status
+{
+    public CardData card;
 }

@@ -98,14 +98,19 @@ public class DamageInfo : TriggerInfo
 }
 public class UseCardInfo : TriggerInfo
 {
+    public CardData card;
     public UseCardInfo() : base()
     {
         test = "UseCard";
     }
+    public void SetInfo(CardData _card)
+    {
+        card = _card;
+    }
 
     public override void Reset()
     {
-        throw new System.NotImplementedException();
+        card = null;
     }
 }
 public class TurnInfo : TriggerInfo

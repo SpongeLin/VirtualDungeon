@@ -9,38 +9,51 @@ public class CharData
     public CharStatusControl charStatusControl;
     public SkillControl skillControl; // 尚未確定
 
+    public EnemyStrategy enemyStrategy = null;
+
     public CharData()
     {
         charStatusControl = new CharStatusControl(this);
         skillControl = new SkillControl(this);
     }
+    
 
     public string charName;
     public string charShowName;
 
-    public bool isEnemy;
+    public bool isEnemy { get { return enemyStrategy != null; } }
     public bool isDie;
 
     public int health;
     public int maxHealth;
-    public int actionPoint;
-    public int maxActionPoint;
+    public int energy;
+    public int maxEnergy;
 
     public int magicPoint;
     public int maxMagicPoint;
 
     public int speedOrder;
+    public int agility;
 
     public Skill skill1;
     public Skill skill2;
     public Skill skill3;
 
-    public int physicalDamage;
-    public int magicDamage;
-    public int physicalDefense;
-    public int magicDefense;
-    public int agility;
 
+    public void ReduceHealth(int damage)
+    {
+        if (damage <= 0) return;
+
+        // deal armor 
+        health -= damage;
+    }
+
+    public void CharUpdate()
+    {
+        if (skill1 != null) skill1.Update();
+        if (skill2 != null) skill2.Update();
+        if (skill3 != null) skill3.Update();
+    }
 
     public void TurnEnd()
     {
@@ -49,6 +62,9 @@ public class CharData
         if(skill1!=null )skill1.CoolDown();
         if (skill2 != null) skill2.CoolDown();
         if (skill3 != null) skill3.CoolDown();
+
+        if (enemyStrategy != null)
+            enemyStrategy.TurnEnd();
     }
 
 }

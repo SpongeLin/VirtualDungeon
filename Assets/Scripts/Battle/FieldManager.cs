@@ -9,18 +9,27 @@ public class FieldManager : MonoBehaviour
     public BattleTextControl battleTextControl;
     public CharViewUIControl charViewUIControl;
     public BattleHubControl battleHubControl;
-
     public CharLineControl charLineControl;
+    public CharLineViewControl charLineViewControl;
+
+    public FieldStatusControl fieldStatusControl;
 
     public bool playerTurn;
     public bool isWorking = false;
+    public bool gameStart = false;
+
 
     public Skill selectingSkill = null;
+    public CardView selectingCard = null;
 
     public CharData currentActionCharacter;
 
+
     //public List<CharData> heros;
     //public List<CharData> enemies;
+
+    public int handCardNum;
+
 
 
     public CharTeam heros;
@@ -30,6 +39,8 @@ public class FieldManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        fieldStatusControl = new FieldStatusControl();
         heros = new CharTeam();
         enemies = new CharTeam();
         allChar = new List<CharData>();
@@ -45,11 +56,19 @@ public class FieldManager : MonoBehaviour
         //GameStart();//TEST!
         OrderManager.instance.AddOrder(new sysOrder.GameStart());
 
+        foreach(int cardNo in GameData.instance.deck)
+        {
+            CardManager.instance.deck.Add(CardCreator.CreateCard(cardNo));
+        }
+        handCardNum = GameData.instance.handCardNum;
+        //for (int i = 0; i < handCardNum; i++)
+        //    OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
+
         //Create hero by GameData
         //instatiate(CharView)
         //CharCreator(CharView,name)
         //chardata set heros.front
-        
+
         //Create enemy by EnemyManager
 
 
@@ -58,7 +77,7 @@ public class FieldManager : MonoBehaviour
 
     public void GameStart()
     {
-
+        gameStart = true;
         //character create!!
         allChar.Add(heros.front);
         allChar.Add(heros.middle);
@@ -85,6 +104,11 @@ public class FieldManager : MonoBehaviour
                 if (chara.health <= 0)
                     OrderManager.instance.AddOrder(new sysOrder.DealthOrder(chara));
         }
+        if (CardManager.instance.handCards.Count < handCardNum)
+            if (CardManager.instance.deck.Count != 0 || CardManager.instance.cemetery.Count != 0)
+                OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
+
+
 
         battleHubControl.Gameupdate();
 
@@ -100,16 +124,27 @@ public class FieldManager : MonoBehaviour
     {
         Debug.Log("現在是" + character.charShowName + "的回合了!!");
         charViewUIControl.ShowCurrentTurnMark(character, true);
-        battleHubControl.SetCharSkill(character);
-
+        playerTurn = !character.isEnemy;
         currentActionCharacter = character;
+        if (!character.isEnemy)
+        {
+            battleHubControl.SetCharSkill(character);
+            character.energy = character.maxEnergy;
+            battleHubControl.SetTurnEndButton(true);
+
+        }
+        else
+        {
+            character.enemyStrategy.TurnStart();
+            //CharSkill close.
+        }
 
         TurnInfo tif = TriggerManager.instance.GetTriggerInfo<TurnInfo>();
         tif.SetInfo(character);
         tif.GoTrigger(TriggerType.TurnStarting);
         tif.GoTrigger(TriggerType.TurnStartBefore);
 
-        character.actionPoint = character.maxActionPoint;
+
 
         //character turn start trigger
         //character turn start excutive
@@ -117,6 +152,8 @@ public class FieldManager : MonoBehaviour
     public void CharTurnEnd()
     {
         if (!OrderManager.instance.IsEmptyStack()) return;
+        if(playerTurn)
+            battleHubControl.SetTurnEndButton(false);
 
         OrderManager.instance.AddOrder(new sysOrder.TurnEndOrder());
         OrderManager.instance.AddOrder(new sysOrder.WaitOrder(0.35f));
@@ -138,48 +175,101 @@ public class FieldManager : MonoBehaviour
         CharTurnStart(charLineControl.Next());
     }
 
+    public void UpdateCharLineView()
+    {
+        charLineViewControl.UpdateCharLineView();
+    }
+    
     //---------------------------------------------------------------------
+    public void CardSelectTarget(CardView card)
+    {
+        if (selectingSkill != null || selectingCard != null)
+        {
+            CancelTarget();
+        }
+        selectingCard = card;
+        SetTarget(card);
+    }
 
     public void SkillSelecctTarget(Skill skill)
     {
-        if (selectingSkill==null)
+        if (selectingSkill != null || selectingCard !=null)
         {
-            selectingSkill = skill;
-            SetCharTarget(skill);
-            // this Skill need to HighLight
+            CancelTarget();
+        }
+        selectingSkill = skill;
+        SetTarget(skill);
+        // this Skill need to HighLight, original skill need to cancel HighLight
 
-            
-        }
-        else
-        {
-            selectingSkill = skill;
-            CancelCharTarget();
-            SetCharTarget(skill);
-            // this Skill need to HighLight, original skill need to cancel HighLight
-        }
     }
     public void CancelSkillSelectTarget()
     {
         selectingSkill = null;
-        CancelCharTarget();
+        CancelTarget();
         //cancel HighLight
     }
 
 
 
-    public void SetCharTarget(Skill skill)
+    public void SetTarget(Skill skill)
     {
         CharData[] targets = GetCharTarget(skill);
         foreach (CharData chara in targets)
             chara.charView.SetClickTarget(true);
     }
-    public void CancelCharTarget()
+    public void SetTarget(CardView card)
     {
+        List<CharData> targets = new List<CharData>();
+        switch (card.card.cardTarget)
+        {
+            case CardTarget.CardSelf:
+                card.SetCkickTarget(true);
+                break;
+            case CardTarget.All:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    targets.Add(charData);
+
+                }
+                break;
+            case CardTarget.Allies:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    if (!charData.isEnemy)
+                        targets.Add(charData);
+                }
+                break;
+            case CardTarget.Enemies:
+                foreach (CharData charData in allChar)
+                {
+                    if (charData.isDie)
+                        continue;
+                    if (charData.isEnemy)
+                        targets.Add(charData);
+                }
+                break;
+        }
+        foreach (CharData chara in targets)
+            chara.charView.SetClickTarget(true);
+    }
+    public void CancelTarget()
+    {
+        if (selectingCard != null)
+        {
+            selectingCard.SetCkickTarget(false);
+        }
         foreach(CharData charData in allChar)
         {
             if (charData.charView.canClick)
                 charData.charView.SetClickTarget(false);
         }
+
+        selectingCard = null;
+        selectingSkill = null;
     }
 
     public bool CheckCharTargetExist(Skill skill)
@@ -246,22 +336,49 @@ public class FieldManager : MonoBehaviour
 
     public void ClickCharTarget(CharData target)
     {
-        CancelCharTarget();
-        //再次CHECK 目標可行性
 
-        selectingSkill.character.actionPoint -= selectingSkill.actionPoint;
-        selectingSkill.currentCoolDown = selectingSkill.coolDown;
+        if (selectingSkill != null)
+        {
+            //再次CHECK 目標可行性
+            UseSkill(target);
+            return;
+        }
+        if (selectingCard != null)
+        {
+            //再次CHECK 目標可行性
+            UseCardPrepare(target);
+            return;
+        }
+        Debug.LogWarning("This is seem wrong.");
+    }
+    void UseSkill(CharData chara)
+    {
+        Skill useSkill = selectingSkill;
+        CancelTarget();
+
+        currentActionCharacter.energy -= useSkill.actionPoint;
+        useSkill.currentCoolDown = useSkill.coolDown;
 
         SkillInfo sif = TriggerManager.instance.GetTriggerInfo<SkillInfo>();
-        sif.SetInfo(selectingSkill, target);
+        sif.SetInfo(useSkill, chara);
 
         sif.GoTrigger(TriggerType.UseSkillCheck);
 
         sif.GoTrigger(TriggerType.UseSkillAfter);
-        OrderManager.instance.AddOrder(new sysOrder.UseSkillOrder(selectingSkill,target));
+        OrderManager.instance.AddOrder(new sysOrder.UseSkillOrder(useSkill, chara));
         sif.GoTrigger(TriggerType.UseSkillBefore);
-    
+
     }
+    public void UseCardPrepare(CharData chara=null)
+    {
+        selectingCard.card.targetChar = chara;
+        CardManager.instance.UseCard(selectingCard.card);
+
+        CancelTarget();
+    }
+    //---------------------------------------------------------------
+
+
 
 
     //---------------------------------------------------------------------
@@ -304,8 +421,41 @@ public class FieldManager : MonoBehaviour
         character.charStatusControl.ExitAll();
         //skillControl.???
     }
+    //---------------------------------------------------
+    public void GainEnergy(int energyNum)
+    {
+        if (energyNum <= 0) return;
+        currentActionCharacter.energy += energyNum;
+    }
+    public void GiveCharStatus(CharData chara,string statusName,int statusNum)
+    {
+        CharStatus cs = StatusCreator.CreateCharStatus(statusName, statusNum);
+        if (cs != null)
+            chara.charStatusControl.EnterStatus(cs);
+    }
+    public void GiveCardStatus(CardData card,string statusName,int statusNum)
+    {
+        CardStatus cs = StatusCreator.CreateCardStatus(statusName, statusNum);
+        if (cs != null)
+            card.cardStatusControl.EnterStatus(cs);
+    }
+    public void GiveFieldStatus(string statusName,int statusNum)
+    {
+        FieldStatus fs = StatusCreator.CreateFieldStatus(statusName, statusNum);
+        if (fs != null)
+            fieldStatusControl.EnterStatus(fs);
+    }
 
     //---------------------------------------------------
+
+    public bool CheckSkillCanUse(Skill skill)
+    {
+
+
+        return true;
+    }
+
+    //=================================================
     public bool CheckCharIsFront(CharData chara)
     {
         CharTeam charTeam;
