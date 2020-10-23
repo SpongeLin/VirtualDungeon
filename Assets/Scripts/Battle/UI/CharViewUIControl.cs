@@ -78,7 +78,11 @@ public class CharViewUIControl : MonoBehaviour
     {
         foreach(CharViewUI cvu in viewList)
         {
-            cvu.ViewUpdate();
+            if (cvu.isWorking)
+            {
+                cvu.ViewUpdate();
+                cvu.transform.position = cvu.character.charView.transform.position;
+            }
         }
     }
 }

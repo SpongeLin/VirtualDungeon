@@ -13,6 +13,11 @@ public class CardManager : MonoBehaviour
 
     public CardViewControl cardViewControl;
 
+    public BattleCardDragControl battleCardDragControl;
+
+    public CardView currentDragCard = null;
+
+
     public void Awake()
     {
         instance = this;
@@ -27,13 +32,34 @@ public class CardManager : MonoBehaviour
     {
         
     }
+    public void Update()
+    {
+        CheckMouseUp();
+    }
 
 
-    public void CardUpdate()
+    public void GameUpdate()
     {
         foreach (CardData card in handCards)
             card.canUse = CheckCardCanUse(card);
+        cardViewControl.GameUpdate();
     }
+
+    public void MouseDownCard(CardView cardVIew)
+    {
+        battleCardDragControl.MouseDown(cardVIew);
+    }
+    void CheckMouseUp()
+    {
+        if (currentDragCard != null)
+            if (Input.GetMouseButtonUp(0))
+            {
+                battleCardDragControl.MouseUp();
+            }
+    }
+
+
+
     bool CheckCardCanUse(CardData card)
     {
         if (!FieldManager.instance.playerTurn)
@@ -48,10 +74,13 @@ public class CardManager : MonoBehaviour
             return false;
         if (!CardTargetExist(card))
             return false;
+        // check card target exist!
         return true;
     }
     bool CardTargetExist(CardData card)
     {
+        if (FieldManager.instance.GetConditionChar(card) == null)
+            return false;
         return true;
     }
 
@@ -87,14 +116,6 @@ public class CardManager : MonoBehaviour
                 card.cardEffects[i].UseCardEffect();
         }
         ClearCard(card);
-    }
-
-    public void MouseDownInCard(CardView view)
-    {
-        //DiscardHandCard(view.card);
-        //FieldManager.instance.GameUpdate();
-
-        FieldManager.instance.CardSelectTarget(view);
     }
 
 

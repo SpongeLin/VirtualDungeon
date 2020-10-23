@@ -9,6 +9,7 @@ public class CharViewUI : MonoBehaviour
 
     public Image health;
     public Text healthPoint;
+    public Text armor;
 
     public Image currentMark;
 
@@ -18,9 +19,21 @@ public class CharViewUI : MonoBehaviour
     public Transform charStatusViewTransform;
     public GameObject charStatusViewObject;
 
+    public Image enemyIntention;
+    public Text enemyIntentionNum;
+    bool enemyIntentionActive;
+
+    bool canClick = false;
+    public Animator targetMark;
+
     public void Awake()
     {
         charStatusViewList = new List<CharStatusView>();
+
+        charStatusViewObject.SetActive(false);
+        enemyIntention.gameObject.SetActive(false);
+        enemyIntentionNum.gameObject.SetActive(false);
+        enemyIntentionActive = false;
         for (int i = 0; i < 15; i++)
         {
             GameObject go = Instantiate(charStatusViewObject, charStatusViewTransform);
@@ -35,9 +48,27 @@ public class CharViewUI : MonoBehaviour
         float rate = character.health / (float)character.maxHealth;
         health.fillAmount = rate;
         healthPoint.text = character.health.ToString() + "/" + character.maxHealth.ToString();
+        armor.text = character.armor.ToString();
 
         //actionPoint.text = character.energy.ToString()+"/"+character.maxEnergy.ToString() ;
         UpdateCharStatusView();
+
+        if (!canClick && character.charView.canClick)
+        {
+            canClick = true;
+            targetMark.SetTrigger("TargetMark");
+        }
+        else if (canClick && !character.charView.canClick)
+        {
+            canClick = false;
+            targetMark.SetTrigger("NotTarget");
+        }
+
+
+        if (character.enemyStrategy != null)
+        {
+            UpdateEnemyIntention();
+        }
     }
     public void SetCurrentTurnMark(bool active)
     {
@@ -67,6 +98,32 @@ public class CharViewUI : MonoBehaviour
             if (csv.charStatus != null)
                 if (!csv.charStatus.isWorking)
                     csv.Close();
+    }
+    void UpdateEnemyIntention()
+    {
+        if (enemyIntentionActive)
+        {
+            if (!character.enemyStrategy.strategyShow)
+            {
+                enemyIntention.gameObject.SetActive(false);
+                enemyIntentionNum.gameObject.SetActive(false);
+                enemyIntentionActive = false;
+                return;
+            }
+        }
+        else
+        {
+            if (character.enemyStrategy.strategyShow)
+            {
+                enemyIntention.gameObject.SetActive(true);
+                enemyIntentionNum.gameObject.SetActive(true);
+                enemyIntentionActive = true;
+            }
+            else return;
+        }
+
+        enemyIntentionNum.text = character.enemyStrategy.currentAction.actionContent;
+
     }
 
     CharStatusView GetView()

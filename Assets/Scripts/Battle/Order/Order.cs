@@ -17,6 +17,13 @@ namespace sysOrder
             FieldManager.instance.GameStart();
         }
     }
+    public class StartPrepare : Order
+    {
+        public override void Execution()
+        {
+            FieldManager.instance.StartPrepare();
+        }
+    }
     public class TurnEndOrder : Order
     {
 
@@ -67,12 +74,8 @@ namespace sysOrder
         }
         public override void Execution()
         {
-            //進行防禦計算!!
+            FieldManager.instance.RealDamage(character, damageValue, damageType, damagerChar);
 
-            character.ReduceHealth(damageValue);
-
-            FieldManager.instance.battleTextControl.ShowDamageText(character, damageValue, TextType.Damage);
-            Debug.Log(character.charShowName + " 受到 " + damageValue + " 點傷害!");
         }
     }
     public class UseSkillOrder : Order

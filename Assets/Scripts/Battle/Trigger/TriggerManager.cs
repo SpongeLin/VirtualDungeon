@@ -38,14 +38,14 @@ public class TriggerManager : MonoBehaviour
     {
         updateList.Add(s);
     }
-    public void CardUpdate()
+    public void GameUpdate()
     {
         updateList.RemoveAll(DontWorkSubscriber);
         foreach (Subscriber s in updateList)
             s.Update();
 
         FieldManager.instance.GameUpdate();
-        CardManager.instance.CardUpdate();
+        CardManager.instance.GameUpdate();
     }
 
     public T GetTriggerInfo<T>() where T : TriggerInfo

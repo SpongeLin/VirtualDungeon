@@ -11,17 +11,21 @@ public class CharView : MonoBehaviour
     public CharAvatar charAvatar;//??
     public Animator animator;
 
-
+    bool targetingAnim = false;
     public void SetClickTarget(bool active)
     {
         canClick = active;
         if (active)
         {
-            animator.SetTrigger("selected");
+            //animator.SetTrigger("selected");
         }
         else
         {
-            animator.SetTrigger("notSelected");
+            if (targetingAnim)
+            {
+                animator.SetTrigger("notSelected");
+                targetingAnim = false;
+            }
         }
     }
 
@@ -33,10 +37,6 @@ public class CharView : MonoBehaviour
 
         FieldManager.instance.ClickCharTarget(character);
     }
-    void MouseEnter()
-    {
-        
-    }
 
     private void OnMouseDown()
     {
@@ -44,6 +44,27 @@ public class CharView : MonoBehaviour
     }
     private void OnMouseEnter()
     {
-        MouseEnter();
+        if (!canClick) return;
+
+        //punch select highlight
+        if (!targetingAnim)
+        {
+            animator.SetTrigger("selected");
+            targetingAnim = true;
+        }
+
+        FieldManager.instance.currentMouseOverCharacter = character;
+    }
+    private void OnMouseExit()
+    {
+        if (!canClick) return;
+
+        if (targetingAnim)
+        {
+            animator.SetTrigger("notSelected");
+            targetingAnim = false;
+        }
+
+        FieldManager.instance.currentMouseOverCharacter = null;
     }
 }

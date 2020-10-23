@@ -13,55 +13,52 @@ public class SlotControl : MonoBehaviour
     public Transform middleEnemy;
     public Transform backEnemy;
 
-    public void SetSlotPos(CharView view,TeamPos pos,bool isEnemy)
+    public void SetSlotPos(CharView view,TeamPos pos,bool isEnemy,bool gameStart=false)
     {
-        if(pos == TeamPos.Front)
+        if (view == null) return;
+
+        Transform slotPos = GetPos(pos,isEnemy);
+        float piddle = isEnemy ? 12 : -12;
+        if (gameStart)
+            view.transform.position = new Vector3(slotPos.position.x + piddle, slotPos.position.y, slotPos.position.z);
+        view.transform.DOMove(slotPos.position, 0.8f);
+
+    }
+    Transform GetPos(TeamPos pos,bool isEnemy)
+    {
+        if (pos == TeamPos.Front)
         {
             if (!isEnemy)
             {
-                view.transform.DOMove(frontHero.position, 0.6f);
+                return frontHero;
             }
             else
             {
-                view.transform.DOMove(frontEnemy.position, 0.6f);
+                return frontEnemy;
             }
         }
-        if(pos == TeamPos.Middle)
+        if (pos == TeamPos.Middle)
         {
             if (!isEnemy)
             {
-                view.transform.DOMove(middleHero.position, 0.6f);
+                return middleHero;
             }
             else
             {
-                view.transform.DOMove(middleEnemy.position, 0.6f);
+                return middleEnemy;
             }
         }
         if (pos == TeamPos.Back)
         {
             if (!isEnemy)
             {
-                view.transform.DOMove(backHero.position, 0.6f);
+                return backHero;
             }
             else
             {
-                view.transform.DOMove(backEnemy.position, 0.6f);
+                return backEnemy;
             }
         }
-
-    }
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return null;
     }
 }

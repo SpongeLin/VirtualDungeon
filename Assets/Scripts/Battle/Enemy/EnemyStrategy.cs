@@ -22,7 +22,12 @@ public class EnemyStrategy
         }
         else
         {
-
+            EnemyAction temp = currentAction;
+            for (int i = 0; i < linkNum; i++)
+                temp = temp.next;
+            temp.next = action;
+            action.next = currentAction;
+            linkNum++;
         }
     }
 
@@ -67,6 +72,17 @@ namespace nEnemyAction
         public override void Action()
         {
             FieldManager.instance.DamageChar(FieldManager.instance.currentActionCharacter, damageValue, DamageType.Normal, FieldManager.instance.currentActionCharacter);
+        }
+    }
+    public class Test : EnemyAction
+    {
+        public Test(string text)
+        {
+            actionDescription = text;
+        }
+        public override void Action()
+        {
+            Debug.Log("testText");
         }
     }
 }

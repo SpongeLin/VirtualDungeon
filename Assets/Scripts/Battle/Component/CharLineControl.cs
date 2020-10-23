@@ -15,7 +15,7 @@ public class CharLineControl
         }
         public void ResetLine()
         {
-            timeLine = 999 - character.agility;
+            timeLine =  character.agility;
             if (!character.isEnemy) timeLine -= 0.5f;
         }
     }
@@ -67,11 +67,10 @@ public class CharLineControl
                 lp.timeLine -= leastPack.timeLine;
             leastPack.ResetLine();
 
+            UpdateCharLineView();
             return leastPack.character;
         }
 
-
-        UpdateCharLineView();
 
         Debug.LogError("CharLineControl must have something wrong!!");
         return null;

@@ -15,12 +15,14 @@ public class FirstTest : MonoBehaviour
     public Status s;
 
 
+    EnemyStrategy es;
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Start");
-
+        //CharData data;
+        /*
         CharData data = new CharData();
         data.charShowName = "理事";
         data.maxHealth = 64;
@@ -64,6 +66,7 @@ public class FirstTest : MonoBehaviour
         data.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(data);
         data.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(data);
         data.skill3 = new testSkill.JustTest("x", 2, 2).SetChar(data);
+        
 
         data = new CharData();
         data.charShowName = "敵人1";
@@ -107,29 +110,37 @@ public class FirstTest : MonoBehaviour
         FieldManager.instance.charViewUIControl.OpenCharViewUI(enemy1.GetComponent<CharView>());
         FieldManager.instance.charViewUIControl.OpenCharViewUI(enemy2.GetComponent<CharView>());
         FieldManager.instance.charViewUIControl.OpenCharViewUI(enemy3.GetComponent<CharView>());
+        */
 
-
-
-        FieldManager.instance.charViewUIControl.OpenCharViewUI(character1.GetComponent<CharView>());
-        FieldManager.instance.charViewUIControl.OpenCharViewUI(character2.GetComponent<CharView>());
-        FieldManager.instance.charViewUIControl.OpenCharViewUI(character3.GetComponent<CharView>());
-        //s = new TestStatus();
-        //s.Enter();
-
-
+        es = new EnemyStrategy();
+        es.AddAction(new nEnemyAction.Test("no1. action"));
+        es.AddAction(new nEnemyAction.Test("no2. action"));
+        es.AddAction(new nEnemyAction.Test("no3. action"));
     }
     
 
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(Input.mousePosition);
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log(es.currentAction.actionDescription);
+            es.currentAction = es.currentAction.next;
+        }
         if (Input.GetKeyDown(KeyCode.D))
         {
             OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            Debug.Log("now is his turn : " + FieldManager.instance.charLineControl.Next().charShowName);
+            FieldManager.instance.ChangeTeamPos(FieldManager.instance.heros.front, TeamPos.Back);
+
+            Debug.Log("F:" + FieldManager.instance.heros.front.charShowName + "  M:" + FieldManager.instance.heros.middle.charShowName + "  B:" + FieldManager.instance.heros.back.charShowName);
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            //Debug.Log("now is his turn : " + FieldManager.instance.charLineControl.Next().charShowName);
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -153,7 +164,8 @@ public class FirstTest : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            FieldManager.instance.CharTurnEnd();
+            CardManager.instance.handCards[0].CostAdjust(-1);
+            TriggerManager.instance.GameUpdate();
         }
     }
 }

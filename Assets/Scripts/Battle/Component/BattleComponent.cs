@@ -33,6 +33,7 @@ public enum TeamPos
     Front,
     Middle,
     Back,
+    Null
 }
 
 public enum TriggerType

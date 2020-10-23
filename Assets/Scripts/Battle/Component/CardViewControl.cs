@@ -11,6 +11,8 @@ public class CardViewControl : MonoBehaviour
     public Transform handCardPlace;
     public Transform cardViewpool;
 
+    public Transform useLine;
+
     public List<CardView> disableCard;
     public List<CardView> handCard;
 
@@ -29,7 +31,11 @@ public class CardViewControl : MonoBehaviour
 
 
 
-
+    public void GameUpdate()
+    {
+        foreach (CardView cv in handCard)
+            cv.GameUpdate();
+    }
     public void OpenCard(CardData card)
     {
         CardView cardView = null;
@@ -77,10 +83,11 @@ public class CardViewControl : MonoBehaviour
         foreach (CardView cv in handCard)
         {
 
-            Vector3 pos = new Vector2(handCardPlace.transform.position.x + handCardDistance * i, handCardPlace.transform.position.y);
+            Vector3 pos = new Vector3(handCardPlace.transform.position.x + handCardDistance * i, handCardPlace.transform.position.y,handCardPlace.transform.position.z);
             cv.SetPos(pos);
             i++;
         }
+        //Debug.Log(handCardPlace.transform.position.z);
     }
 
 }

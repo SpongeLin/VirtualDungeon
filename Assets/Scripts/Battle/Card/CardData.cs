@@ -11,15 +11,31 @@ public class CardData
     public Sprite cardImage;
 
     public string cardDescription;
-    public int cardCost;
+    public int cardCost
+    {
+        get
+        {
+            if (setCost == -1)
+                return (oriCost + extraCost)<0?0:(oriCost + extraCost);
+            else return (setCost + extraCost)<0?0:(setCost + extraCost);
+        }
+    }
+    public int extraCost;
+    public int setCost = -1;
+    public int oriCost;
 
     public bool canUse;
     public int banCount;
+    public int exhasutCount;
+
+
+    public CharData soulChar;
 
     public CardTarget cardTarget;
     public CharData targetChar;
 
     public List<CardEffect> cardEffects;
+    public List<CharFilter> charFilters;
 
     public CardStatusControl cardStatusControl;
 
@@ -27,6 +43,25 @@ public class CardData
     {
         cardEffects = new List<CardEffect>();
         cardStatusControl = new CardStatusControl(this);
+
+        charFilters = new List<CharFilter>();
+    }
+
+    public void burst()
+    {
+
+    }
+    public void Magic()
+    {
+
+    }
+    public void CostAdjust(int costNum)
+    {
+        extraCost += costNum;
+    }
+    public void CostSet(int costNum)
+    {
+        setCost = costNum;
     }
 
 }

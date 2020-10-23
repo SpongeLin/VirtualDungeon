@@ -28,12 +28,15 @@ public class CharData
     public int maxHealth;
     public int energy;
     public int maxEnergy;
+    public int armor;
 
     public int magicPoint;
     public int maxMagicPoint;
 
     public int speedOrder;
     public int agility;
+    public int guardCount;
+    public int cardDamage;
 
     public Skill skill1;
     public Skill skill2;
@@ -44,8 +47,16 @@ public class CharData
     {
         if (damage <= 0) return;
 
-        // deal armor 
-        health -= damage;
+        if (damage > armor)
+        {
+            armor = 0;
+            damage -= armor;
+            health -= damage;
+        }
+        else
+        {
+            armor -= damage;
+        }
     }
 
     public void CharUpdate()

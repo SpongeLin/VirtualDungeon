@@ -29,7 +29,7 @@ public class OrderManager : MonoBehaviour
                 currentOrder.Execution();
                 //Call CardUpdate()
 
-                TriggerManager.instance.CardUpdate();
+                TriggerManager.instance.GameUpdate();
             }
         }
 

@@ -30,13 +30,31 @@ public class GameData : MonoBehaviour
 
         handCardNum = 4;
         //===
-
-
-
+        front = new CharacterDataPack("", 0, 0,0);
+        middle = new CharacterDataPack("", 0, 0,0);
+        back = new CharacterDataPack("", 0, 0,0);
     }
 
     public List<int> deck;
     public int handCardNum;
 
+    public CharacterDataPack front;
+    public CharacterDataPack middle;
+    public CharacterDataPack back;
 
+}
+
+public class CharacterDataPack
+{
+    public CharacterDataPack(string name, int cd1, int cd2,int hp)
+    {
+        heroName = name;
+        skillCD1 = cd1;
+        skillCD2 = cd2;
+        currentHealth = hp;
+    }
+    public string heroName;
+    public int skillCD1;
+    public int skillCD2;
+    public int currentHealth;
 }
