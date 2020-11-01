@@ -144,7 +144,10 @@ public class FirstTest : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-
+            CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+            cif.card = CardManager.instance.handCards[3];
+            cif.to = CardPos.Hand;
+            cif.GoTrigger(TriggerType.CardMove);
         }
         if (Input.GetKeyDown(KeyCode.B))
         {

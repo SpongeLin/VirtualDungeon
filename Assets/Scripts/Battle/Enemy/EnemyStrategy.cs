@@ -71,7 +71,7 @@ namespace nEnemyAction
 
         public override void Action()
         {
-            FieldManager.instance.DamageChar(FieldManager.instance.currentActionCharacter, damageValue, DamageType.Normal, FieldManager.instance.currentActionCharacter);
+            OrderManager.instance.AddOrder(new sysOrder.DamagePrepare(FieldManager.instance.currentActionCharacter,damageValue,DamageType.Normal,FieldManager.instance.currentActionCharacter));
         }
     }
     public class Test : EnemyAction

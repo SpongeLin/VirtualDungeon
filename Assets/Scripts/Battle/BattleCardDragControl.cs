@@ -128,7 +128,7 @@ namespace DragMode
 
             if(CardManager.instance.currentDragCard.transform.position.y > CardManager.instance.cardViewControl.useLine.transform.position.y)
             {
-                if (CardManager.instance.currentDragCard.card.cardTarget == CardTarget.CardSelf)
+                if (!CardManager.instance.currentDragCard.card.isSelectTarget)
                     CardManager.instance.battleCardDragControl.GoToFieldMode();
                 else
                     CardManager.instance.battleCardDragControl.GoToArrowMode();

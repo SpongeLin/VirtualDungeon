@@ -28,8 +28,8 @@ public static class CharacterCreator
                 charData.energy = 1;
                 charData.maxEnergy = 3;
                 charData.agility = 23;
-                charData.skill1 = new testSkill.NormalAttack("x", 1, 1, 15).SetChar(charData);
-                charData.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(charData);
+                charData.skillControl.skill1 = new testSkill.NormalAttack("x", 1, 1, 15).SetChar(charData);
+                charData.skillControl.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(charData);
                 break;
             case "B":
                 charData.charShowName = "人偶B";
@@ -37,8 +37,8 @@ public static class CharacterCreator
                 charData.energy = 2;
                 charData.maxEnergy = 4;
                 charData.agility = 12;
-                charData.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(charData);
-                charData.skill2 = new testSkill.JustTest("x", 2, 2).SetChar(charData);
+                charData.skillControl.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(charData);
+                charData.skillControl.skill2 = new testSkill.JustTest("x", 2, 2).SetChar(charData);
                 break;
             case "C":
                 charData.charShowName = "人偶C";
@@ -46,9 +46,9 @@ public static class CharacterCreator
                 charData.energy = 2;
                 charData.maxEnergy = 3;
                 charData.agility = 35;
-                charData.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(charData);
-                charData.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(charData);
-                charData.skill3 = new testSkill.JustTest("x", 2, 2).SetChar(charData);
+                charData.skillControl.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(charData);
+                charData.skillControl.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(charData);
+                charData.skillControl.skill3 = new testSkill.JustTest("x", 2, 2).SetChar(charData);
                 break;
             case "X":
                 charData.charShowName = "敵人X";

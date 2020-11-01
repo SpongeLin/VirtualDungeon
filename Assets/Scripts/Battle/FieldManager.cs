@@ -31,7 +31,7 @@ public class FieldManager : MonoBehaviour
 
     public CharData currentMouseOverCharacter;
 
-
+    public int overloadNum;
 
     //public List<CharData> heros;
     //public List<CharData> enemies;
@@ -123,12 +123,6 @@ public class FieldManager : MonoBehaviour
     {
         gameStart = true;
         //character create!!
-        allChar.Add(heros.front);
-        allChar.Add(heros.middle);
-        allChar.Add(heros.back);
-        allChar.Add(enemies.front);
-        allChar.Add(enemies.middle);
-        allChar.Add(enemies.back);
 
 
         //Hero go to field
@@ -148,7 +142,7 @@ public class FieldManager : MonoBehaviour
                 if (chara.health <= 0)
                     OrderManager.instance.AddOrder(new sysOrder.DealthOrder(chara));
         }
-        if (CardManager.instance.handCards.Count < handCardNum)
+        if (CardManager.instance.handCards.Count < handCardNum && OrderManager.instance.IsEmptyStack())
             if (CardManager.instance.deck.Count != 0 || CardManager.instance.cemetery.Count != 0)
                 OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
 
@@ -253,7 +247,7 @@ public class FieldManager : MonoBehaviour
     public void SetTarget(CardView card)
     {
         List<CharData> targets = new List<CharData>();
-        targets.AddRange(GetConditionChar(card.card));
+        targets.AddRange(GetConditionChar(card.card.charFilters.ToArray()));
         /*
         switch (card.card.cardTarget)
         {
@@ -300,6 +294,7 @@ public class FieldManager : MonoBehaviour
         }
         CancelSkillSelectTarget();
 
+        FieldManager.instance.currentMouseOverCharacter = null;
         selectingSkill = null;
     }
     void CancelSkillSelectTarget()
@@ -408,30 +403,14 @@ public class FieldManager : MonoBehaviour
 
 
     //---------------------------------------------------------------------
-    public void DamageChar(CharData character, int damageValue, DamageType type, CharData damager = null)
-    {
-        if (damager != null)
-            damageValue += damager.cardDamage;
-
-        DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
-        dif.SetInfo(character, damageValue, type, damager);
-
-        dif.GoTrigger(TriggerType.DamageCheck);
-        dif.GoTrigger(TriggerType.DamageTotalCheck);
-        dif.GoTrigger(TriggerType.DamageFinalCheck);
-
-        dif.GoTrigger(TriggerType.DamageAfter);
-        OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
-        dif.GoTrigger(TriggerType.DamageBefore);
-    }
     public void DealthChar(CharData character)
     {
-        DealthInfo dif = TriggerManager.instance.GetTriggerInfo<DealthInfo>();
-        dif.SetInfo(character);
+        CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
+        cif.SetInfo(character,true);
 
-        dif.GoTrigger(TriggerType.DealthAfter);
+        cif.GoTrigger(TriggerType.DealthAfter);
         OrderManager.instance.AddOrder(new sysOrder.DealthOrder(character));
-        dif.GoTrigger(TriggerType.DealthBefore);
+        cif.GoTrigger(TriggerType.DealthBefore);
 
     }
     //--------------------------------------------------
@@ -456,11 +435,30 @@ public class FieldManager : MonoBehaviour
         character.charStatusControl.ExitAll();
         //skillControl.???
     }
+    public void CharGainMagic(CharData chara,int magicNum)
+    {
+        if (magicNum <= 0) return;
+        chara.magicPoint += magicNum;
+        CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
+        cif.SetInfo(chara, magicNum);
+        cif.GoTrigger(TriggerType.GainMagic);
+    }
+    public void CardBurst(CardData card)
+    {
+        card.Burst();
+        //Trigger!!
+    }
     //---------------------------------------------------
-    public void GainEnergy(int energyNum)
+    public void ArmorChar(CharData chara ,int armorNum,CharData user=null)
+    {
+        if (armorNum < 0) return;
+        chara.armor += armorNum;
+        //Trigger!!
+    }
+    public void GainEnergy(CharData character,int energyNum)
     {
         if (energyNum <= 0) return;
-        currentActionCharacter.energy += energyNum;
+        character.energy += energyNum;
     }
     public void GiveCharStatus(CharData chara, string statusName, int statusNum)
     {
@@ -491,7 +489,7 @@ public class FieldManager : MonoBehaviour
     }
 
     //=================================================
-    public CharData[] GetConditionChar(CardData card, bool dontCardGuard = false)
+    public CharData[] GetConditionChar(CharFilter[] filters, bool dontCardGuard = false)
     {
         List<CharData> charList = new List<CharData>();
 
@@ -500,7 +498,7 @@ public class FieldManager : MonoBehaviour
             if (chara.isDie) continue;
 
             bool active = true;
-            foreach(CharFilter cf in card.charFilters)
+            foreach(CharFilter cf in filters)
             {
                 if (!cf.CheckFilter(chara))
                 {
@@ -533,9 +531,9 @@ public class FieldManager : MonoBehaviour
 
         return charList.ToArray();
     }
-    public CharData GetRandomChar(CardData card, bool careGuard = false)
+    public CharData GetRandomChar(CharFilter[] filters, bool careGuard = false)
     {
-        CharData[] charList = GetConditionChar(card,!careGuard);
+        CharData[] charList = GetConditionChar(filters, !careGuard);
         if (charList == null)
             return null;
 

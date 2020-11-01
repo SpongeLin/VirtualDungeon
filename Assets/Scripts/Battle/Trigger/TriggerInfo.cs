@@ -24,7 +24,7 @@ public abstract class TriggerInfo
     public List<SubscriberData> subscriberDatas;
     public string test;
 
-    public abstract void Reset();
+    //public abstract void Reset();
     public TriggerInfo SubscriptionButton(TriggerType type, int port, Subscriber s)
     {
         //Debug.Log("SUB!");
@@ -70,20 +70,14 @@ public class DamageInfo : TriggerInfo
     public CharData damagedChar;
     public CharData damagerChar;
     public int damageValue;
+    public int extraDamageValue;
+    public float multiDamageValue;
 
     public DamageType damageType;
 
     public DamageInfo() : base()
     {
         test = "Damage";
-    }
-
-    public override void Reset()
-    {
-        damagedChar = null;
-        damagerChar = null;
-        damageValue = 0;
-        damageType = DamageType.Null;
     }
 
     public void SetInfo(CharData chara, int _damageValue, DamageType _damageType ,CharData  _damager)
@@ -93,7 +87,13 @@ public class DamageInfo : TriggerInfo
 
         damageValue = _damageValue;
         damageType = _damageType;
-
+        extraDamageValue = 0;
+        multiDamageValue = 1;
+    }
+    public void Computer()
+    {
+        damageValue += extraDamageValue;
+        damageValue = (int)(damageValue*multiDamageValue);
     }
 }
 public class UseCardInfo : TriggerInfo
@@ -108,10 +108,6 @@ public class UseCardInfo : TriggerInfo
         card = _card;
     }
 
-    public override void Reset()
-    {
-        card = null;
-    }
 }
 public class TurnInfo : TriggerInfo
 {
@@ -126,10 +122,6 @@ public class TurnInfo : TriggerInfo
         character = _character;
         isEnemyTurn = character.isEnemy;
     }
-    public override void Reset()
-    {
-        character = null;
-    }
 }
 
 public class SkillInfo : TriggerInfo
@@ -142,12 +134,6 @@ public class SkillInfo : TriggerInfo
         test = "Damage";
     }
 
-    public override void Reset()
-    {
-        skill = null;
-        target = null;
-    }
-
     public void SetInfo(Skill _skill,CharData _target)
     {
         skill = _skill;
@@ -155,19 +141,62 @@ public class SkillInfo : TriggerInfo
 
     }
 }
-public class DealthInfo : TriggerInfo
+
+public class CharInfo : TriggerInfo
 {
     public CharData character;
-    public DealthInfo() : base()
+    public bool dealth;
+    public int gainMagic;
+    public CharInfo() : base()
     {
 
     }
-    public override void Reset()
-    {
-        character = null;
-    }
-    public void SetInfo(CharData _chara)
+
+    public void SetInfo(CharData _chara,bool _dealth)
     {
         character = _chara;
+        dealth = _dealth;
+    }
+    public void SetInfo(CharData _chara, int _magic)
+    {
+        character = _chara;
+        gainMagic = _magic;
+    }
+}
+public class CardInfo : TriggerInfo
+{
+    public CardData card;
+    public int burstNum;
+    public bool exhaust;
+    public CardPos from;
+    public CardPos to;
+
+    public CardInfo() : base()
+    {
+
+    }
+    public void SetInfo(CardData _card, int _burstNum)
+    {
+        card = _card;
+        burstNum = _burstNum;
+        exhaust = false;
+        from = CardPos.Null;
+        to = CardPos.Null;
+    }
+    public void SetInfo(CardData _card, bool _exhaust)
+    {
+        card = _card;
+        burstNum = 0;
+        exhaust = _exhaust;
+        from = CardPos.Null;
+        to = CardPos.Null;
+    }
+    public void SetInfo(CardData _card, CardPos _form,CardPos _to)
+    {
+        card = _card;
+        burstNum = 0;
+        exhaust = false;
+        from = _form;
+        to = _to;
     }
 }

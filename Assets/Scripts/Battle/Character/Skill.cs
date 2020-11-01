@@ -4,12 +4,32 @@ using UnityEngine;
 
 
 
-public class SkillControl // need to inheritance subscriber??
+public class SkillControl : Subscriber
 {
     CharData character;
+
+    public Skill skill1;
+    public Skill skill2;
+    public Skill skill3;
+
     public SkillControl(CharData _chara)
     {
         character = _chara;
+        isWorking = true;
+        TriggerManager.instance.AddUpdateList(this);
+    }
+
+    public override void Update()
+    {
+        if (skill1 != null) skill1.Update();
+        if (skill2 != null) skill2.Update();
+        if (skill3 != null) skill3.Update();
+    }
+    public void TurnEnd()
+    {
+        if (skill1 != null) skill1.CoolDown();
+        if (skill2 != null) skill2.CoolDown();
+        if (skill3 != null) skill3.CoolDown();
     }
 }
 
@@ -44,6 +64,8 @@ public abstract class Skill : Subscriber
     public abstract void Enter();
     public bool CanUseSkill()
     {
+        if (talent)
+            return false;
         if (character.energy < actionPoint)
             return false;
         if (currentCoolDown > 0)
@@ -84,7 +106,8 @@ namespace testSkill
 
         public override void Excite(CharData target)
         {
-            FieldManager.instance.DamageChar(target, damageValue, DamageType.Normal, character);
+            //FieldManager.instance.DamageChar(target, damageValue, DamageType.Normal, character);
+            OrderManager.instance.AddOrder(new sysOrder.DamagePrepare(target, damageValue, DamageType.Normal, character));
         }
 
         public override void Update()
@@ -108,7 +131,8 @@ namespace testSkill
         }
         public override void Excite(CharData target)
         {
-            FieldManager.instance.DamageChar(target, damageValue, DamageType.Normal, character);
+            //FieldManager.instance.DamageChar(target, damageValue, DamageType.Normal, character);
+            OrderManager.instance.AddOrder(new sysOrder.DamagePrepare(target, damageValue, DamageType.Normal, character));
         }
         public override void Update()
         {

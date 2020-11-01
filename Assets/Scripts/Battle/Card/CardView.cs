@@ -13,6 +13,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     public Image cardImage;
     public Text cost;
     public Text description;
+    public Text cardName;
 
     public CardData card;
     public bool CanUseHighLight;
@@ -20,6 +21,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
 
     //Tween tween = null;
     Tween scaleTween = null;
+    Tween posTween = null;
 
     public int costStatus = 0;
 
@@ -28,6 +30,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     {
         card = setCard;
         cardImage.sprite = card.cardImage;
+        cardName.text = card.cardShowName;
         description.text = card.cardDescription;
         cost.text = card.cardCost.ToString();
 
@@ -49,6 +52,11 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     public void GameUpdate()
     {
         description.text = card.cardDescription;
+        if (card.burst >= 1)
+            description.text += "\n<color=#ff0000   >強化：" + card.burst.ToString()+ "</color>";
+        if (card.linkChar != null)
+            description.text += "\n<color=#0000E3>連結：" + card.linkChar.charShowName.ToString() + "</color>";
+
         cost.text = card.cardCost.ToString();
 
         if (!CanUseHighLight)
@@ -90,11 +98,24 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     }
 
 
-    public void SetPos(Vector3 pos)
+    public void SetPos(Vector3 pos,bool anim=false,bool fast=false)
     {
         //StopTween();
         //tween = transform.DOMove(pos, CardManager.instance.cardSpeed).SetEase(Ease.OutQuad);
-        transform.position = pos;
+        if (posTween == null)
+        {
+            posTween.Kill();
+            posTween = null;
+        }
+        if (anim)
+        {
+            float cardSpeed = fast ? 0.5f : 0.6f;
+            posTween = transform.DOMove(pos, cardSpeed).SetEase(Ease.OutQuad);
+        }
+        else
+        {
+            transform.position = pos;
+        }
     }
     public void SetSize(Vector3 size,bool anim=false)
     {

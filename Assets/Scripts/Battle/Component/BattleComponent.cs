@@ -58,6 +58,11 @@ public enum TriggerType
     DealthBefore,
     DealthAfter,
 
+    GainMagic,
+    CardBurst,
+    CardMove,
+    Draw
+
 }
 
 public enum SkillTarget

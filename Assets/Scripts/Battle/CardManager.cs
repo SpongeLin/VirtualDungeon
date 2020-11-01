@@ -79,7 +79,7 @@ public class CardManager : MonoBehaviour
     }
     bool CardTargetExist(CardData card)
     {
-        if (FieldManager.instance.GetConditionChar(card) == null)
+        if (FieldManager.instance.GetConditionChar(card.charFilters.ToArray()) == null)
             return false;
         return true;
     }
@@ -90,7 +90,18 @@ public class CardManager : MonoBehaviour
         Debug.Log("Use Card!!!!!!!!");
 
 
-        FieldManager.instance.currentActionCharacter.energy -= card.cardCost;
+        FieldManager.instance.currentActionCharacter.ReduceEnergy(card.cardCost);
+        if (FieldManager.instance.currentActionCharacter.magicPoint >= card.magicConsume)
+        {
+            FieldManager.instance.currentActionCharacter.magicPoint -= card.magicConsume;
+            card.magicCheck = true;
+        }
+        if(FieldManager.instance.currentActionCharacter == card.linkChar && card.linkChar != null)
+        {
+            card.linkCheck = true;
+        }
+
+
         UseCardInfo cif = TriggerManager.instance.GetTriggerInfo<UseCardInfo>();
         cif.SetInfo(card);
 
@@ -101,12 +112,10 @@ public class CardManager : MonoBehaviour
         cif.GoTrigger(TriggerType.UseCardBefore);
 
         //OrderManager.instance.AddOrder(new sysOrder.DiscardOrder(card));
-        DiscardHandCard(card);
-    }
-    void ClearCard(CardData card)
-    {
-        card.targetChar = null;
-        //cardStatus clear!!
+        if (card.exhasutCount >= 1)
+            DiscardHandCard(card, true);
+        else
+            DiscardHandCard(card);
     }
     public void RealUseCard(CardData card)
     {
@@ -115,7 +124,7 @@ public class CardManager : MonoBehaviour
             if (card.cardEffects[i].CanUseCardEffect())
                 card.cardEffects[i].UseCardEffect();
         }
-        ClearCard(card);
+        card.Clear();
     }
 
 
@@ -142,12 +151,15 @@ public class CardManager : MonoBehaviour
         }
         //        cardViewControl.HandCardPosUpdate();
     }
-    public void DiscardHandCard(CardData card)
+    public void DiscardHandCard(CardData card,bool exhaust=false)
     {
         if(GetCardPosition(card) == CardPos.Hand)
         {
             ExitHand(card);
-            cemetery.Add(card);
+            if(exhaust)
+                banish.Add(card);
+            else
+                cemetery.Add(card);
         }
         else
         {
@@ -155,12 +167,18 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    void EnterHand(CardData card)
+    void EnterHand(CardData card,CardPos from = CardPos.Deck)
     {
+        CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+        cif.SetInfo(card, from, CardPos.Hand);
+        cif.GoTrigger(TriggerType.CardMove);
+        if(from == CardPos.Deck)
+            cif.GoTrigger(TriggerType.Draw);
+
         handCards.Add(card);
         cardViewControl.OpenCard(card);
 
-        cardViewControl.HandCardPosUpdate();
+        //cardViewControl.HandCardPosUpdate();
     }
     void ExitHand(CardData card)
     {
@@ -228,6 +246,10 @@ public class CardManager : MonoBehaviour
 
 
         return pos;
+    }
+    public void CardMove(CardData card,CardPos to,int condition=0)
+    {
+        Debug.LogWarning("CardMove have not completed");
     }
 
 }

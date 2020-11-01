@@ -28,10 +28,15 @@ public class CardData
     public int banCount;
     public int exhasutCount;
 
+    public int magicConsume;
+    public bool magicCheck;
+    public bool canBurst;
+    public int burst;
 
-    public CharData soulChar;
+    public CharData linkChar;
+    public bool linkCheck;
 
-    public CardTarget cardTarget;
+    public bool isSelectTarget;
     public CharData targetChar;
 
     public List<CardEffect> cardEffects;
@@ -47,13 +52,20 @@ public class CardData
         charFilters = new List<CharFilter>();
     }
 
-    public void burst()
+    public void Clear()
     {
-
+        targetChar = null;
+        cardStatusControl.ExitAll();
+        magicCheck = false;
+        burst = 0;
+        linkChar = null;
+        linkCheck = false;
+        //cardStatus clear!!
     }
-    public void Magic()
-    {
 
+    public void Burst()
+    {
+        burst++;
     }
     public void CostAdjust(int costNum)
     {

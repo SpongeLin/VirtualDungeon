@@ -39,7 +39,7 @@ public class BattleHubControl : MonoBehaviour
         skillView2.Gameupdate();
         skillView3.Gameupdate();
 
-        cardInfo.text = "牌組：" + CardManager.instance.deck.Count + "\n棄牌：" + CardManager.instance.cemetery.Count + "\n守牌：" +CardManager.instance.handCards.Count;
+        cardInfo.text = "牌組：" + CardManager.instance.deck.Count + "\n棄牌：" + CardManager.instance.cemetery.Count + "\n守牌：" +CardManager.instance.handCards.Count + "\n除外：" + CardManager.instance.banish.Count;
         if (FieldManager.instance.currentActionCharacter != null)
         {
             cardInfo.text += "\n卡牌傷害：" + FieldManager.instance.currentActionCharacter.cardDamage;
@@ -53,9 +53,9 @@ public class BattleHubControl : MonoBehaviour
 
     public void SetCharSkill(CharData character)
     {
-        skillView1.SetSkill(character.skill1);
-        skillView2.SetSkill(character.skill2);
-        skillView3.SetSkill(character.skill3);
+        skillView1.SetSkill(character.skillControl.skill1);
+        skillView2.SetSkill(character.skillControl.skill2);
+        skillView3.SetSkill(character.skillControl.skill3);
     }
     public void SetArrow(bool active)
     {

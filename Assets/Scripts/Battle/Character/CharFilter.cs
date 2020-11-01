@@ -21,6 +21,10 @@ public class CharFilter
         filterType = type;
         conditionBool = condBool;
     }
+    public CharFilter(string type)
+    {
+        filterType = type;
+    }
 
     public bool CheckFilter(CharData chara)
     {
@@ -40,6 +44,10 @@ public class CharFilter
                 break;
             case "Front":
                 if (FieldManager.instance.CheckCharIsFrontest(chara))
+                    result = true;
+                break;
+            case "NotCurrent":
+                if (chara != FieldManager.instance.currentActionCharacter)
                     result = true;
                 break;
         }

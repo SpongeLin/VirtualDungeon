@@ -19,6 +19,7 @@ public class GameData : MonoBehaviour
         }
         deck = new List<int>();
         //Test
+        /*
         deck.Add(1);
         deck.Add(1);
         deck.Add(2);
@@ -27,6 +28,17 @@ public class GameData : MonoBehaviour
         deck.Add(2);
         deck.Add(3);
         deck.Add(4);
+        */
+        deck.Add(15);
+        deck.Add(22);
+        deck.Add(25);
+        deck.Add(10);
+        deck.Add(11);
+        deck.Add(12);
+        deck.Add(13);
+        deck.Add(13);
+        deck.Add(14);
+        deck.Add(14);
 
         handCardNum = 4;
         //===

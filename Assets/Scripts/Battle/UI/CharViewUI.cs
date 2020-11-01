@@ -10,6 +10,8 @@ public class CharViewUI : MonoBehaviour
     public Image health;
     public Text healthPoint;
     public Text armor;
+    public Text magic;
+    public Text cardDamage;
 
     public Image currentMark;
 
@@ -19,7 +21,8 @@ public class CharViewUI : MonoBehaviour
     public Transform charStatusViewTransform;
     public GameObject charStatusViewObject;
 
-    public Image enemyIntention;
+    public GameObject enemyIntention;
+    public Image enemyIntentionImage;
     public Text enemyIntentionNum;
     bool enemyIntentionActive;
 
@@ -31,7 +34,7 @@ public class CharViewUI : MonoBehaviour
         charStatusViewList = new List<CharStatusView>();
 
         charStatusViewObject.SetActive(false);
-        enemyIntention.gameObject.SetActive(false);
+        enemyIntention.SetActive(false);
         enemyIntentionNum.gameObject.SetActive(false);
         enemyIntentionActive = false;
         for (int i = 0; i < 15; i++)
@@ -48,7 +51,9 @@ public class CharViewUI : MonoBehaviour
         float rate = character.health / (float)character.maxHealth;
         health.fillAmount = rate;
         healthPoint.text = character.health.ToString() + "/" + character.maxHealth.ToString();
-        armor.text = character.armor.ToString();
+        armor.text = "護盾"+character.armor.ToString();
+        magic.text = "魔力" + character.magicPoint.ToString();
+        cardDamage.text = "力量" + character.cardDamage.ToString();
 
         //actionPoint.text = character.energy.ToString()+"/"+character.maxEnergy.ToString() ;
         UpdateCharStatusView();
@@ -105,8 +110,9 @@ public class CharViewUI : MonoBehaviour
         {
             if (!character.enemyStrategy.strategyShow)
             {
-                enemyIntention.gameObject.SetActive(false);
+                enemyIntention.SetActive(false);
                 enemyIntentionNum.gameObject.SetActive(false);
+                enemyIntentionImage.sprite = null;
                 enemyIntentionActive = false;
                 return;
             }
@@ -115,7 +121,7 @@ public class CharViewUI : MonoBehaviour
         {
             if (character.enemyStrategy.strategyShow)
             {
-                enemyIntention.gameObject.SetActive(true);
+                enemyIntention.SetActive(true);
                 enemyIntentionNum.gameObject.SetActive(true);
                 enemyIntentionActive = true;
             }

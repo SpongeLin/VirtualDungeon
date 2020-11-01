@@ -39,4 +39,35 @@ namespace nCharStatus
             
         }
     }
+    public class Fragile : CharStatus
+    {
+        DamageInfo dif;
+        public Fragile(int _time)
+        {
+            statusName = "Fragile";
+            byTime = true;
+            time = _time;
+        }
+        public override void Enter()
+        {
+            dif = SetSubscription<DamageInfo>(TriggerType.DamageTotalCheck,1);
+        }
+        public override void Trigger1()
+        {
+            if (dif.damagedChar == character)
+            {
+                dif.extraDamageValue += dif.damageValue / 2;
+            }
+        }
+
+        public override void Exit()
+        {
+           // throw new System.NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
 }

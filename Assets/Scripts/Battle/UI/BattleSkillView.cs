@@ -8,12 +8,11 @@ public class BattleSkillView : MonoBehaviour
     public Skill skill;
     public Button button;
 
-    public Text skillName;
-
     public Text ap;
     public Text cd;
 
     public Image skillImage;//it's unavailability now
+    public Image costMask;
 
     public bool canClick;
     public bool highLight;
@@ -26,6 +25,8 @@ public class BattleSkillView : MonoBehaviour
         if (skill != null)
         {
             SetCanClick(skill.CanUseSkill() && sysCanClick && OrderManager.instance.IsEmptyStack() && FieldManager.instance.CheckCharTargetExist(skill));
+
+            SetSkillNum();
         }
     }
 
@@ -35,7 +36,6 @@ public class BattleSkillView : MonoBehaviour
         {
             skill = null;
 
-            skillName.text = "";
             ap.text = "";
             cd.text = "";
             SetActiveSkill(false);
@@ -43,12 +43,28 @@ public class BattleSkillView : MonoBehaviour
             return;
         }
         skill = _skill;
-
-        skillName.text = skill.skillShowName;
-        ap.text = skill.actionPoint.ToString();
-        cd.text = skill.coolDown.ToString();
-
+        SetSkillNum();
         SetActiveSkill(true);
+    }
+
+    void SetSkillNum()
+    {
+        if (skill.talent)
+            ap.text = "";
+        else
+            ap.text = skill.actionPoint.ToString();
+
+        if (skill.currentCoolDown == 0)
+        {
+            cd.text = "";
+            costMask.fillAmount = 0;
+        }
+        else
+        {
+            cd.text = skill.currentCoolDown.ToString();
+            float r = skill.currentCoolDown / (float)skill.coolDown;
+            costMask.fillAmount = r;
+        }
     }
     public void Click()
     {
@@ -60,18 +76,17 @@ public class BattleSkillView : MonoBehaviour
     {
         if (active)
         {
-            skillImage.color = Color.white;
             canClick = true;
+            button.interactable = true;
         }
         else
         {
-            skillImage.color = Color.gray;
             canClick = false;
+            button.interactable = false;
         }
     }
     public void SetActiveSkill(bool active)
     {
-        canClick = active;
         button.interactable = active;
     }
 

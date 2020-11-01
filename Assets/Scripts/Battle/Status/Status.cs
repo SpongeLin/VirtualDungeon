@@ -12,7 +12,10 @@ public abstract class Status : Subscriber
     public bool byTime;
     public bool byNum;
     public bool onlyOne;
+    public bool thisTurn;
     public bool eternal;
+    public bool original;
+
     public bool canRepeat { get { return byTime || byNum; } }
     public void Repeat(Status s)
     {
@@ -29,7 +32,7 @@ public abstract class Status : Subscriber
 
     public string statusImage;
     public string showName;
-    public abstract string GetDescription();
+    public virtual string GetDescription(){return "";}
     public string GetNum()
     {
         if (byNum)

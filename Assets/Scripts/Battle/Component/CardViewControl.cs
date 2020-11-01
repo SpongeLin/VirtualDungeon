@@ -12,6 +12,8 @@ public class CardViewControl : MonoBehaviour
     public Transform cardViewpool;
 
     public Transform useLine;
+    public Transform deckPlace;
+    public Transform cemeteryPlace;
 
     public List<CardView> disableCard;
     public List<CardView> handCard;
@@ -53,7 +55,17 @@ public class CardViewControl : MonoBehaviour
         handCard.Add(cardView);
         disableCard.Remove(cardView);
 
-        cardView.transform.position = handCardPlace.position;
+        cardView.transform.position = deckPlace.position;
+        int i = 0;
+        foreach(CardView cv in handCard)
+        {
+            if (cv == cardView)
+            {
+                cardView.SetPos(GetHandCardPos(i), true);
+                break;
+            }
+            i++;
+        }
 
     }
     public void CloseCard(CardData card)
@@ -83,11 +95,15 @@ public class CardViewControl : MonoBehaviour
         foreach (CardView cv in handCard)
         {
 
-            Vector3 pos = new Vector3(handCardPlace.transform.position.x + handCardDistance * i, handCardPlace.transform.position.y,handCardPlace.transform.position.z);
-            cv.SetPos(pos);
+            Vector3 pos = GetHandCardPos(i);
+            cv.SetPos(pos,true,true);
             i++;
         }
         //Debug.Log(handCardPlace.transform.position.z);
+    }
+    Vector3 GetHandCardPos(int i)
+    {
+        return new Vector3(handCardPlace.transform.position.x + handCardDistance * i, handCardPlace.transform.position.y, handCardPlace.transform.position.z);
     }
 
 }

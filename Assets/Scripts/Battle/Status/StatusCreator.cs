@@ -10,6 +10,8 @@ public static class StatusCreator
         {
             case "DamageToZero":
                 return new nCharStatus.DamageToZero(statusNum);
+            case "Fragile":
+                return new nCharStatus.Fragile(statusNum);
         }
 
         Debug.LogWarning("This charStatus is not exist.");
@@ -32,7 +34,8 @@ public static class StatusCreator
     {
         switch (fieldStatusName)
         {
-
+            case "AllyDownEnergyAtTurnStart":
+                return new nFieldStatus.AllyDownEnergyAtTurnStart(statusNum);
         }
 
         Debug.LogWarning("This fieldStatus is not exist.");

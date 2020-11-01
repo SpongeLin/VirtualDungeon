@@ -79,7 +79,7 @@ public class StatusControl : Subscriber
     {
         foreach (Status s in statusList)
         {
-            if (s.isWorking)
+            if (s.isWorking && !s.original)
             {
                 s.isWorking = false;
                 s.Exit();
@@ -102,8 +102,9 @@ public class CharStatusControl : StatusControl
     }
     public void EnterStatus(CharStatus status)
     {
-        if (CheckStatus(status))
-            status.character = chara;
+        status.character = chara;
+        CheckStatus(status);
+
     }
     public override void Trigger1()
     {
@@ -114,6 +115,11 @@ public class CharStatusControl : StatusControl
             if (!s.eternal)
             {
                 s.time--;
+            }
+            if (s.thisTurn)
+            {
+                s.isWorking = false;
+                s.Exit();
             }
         }
     }
@@ -127,8 +133,10 @@ public class CardStatusControl : StatusControl
     }
     public void EnterStatus(CardStatus status)
     {
-        if (CheckStatus(status))
-            status.card = card;
+        status.card = card;
+        CheckStatus(status);
+
+
     }
     public override void Trigger1()
     {

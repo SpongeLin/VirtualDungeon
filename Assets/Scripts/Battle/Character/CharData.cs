@@ -7,7 +7,7 @@ public class CharData
 {
     public CharView charView;
     public CharStatusControl charStatusControl;
-    public SkillControl skillControl; // 尚未確定
+    public SkillControl skillControl;
 
     public EnemyStrategy enemyStrategy = null;
 
@@ -31,16 +31,12 @@ public class CharData
     public int armor;
 
     public int magicPoint;
-    public int maxMagicPoint;
 
     public int speedOrder;
     public int agility;
     public int guardCount;
     public int cardDamage;
 
-    public Skill skill1;
-    public Skill skill2;
-    public Skill skill3;
 
 
     public void ReduceHealth(int damage)
@@ -58,21 +54,17 @@ public class CharData
             armor -= damage;
         }
     }
-
-    public void CharUpdate()
+    public void ReduceEnergy(int num)
     {
-        if (skill1 != null) skill1.Update();
-        if (skill2 != null) skill2.Update();
-        if (skill3 != null) skill3.Update();
+        energy -= num;
+        if (energy < 0)
+            energy = 0;
     }
 
     public void TurnEnd()
     {
         //處理狀態減少!?
-
-        if(skill1!=null )skill1.CoolDown();
-        if (skill2 != null) skill2.CoolDown();
-        if (skill3 != null) skill3.CoolDown();
+        skillControl.TurnEnd();
 
         if (enemyStrategy != null)
             enemyStrategy.TurnEnd();
