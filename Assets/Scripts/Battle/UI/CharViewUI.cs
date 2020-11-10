@@ -53,7 +53,7 @@ public class CharViewUI : MonoBehaviour
         healthPoint.text = character.health.ToString() + "/" + character.maxHealth.ToString();
         armor.text = "護盾"+character.armor.ToString();
         magic.text = "魔力" + character.magicPoint.ToString();
-        cardDamage.text = "力量" + character.cardDamage.ToString();
+        cardDamage.text = "力量" + character.power.ToString();
 
         //actionPoint.text = character.energy.ToString()+"/"+character.maxEnergy.ToString() ;
         UpdateCharStatusView();
@@ -123,6 +123,8 @@ public class CharViewUI : MonoBehaviour
             {
                 enemyIntention.SetActive(true);
                 enemyIntentionNum.gameObject.SetActive(true);
+                Sprite s = Resources.Load<Sprite>("EnemyIntention/" + character.enemyStrategy.currentAction.actionImage);
+                enemyIntentionImage.sprite = s;
                 enemyIntentionActive = true;
             }
             else return;

@@ -9,6 +9,7 @@ public class CardViewControl : MonoBehaviour
 
     public GameObject cardViewObject;
     public Transform handCardPlace;
+    public Transform handCardEndPos;
     public Transform cardViewpool;
 
     public Transform useLine;
@@ -56,6 +57,9 @@ public class CardViewControl : MonoBehaviour
         disableCard.Remove(cardView);
 
         cardView.transform.position = deckPlace.position;
+        HandCardPosUpdate();
+        return;
+        /*
         int i = 0;
         foreach(CardView cv in handCard)
         {
@@ -66,6 +70,7 @@ public class CardViewControl : MonoBehaviour
             }
             i++;
         }
+        */
 
     }
     public void CloseCard(CardData card)
@@ -85,7 +90,8 @@ public class CardViewControl : MonoBehaviour
         disableCard.Add(closeCardView);
         handCard.Remove(closeCardView);
 
-        closeCardView.transform.position = cardViewpool.transform.position;
+        //closeCardView.transform.position = cardViewpool.transform.position;
+        closeCardView.SetPos(cardViewpool.transform.position);
         //closeCardView.SetPos(cemeteryTransform.transform.position);
     }
 
@@ -103,7 +109,11 @@ public class CardViewControl : MonoBehaviour
     }
     Vector3 GetHandCardPos(int i)
     {
-        return new Vector3(handCardPlace.transform.position.x + handCardDistance * i, handCardPlace.transform.position.y, handCardPlace.transform.position.z);
+        float dis = handCardEndPos.transform.position.x - handCardPlace.transform.position.x;
+        Debug.Log(dis);
+        dis = dis / handCard.Count;
+
+        return new Vector3(handCardPlace.transform.position.x + dis * i, handCardPlace.transform.position.y, handCardPlace.transform.position.z);
     }
 
 }

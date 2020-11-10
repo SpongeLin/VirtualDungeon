@@ -21,7 +21,7 @@ public class BattleCardDragControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (currentDragMode != null)
         {

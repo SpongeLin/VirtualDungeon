@@ -14,6 +14,7 @@ public class FieldManager : MonoBehaviour
 
     public CharLineControl charLineControl;
     public CharLineViewControl charLineViewControl;
+    public IntroViewControl introViewControl;
 
     public FieldStatusControl fieldStatusControl;
 
@@ -68,12 +69,12 @@ public class FieldManager : MonoBehaviour
         OrderManager.instance.AddOrder(new sysOrder.WaitOrder(0.84f));
 
 
-        CharCreate(new CharacterDataPack("A", 0, 0,0), TeamPos.Front, false);
-        CharCreate(new CharacterDataPack("B", 0, 0,0), TeamPos.Middle, false);
-        CharCreate(new CharacterDataPack("C", 0, 0,0), TeamPos.Back, false);
-        CharCreate(new CharacterDataPack("X", 0, 0,0), TeamPos.Front, true);
-        CharCreate(new CharacterDataPack("X", 0, 0,0), TeamPos.Middle, true);
-        CharCreate(new CharacterDataPack("X", 0, 0,0), TeamPos.Back, true);
+        CharCreate(new CharacterDataPack("A", 0, 0,64,0), TeamPos.Front, false);
+        CharCreate(new CharacterDataPack("B", 0, 0,100,0), TeamPos.Middle, false);
+        CharCreate(new CharacterDataPack("C", 0, 0,75,0), TeamPos.Back, false);
+        CharCreate(new CharacterDataPack("NovitiateKnight", 0, 0,75,0), TeamPos.Front, true);
+        CharCreate(new CharacterDataPack("NovitiateMage", 0, 0,60,0), TeamPos.Middle, true);
+        CharCreate(new CharacterDataPack("NovitiateLancer", 0, 0,70,0), TeamPos.Back, true);
 
         //for (int i = 0; i < handCardNum; i++)
         //    OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
@@ -144,7 +145,10 @@ public class FieldManager : MonoBehaviour
         }
         if (CardManager.instance.handCards.Count < handCardNum && OrderManager.instance.IsEmptyStack())
             if (CardManager.instance.deck.Count != 0 || CardManager.instance.cemetery.Count != 0)
+            {
                 OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
+                OrderManager.instance.AddOrder(new sysOrder.WaitOrder(0.15f));
+            }
 
 
 
@@ -406,7 +410,7 @@ public class FieldManager : MonoBehaviour
     public void DealthChar(CharData character)
     {
         CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
-        cif.SetInfo(character,true);
+        cif.SetInfo(character);
 
         cif.GoTrigger(TriggerType.DealthAfter);
         OrderManager.instance.AddOrder(new sysOrder.DealthOrder(character));
@@ -439,26 +443,43 @@ public class FieldManager : MonoBehaviour
     {
         if (magicNum <= 0) return;
         chara.magicPoint += magicNum;
+
         CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
         cif.SetInfo(chara, magicNum);
         cif.GoTrigger(TriggerType.GainMagic);
-    }
-    public void CardBurst(CardData card)
-    {
-        card.Burst();
-        //Trigger!!
     }
     //---------------------------------------------------
     public void ArmorChar(CharData chara ,int armorNum,CharData user=null)
     {
         if (armorNum < 0) return;
         chara.armor += armorNum;
-        //Trigger!!
+
+        CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
+        cif.SetInfo(chara, armorNum,user);
+        cif.GoTrigger(TriggerType.Armor);
+    }
+    public void HealChar(CharData chara, int healNum, CharData user = null)
+    {
+        if (healNum < 0) return;
+        chara.HealHealth(healNum);
+
+        CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
+        cif.SetInfo(chara, healNum, user);
+        cif.GoTrigger(TriggerType.Heal);
     }
     public void GainEnergy(CharData character,int energyNum)
     {
         if (energyNum <= 0) return;
         character.energy += energyNum;
+    }
+    public void GainPower(CharData character, int powerNum)
+    {
+        if (powerNum <= 0) return;
+        character.power += powerNum;
+
+        CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
+        cif.SetInfo(character, powerNum);
+        cif.GoTrigger(TriggerType.GainPower);
     }
     public void GiveCharStatus(CharData chara, string statusName, int statusNum)
     {

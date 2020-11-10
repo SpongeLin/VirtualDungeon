@@ -31,7 +31,7 @@ public abstract class Status : Subscriber
     public abstract void Exit();
 
     public string statusImage;
-    public string showName;
+    //public string showName;
     public virtual string GetDescription(){return "";}
     public string GetNum()
     {

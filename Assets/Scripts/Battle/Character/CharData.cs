@@ -35,10 +35,17 @@ public class CharData
     public int speedOrder;
     public int agility;
     public int guardCount;
-    public int cardDamage;
+    public int power;
 
 
 
+    public void HealHealth(int heal)
+    {
+        if (heal <= 0) return;
+        health += heal;
+        if (health > maxHealth)
+            health = maxHealth;
+    }
     public void ReduceHealth(int damage)
     {
         if (damage <= 0) return;

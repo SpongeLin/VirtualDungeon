@@ -91,14 +91,20 @@ public class CardManager : MonoBehaviour
 
 
         FieldManager.instance.currentActionCharacter.ReduceEnergy(card.cardCost);
-        if (FieldManager.instance.currentActionCharacter.magicPoint >= card.magicConsume)
+        if (FieldManager.instance.currentActionCharacter.magicPoint >= card.oriMagicConsume)
         {
-            FieldManager.instance.currentActionCharacter.magicPoint -= card.magicConsume;
+            FieldManager.instance.currentActionCharacter.magicPoint -= card.oriMagicConsume;
             card.magicCheck = true;
         }
         if(FieldManager.instance.currentActionCharacter == card.linkChar && card.linkChar != null)
         {
             card.linkCheck = true;
+        }
+
+        if (card.exhasutCount >= 1) {
+            CardInfo cardif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+            cardif.SetInfo(card);
+            cardif.GoTrigger(TriggerType.CardExhaust);
         }
 
 
@@ -133,9 +139,15 @@ public class CardManager : MonoBehaviour
     {
         if (deck.Count != 0)
         {
-            CardData drawCard = deck[0];
+            CardData drawCard = deck[deck.Count-1];
             deck.Remove(drawCard);
             EnterHand(drawCard);
+
+            CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+            cif.SetInfo(drawCard, CardPos.Deck, CardPos.Hand);
+            cif.GoTrigger(TriggerType.CardMove); 
+            cif.GoTrigger(TriggerType.Draw);
+
         }
         else
         {
@@ -156,10 +168,22 @@ public class CardManager : MonoBehaviour
         if(GetCardPosition(card) == CardPos.Hand)
         {
             ExitHand(card);
-            if(exhaust)
+            if (exhaust)
+            {
                 banish.Add(card);
+
+                CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+                cif.SetInfo(card, CardPos.Hand, CardPos.Banish);
+                cif.GoTrigger(TriggerType.CardMove);
+            }
             else
+            {
                 cemetery.Add(card);
+
+                CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+                cif.SetInfo(card, CardPos.Hand, CardPos.Cemetery);
+                cif.GoTrigger(TriggerType.CardMove);
+            }
         }
         else
         {
@@ -169,11 +193,6 @@ public class CardManager : MonoBehaviour
 
     void EnterHand(CardData card,CardPos from = CardPos.Deck)
     {
-        CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
-        cif.SetInfo(card, from, CardPos.Hand);
-        cif.GoTrigger(TriggerType.CardMove);
-        if(from == CardPos.Deck)
-            cif.GoTrigger(TriggerType.Draw);
 
         handCards.Add(card);
         cardViewControl.OpenCard(card);
@@ -218,6 +237,17 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    public void CardBurst(CardData card)
+    {
+        card.Burst();
+
+        CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+        cif.SetInfo(card, 1);
+        cif.GoTrigger(TriggerType.CardBurst);
+    }
+
+
+
     public CardPos GetCardPosition(CardData card)
     {
         if (handCards.Contains(card))
@@ -249,7 +279,28 @@ public class CardManager : MonoBehaviour
     }
     public void CardMove(CardData card,CardPos to,int condition=0)
     {
-        Debug.LogWarning("CardMove have not completed");
+        CardPos from = GetCardPosition(card);
+        if (from == to) return;
+        RemoveOriPos(card);
+
+        if (to == CardPos.Hand)
+            EnterHand(card);
+        else if (to == CardPos.Deck)
+        {
+            deck.Add(card);
+            if (condition == 0) { Shuffle(); }
+        }
+        else if (to == CardPos.Cemetery)
+            cemetery.Add(card);
+        else if (to == CardPos.Banish)
+            banish.Add(card);
+
+
+        CardInfo cif = TriggerManager.instance.GetTriggerInfo<CardInfo>();
+        cif.SetInfo(card, from,to);
+        cif.GoTrigger(TriggerType.CardMove);
+        if (from == CardPos.Deck && to == CardPos.Hand)
+            cif.GoTrigger(TriggerType.Draw);
     }
 
 }

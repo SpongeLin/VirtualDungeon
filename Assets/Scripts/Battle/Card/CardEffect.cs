@@ -97,6 +97,19 @@ namespace nCardEffect
             OrderManager.instance.AddOrder(new sysOrder.DamagePapareMulti(new CharFilter[] {new CharFilter("Camps",2) }, damageValue, DamageType.Normal, FieldManager.instance.currentActionCharacter));
         }
     }
+    public class DamageFront : CardEffect
+    {
+        int damageValue;
+        public DamageFront(int _damageValue)
+        {
+            damageValue = _damageValue;
+        }
+        public override void UseCardEffect()
+        {
+            //Animation???
+            OrderManager.instance.AddOrder(new sysOrder.DamagePapareFront( damageValue, DamageType.Normal, FieldManager.instance.currentActionCharacter));
+        }
+    }
     public class ArmorSelf : CardEffect
     {
         public int armorNum;
@@ -122,6 +135,19 @@ namespace nCardEffect
         public override void UseCardEffect()
         {
             OrderManager.instance.AddOrder(new sysOrder.ArmorChar(card.targetChar, armorNum, FieldManager.instance.currentActionCharacter));
+        }
+    }
+    public class ArmorAllAlly : CardEffect
+    {
+        public int armorNum;
+        public ArmorAllAlly(int armor)
+        {
+            armorNum = armor;
+        }
+
+        public override void UseCardEffect()
+        {
+            OrderManager.instance.AddOrder(new sysOrder.ArmorCharMulti(new CharFilter[] { new CharFilter("Camps", 1) }, armorNum, FieldManager.instance.currentActionCharacter));
         }
     }
     public class GainEnergy : CardEffect
@@ -274,6 +300,28 @@ namespace nCardEffect
             {
                 OrderManager.instance.AddOrder(new sysOrder.NewCardToDeck(card.cardNo,true));
             }
+        }
+    }
+    public class NewCardToHand : CardEffect
+    {
+        public int cardNo;
+        public NewCardToHand(int _cardNo)
+        {
+            cardNo = _cardNo;
+        }
+        public override void UseCardEffect()
+        {
+            OrderManager.instance.AddOrder(new sysOrder.NewCardToHand(cardNo));
+        }
+    }
+    public class ChangeToFront : CardEffect
+    {
+        public ChangeToFront()
+        {
+        }
+        public override void UseCardEffect()
+        {
+            OrderManager.instance.AddOrder(new sysOrder.ChangeToFront(FieldManager.instance.currentActionCharacter));
         }
     }
 }

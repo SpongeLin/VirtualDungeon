@@ -57,10 +57,14 @@ public enum TriggerType
 
     DealthBefore,
     DealthAfter,
-
+    Armor,
+    Heal,
     GainMagic,
+    GainPower,
+
     CardBurst,
     CardMove,
+    CardExhaust,
     Draw
 
 }

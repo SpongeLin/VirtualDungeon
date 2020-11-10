@@ -97,6 +97,89 @@ namespace nCardStatus
             //throw new System.NotImplementedException();
         }
     }
+    //-----------------------
+    public class BeastDance : CardStatus
+    {
+        CardInfo cif;
+        TurnInfo tif;
+        bool active;
+        int powerNum;
+        public BeastDance(int _power)
+        {
+            eternal = true;
+            original = true;
+            powerNum = _power;
+        }
+        public override void Enter()
+        {
+            cif = SetSubscription<CardInfo>(TriggerType.CardMove, 1);
+            tif = SetSubscription<TurnInfo>(TriggerType.TurnStarting, 2);
+            SetSubscription<TurnInfo>(TriggerType.TurnEnding, 3);
+        }
+        public override void Trigger1()
+        {
+            if (cif.to == CardPos.Hand && cif.card==card)
+            {
+                if (!FieldManager.instance.currentActionCharacter.isEnemy)
+                {
+                    if (active == false)
+                    {
+                        active = true;
+                        FieldManager.instance.currentActionCharacter.power += powerNum;
+                    }
+                }
+            }
+            if(cif.from == CardPos.Hand && cif.card == card)
+            {
+                if (!FieldManager.instance.currentActionCharacter.isEnemy)
+                {
+                    if (active == true)
+                    {
+                        active = false;
+                        FieldManager.instance.currentActionCharacter.power -= powerNum;
+                    }
+                }
+            }
+        }
+        public override void Trigger2()
+        {
+            if (!tif.isEnemyTurn)
+            {
+                if (CardManager.instance.GetCardPosition(card) == CardPos.Hand)
+                {
+                    if (active == false)
+                    {
+                        active = true;
+                        FieldManager.instance.currentActionCharacter.power += powerNum;
+                    }
+                }
+            }
+        }
+        public override void Trigger3()
+        {
+            if (!tif.isEnemyTurn)
+            {
+                if (CardManager.instance.GetCardPosition(card) == CardPos.Hand)
+                {
+                    if (active == true)
+                    {
+                        active = false;
+                        FieldManager.instance.currentActionCharacter.power -= powerNum;
+                    }
+                }
+            }
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
     public class CostDownAtBurst : CardStatus
     {
         public int costDown;

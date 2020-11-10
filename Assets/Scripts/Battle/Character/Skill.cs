@@ -18,6 +18,24 @@ public class SkillControl : Subscriber
         isWorking = true;
         TriggerManager.instance.AddUpdateList(this);
     }
+    public void EnterSkill(int skillSlot,Skill skill,int _currentCoolDown=0)
+    {
+        skill.character = character;
+        skill.currentCoolDown = _currentCoolDown;
+        if (skillSlot == 0)
+        {
+            skill3 = skill;
+            skill3.Enter();
+        }else if (skillSlot == 1)
+        {
+            skill1 = skill;
+            skill1.Enter();
+        }else if (skillSlot == 2)
+        {
+            skill2 = skill;
+            skill2.Enter();
+        }
+    }
 
     public override void Update()
     {
@@ -53,15 +71,15 @@ public abstract class Skill : Subscriber
     public SkillTarget target = SkillTarget.All;
 
 
-    public Skill(string name,int ap,int cd)
+    public Skill(int ap,int cd)
     {
-        skillName = name;
         actionPoint = ap;
         coolDown = cd;
 
         isWorking = true;
     }
     public abstract void Enter();
+    public abstract void Exit();
     public bool CanUseSkill()
     {
         if (talent)
@@ -81,14 +99,298 @@ public abstract class Skill : Subscriber
             currentCoolDown--;
     }
 
-    public Skill SetChar(CharData charData) // TEST!!
-    {
-        character = charData;
-        return this;
-    }
-
     public abstract void Excite(CharData target);
     
+}
+namespace nSkill
+{
+    public class MagicLight : Skill
+    {
+        int damageValue;
+        UseCardInfo ucif;
+        int num = 0;
+        public MagicLight( int ap, int cd) : base( ap, cd)
+        {
+            skillShowName = "星輝光芒";
+            talent = true;
+            skillName = "MagicLight";
+
+        }
+
+        public override void Excite(CharData target)
+        {
+        }
+
+        public override void Update()
+        {
+
+        }
+        public override void Trigger1()
+        {
+            if (FieldManager.instance.currentActionCharacter == character)
+            {
+                num++;
+                if (num >= 3)
+                {
+                    num = 0;
+                    OrderManager.instance.AddOrder(new sysOrder.GainMagic(character, 1));
+                }
+            }
+        }
+        public override void Enter()
+        {
+            ucif = SetSubscription<UseCardInfo>(TriggerType.UseCardAfter, 1);
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    public class StarLose : Skill
+    {
+        public StarLose(int ap, int cd) : base( ap, cd)
+        {
+            skillShowName = "星塵殞落";
+            target = SkillTarget.Self;
+            skillName = "StarLose";
+        }
+
+        public override void Excite(CharData target)
+        {
+            CardData[] cards = CardManager.instance.handCards.ToArray();
+            foreach (CardData card in cards)
+            {
+                OrderManager.instance.AddOrder(new sysOrder.DiscardOrder(card));
+            }
+        }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    public class StarGuide : Skill
+    {
+        public StarGuide( int ap, int cd) : base( ap, cd)
+        {
+            skillShowName = "星光指引";
+            target = SkillTarget.Self;
+            skillName = "StarGuide";
+        }
+
+        public override void Excite(CharData target)
+        {
+            if (FieldManager.instance.currentActionCharacter.magicPoint < 3)
+            {
+                CardData[] cards = CardManager.instance.handCards.ToArray();
+                CardData card = cards[Random.Range(0, cards.Length)];
+                OrderManager.instance.AddOrder(new sysOrder.CardCostAdjust(card, -1));
+            }
+            else
+            {
+                FieldManager.instance.currentActionCharacter.magicPoint -= 3;
+                CardData[] cards = CardManager.instance.handCards.ToArray();
+                foreach(CardData card in cards)
+                    OrderManager.instance.AddOrder(new sysOrder.CardCostAdjust(card, -1));
+            }
+        }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    //---------------------
+    public class InsidePower : Skill
+    {
+        CardInfo cif;
+        public InsidePower(int ap, int cd) : base(ap, cd)
+        {
+            skillShowName = "內功";
+            talent = true;
+            skillName = "InsidePower";
+        }
+
+        public override void Excite(CharData target)
+        { }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+            cif = SetSubscription<CardInfo>(TriggerType.Draw, 1);
+        }
+        public override void Trigger1()
+        {
+            if(FieldManager.instance.currentActionCharacter == character)
+            {
+                if (cif.card.canBurst)
+                {
+                    OrderManager.instance.AddOrder(new sysOrder.CardBurst(cif.card));
+                    OrderManager.instance.AddOrder(new sysOrder.CardBurst(cif.card));
+                }
+            }
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    public class Bone : Skill
+    {
+        public Bone(int ap, int cd) : base(ap, cd)
+        {
+            skillShowName = "筋骨神功";
+            target = SkillTarget.Self;
+            skillName = "Bone";
+        }
+
+        public override void Excite(CharData target)
+        {
+            OrderManager.instance.AddOrder(new sysOrder.GainPower(character, 5));
+        }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    public class Clap : Skill
+    {
+        public Clap(int ap, int cd) : base(ap, cd)
+        {
+            skillShowName = "拍掌";
+            target = SkillTarget.Self;
+            skillName = "Clap";
+        }
+
+        public override void Excite(CharData target)
+        {
+            CardData[] cards = CardManager.instance.handCards.ToArray();
+            foreach (CardData card in cards)
+            {
+                if (card.negativeCard)
+                {
+                    OrderManager.instance.AddOrder(new sysOrder.MoveCard(card, CardPos.Banish));
+                }
+            }
+        }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    //---------------------------
+    public class GoatMilk : Skill
+    {
+        CharInfo cif;
+        public GoatMilk(int ap, int cd) : base(ap, cd)
+        {
+            skillShowName = "羊奶";
+            talent = true;
+            skillName = "GoatMilk";
+        }
+
+        public override void Excite(CharData target)
+        { }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+            cif = SetSubscription<CharInfo>(TriggerType.Armor, 1);
+        }
+        public override void Trigger1()
+        {
+            if (cif.argumentChar == character)
+            {
+                if (cif.character != character)
+                {
+                    OrderManager.instance.AddOrder(new sysOrder.HealOrder(cif.character, 5,character));
+                }
+            }
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    public class DemonArmor : Skill
+    {
+        public DemonArmor(int ap, int cd) : base(ap, cd)
+        {
+            skillShowName = "魔族加護";
+            target = SkillTarget.Allies;
+            skillName = "DemonArmor";
+        }
+
+        public override void Excite(CharData target)
+        {
+            if (FieldManager.instance.currentActionCharacter.magicPoint < 1)
+            {
+                OrderManager.instance.AddOrder(new sysOrder.ArmorChar(target, 10, character));
+            }
+            else
+            {
+                FieldManager.instance.currentActionCharacter.magicPoint -= 1;
+                OrderManager.instance.AddOrder(new sysOrder.ArmorChar(target, 20, character));
+            }
+        }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+
 }
 
 
@@ -97,7 +399,7 @@ namespace testSkill
     public class NormalAttack : Skill
     {
         int damageValue;
-        public NormalAttack(string name, int ap, int cd, int _damageValue) : base(name, ap, cd)
+        public NormalAttack( int ap, int cd, int _damageValue) : base( ap, cd)
         {
             skillShowName = "普通打擊";
             damageValue = _damageValue;
@@ -118,11 +420,15 @@ namespace testSkill
         {
 
         }
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
     }
     public class AttackSelf : Skill
     {
         int damageValue;
-        public AttackSelf(string name, int ap, int cd, int _damageValue) : base(name, ap, cd)
+        public AttackSelf( int ap, int cd, int _damageValue) : base( ap, cd)
         {
             skillShowName = "衝撞";
             damageValue = _damageValue;
@@ -142,10 +448,14 @@ namespace testSkill
         {
 
         }
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
     }
     public class JustTest : Skill
     {
-        public JustTest(string name, int ap, int cd) : base(name, ap, cd)
+        public JustTest(int ap, int cd) : base( ap, cd)
         {
             skillShowName = "測試";
 
@@ -163,6 +473,10 @@ namespace testSkill
         public override void Enter()
         {
 
+        }
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
         }
     }
 

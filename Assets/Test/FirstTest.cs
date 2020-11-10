@@ -125,8 +125,10 @@ public class FirstTest : MonoBehaviour
         //Debug.Log(Input.mousePosition);
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.Log(es.currentAction.actionDescription);
-            es.currentAction = es.currentAction.next;
+            //Debug.Log(es.currentAction.actionDescription);
+            //es.currentAction = es.currentAction.next;
+            Debug.Log(FieldManager.instance.enemies.back.enemyStrategy.currentAction);
+            Debug.Log(FieldManager.instance.enemies.back.enemyStrategy.currentAction.next);
         }
         if (Input.GetKeyDown(KeyCode.D))
         {

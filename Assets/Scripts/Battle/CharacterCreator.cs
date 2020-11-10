@@ -9,6 +9,7 @@ public static class CharacterCreator
     {
         CharData data = new CharData();
         data.charName = cdp.heroName;
+        data.maxHealth = cdp.maxHealth;
         //data.charShowName = charName;
 
         SetChar(data, cdp);//Set SKILL
@@ -24,40 +25,63 @@ public static class CharacterCreator
         {
             case "A":
                 charData.charShowName = "人偶A";
-                charData.maxHealth = 64;
                 charData.energy = 1;
                 charData.maxEnergy = 3;
                 charData.agility = 23;
-                charData.skillControl.skill1 = new testSkill.NormalAttack("x", 1, 1, 15).SetChar(charData);
-                charData.skillControl.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(charData);
+                charData.skillControl.EnterSkill(0,new nSkill.MagicLight( 0, 0));
+                charData.skillControl.EnterSkill(1, new nSkill.StarLose(0, 5));
+                charData.skillControl.EnterSkill(2, new nSkill.StarGuide(0, 3));
                 break;
             case "B":
                 charData.charShowName = "人偶B";
-                charData.maxHealth = 100;
                 charData.energy = 2;
                 charData.maxEnergy = 4;
                 charData.agility = 12;
-                charData.skillControl.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(charData);
-                charData.skillControl.skill2 = new testSkill.JustTest("x", 2, 2).SetChar(charData);
+                charData.skillControl.EnterSkill(0, new nSkill.InsidePower(0, 0));
+                charData.skillControl.EnterSkill(1, new nSkill.Bone(2, 1));
+                charData.skillControl.EnterSkill(2, new nSkill.Clap(0, 3));
+                //charData.skillControl.skill1 = new testSkill.NormalAttack( 1, 0, 15).SetChar(charData);
+                //charData.skillControl.skill2 = new testSkill.JustTest( 2, 2).SetChar(charData);
                 break;
             case "C":
                 charData.charShowName = "人偶C";
-                charData.maxHealth = 75;
                 charData.energy = 2;
                 charData.maxEnergy = 3;
-                charData.agility = 35;
-                charData.skillControl.skill1 = new testSkill.NormalAttack("x", 1, 0, 15).SetChar(charData);
-                charData.skillControl.skill2 = new testSkill.AttackSelf("x", 2, 2, 12).SetChar(charData);
-                charData.skillControl.skill3 = new testSkill.JustTest("x", 2, 2).SetChar(charData);
+                charData.agility = 28;
+                charData.skillControl.EnterSkill(0, new nSkill.GoatMilk(0, 0));
+                charData.skillControl.EnterSkill(1, new nSkill.DemonArmor(1, 1));
                 break;
             case "X":
                 charData.charShowName = "敵人X";
-                charData.maxHealth = 75;
-                charData.energy = 2;
-                charData.maxEnergy = 3;
                 charData.agility = 20;
                 charData.enemyStrategy = new EnemyStrategy();
                 charData.enemyStrategy.AddAction(new nEnemyAction.DamageSelf(23));
+                break;
+            case "NovitiateKnight":
+                charData.charShowName = "見習騎士";
+                charData.agility = 21;
+                charData.enemyStrategy = new EnemyStrategy();
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageRandom(15));
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageRandom(15));
+                charData.enemyStrategy.AddAction(new nEnemyAction.ArmorSelf(25));
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageGiveFragile(25,1));
+                break;
+            case "NovitiateMage":
+                charData.charShowName = "見習法師";
+                charData.agility = 26;
+                charData.enemyStrategy = new EnemyStrategy();
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageGiveWeak(7,2));
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageRandom(17));
+                charData.enemyStrategy.AddAction(new nEnemyAction.HealRandomAlly(15));
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageWithFragment(15, 1));
+                break;
+            case "NovitiateLancer":
+                charData.charShowName = "見習槍兵";
+                charData.agility = 21;
+                charData.enemyStrategy = new EnemyStrategy();
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageAllHero(12));
+                charData.enemyStrategy.AddAction(new nEnemyAction.DamageRandomTimes(7,3));
+                charData.enemyStrategy.AddAction(new nEnemyAction.GainPower(3));
                 break;
         }
 

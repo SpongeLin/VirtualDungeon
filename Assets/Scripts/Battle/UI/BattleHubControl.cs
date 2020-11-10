@@ -42,7 +42,7 @@ public class BattleHubControl : MonoBehaviour
         cardInfo.text = "牌組：" + CardManager.instance.deck.Count + "\n棄牌：" + CardManager.instance.cemetery.Count + "\n守牌：" +CardManager.instance.handCards.Count + "\n除外：" + CardManager.instance.banish.Count;
         if (FieldManager.instance.currentActionCharacter != null)
         {
-            cardInfo.text += "\n卡牌傷害：" + FieldManager.instance.currentActionCharacter.cardDamage;
+            cardInfo.text += "\n卡牌傷害：" + FieldManager.instance.currentActionCharacter.power;
             cardInfo.text += "\n能量：" + FieldManager.instance.currentActionCharacter.energy + "/" + FieldManager.instance.currentActionCharacter.maxEnergy;
             if (!FieldManager.instance.currentActionCharacter.isEnemy)
                 energyInfo.text = FieldManager.instance.currentActionCharacter.energy + "/" + FieldManager.instance.currentActionCharacter.maxEnergy;

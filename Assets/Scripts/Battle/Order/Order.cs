@@ -75,7 +75,7 @@ namespace sysOrder
         {
             if (character == null) return;
             if (damagerChar != null)
-                damageValue += damagerChar.cardDamage;
+                damageValue += damagerChar.power;
 
             DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
             dif.SetInfo(character, damageValue, damageType, damagerChar);
@@ -96,12 +96,16 @@ namespace sysOrder
         CharData damagerChar;
         int damageValue;
         DamageType damageType;
-        public DamagePapareRandom(CharFilter[] _filters,int _damageValue,DamageType _type,CharData _damager=null)
+
+        int damageTimes;
+        public DamagePapareRandom(CharFilter[] _filters, int _damageValue, DamageType _type, CharData _damager = null, int times = 1)
         {
             filters = _filters;
             damageValue = _damageValue;
             damageType = _type;
             damagerChar = _damager;
+
+            damageTimes = times;
         }
 
         public override void Execution()
@@ -110,19 +114,22 @@ namespace sysOrder
 
             if (character == null) return;
             if (damagerChar != null)
-                damageValue += damagerChar.cardDamage;
+                damageValue += damagerChar.power;
 
             DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
-            dif.SetInfo(character, damageValue, damageType, damagerChar);
+            for(int i = 0; i < damageTimes; i++)
+            {
+                dif.SetInfo(character, damageValue, damageType, damagerChar);
 
-            dif.GoTrigger(TriggerType.DamageCheck);
-            dif.GoTrigger(TriggerType.DamageTotalCheck);
-            dif.GoTrigger(TriggerType.DamageFinalCheck);
-            dif.Computer();
+                dif.GoTrigger(TriggerType.DamageCheck);
+                dif.GoTrigger(TriggerType.DamageTotalCheck);
+                dif.GoTrigger(TriggerType.DamageFinalCheck);
+                dif.Computer();
 
-            dif.GoTrigger(TriggerType.DamageAfter);
-            OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
-            dif.GoTrigger(TriggerType.DamageBefore);
+                dif.GoTrigger(TriggerType.DamageAfter);
+                OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
+                dif.GoTrigger(TriggerType.DamageBefore);
+            }
         }
     }
     public class DamagePapareMulti : Order // can't use this now
@@ -143,7 +150,7 @@ namespace sysOrder
             CharData[] chars = FieldManager.instance.GetConditionChar(filters);
 
             if (damagerChar != null)
-                damageValue += damagerChar.cardDamage;
+                damageValue += damagerChar.power;
 
             DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
             foreach(CharData character in chars)
@@ -159,6 +166,49 @@ namespace sysOrder
                 OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
                 dif.GoTrigger(TriggerType.DamageBefore);
             }
+        }
+    }
+    public class DamagePapareFront : Order
+    {
+        CharData damagerChar;
+        int damageValue;
+        DamageType damageType;
+        public DamagePapareFront( int _damageValue, DamageType _type, CharData _damager = null)
+        {
+
+            damageValue = _damageValue;
+            damageType = _type;
+            damagerChar = _damager;
+        }
+
+        public override void Execution()
+        {
+            CharData character = null;
+            foreach(CharData chara in FieldManager.instance.allChar)
+            {
+                if (chara.isEnemy)
+                    if (FieldManager.instance.CheckCharIsFrontest(chara))
+                    {
+                        character = chara;
+                        break;
+                    }
+            }
+
+            if (character == null) return;
+            if (damagerChar != null)
+                damageValue += damagerChar.power;
+
+            DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
+            dif.SetInfo(character, damageValue, damageType, damagerChar);
+
+            dif.GoTrigger(TriggerType.DamageCheck);
+            dif.GoTrigger(TriggerType.DamageTotalCheck);
+            dif.GoTrigger(TriggerType.DamageFinalCheck);
+            dif.Computer();
+
+            dif.GoTrigger(TriggerType.DamageAfter);
+            OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
+            dif.GoTrigger(TriggerType.DamageBefore);
         }
     }
     public class DamageOrder : Order
@@ -181,6 +231,54 @@ namespace sysOrder
 
         }
     }
+
+    public class DamagePapareRandomGiveStatus : Order
+    {
+        CharFilter[] filters;
+        CharData damagerChar;
+        int damageValue;
+        DamageType damageType;
+
+        string status;
+        int statusNum;
+
+        public DamagePapareRandomGiveStatus(string _status, int _statusNum,CharFilter[] _filters, int _damageValue, DamageType _type, CharData _damager = null)
+        {
+            status = _status;
+            statusNum = _statusNum;
+
+            filters = _filters;
+            damageValue = _damageValue;
+            damageType = _type;
+            damagerChar = _damager;
+        }
+
+        public override void Execution()
+        {
+            CharData character = FieldManager.instance.GetRandomChar(filters);
+
+            if (character == null) return;
+            if (damagerChar != null)
+                damageValue += damagerChar.power;
+
+            DamageInfo dif = TriggerManager.instance.GetTriggerInfo<DamageInfo>();
+            dif.SetInfo(character, damageValue, damageType, damagerChar);
+
+            dif.GoTrigger(TriggerType.DamageCheck);
+            dif.GoTrigger(TriggerType.DamageTotalCheck);
+            dif.GoTrigger(TriggerType.DamageFinalCheck);
+            dif.Computer();
+
+            dif.GoTrigger(TriggerType.DamageAfter);
+            OrderManager.instance.AddOrder(new sysOrder.DamageOrder(dif.damagedChar, dif.damageValue, dif.damageType, dif.damagerChar));
+            dif.GoTrigger(TriggerType.DamageBefore);
+
+            FieldManager.instance.GiveCharStatus(character, status, statusNum);
+        }
+    }
+
+    //===================================
+
     public class UseSkillOrder : Order
     {
         Skill skill;
@@ -283,7 +381,7 @@ namespace sysOrder
 
         public override void Execution()
         {
-            FieldManager.instance.CardBurst(card);
+            CardManager.instance.CardBurst(card);
         }
     }
     public class ArmorChar : Order
@@ -303,6 +401,81 @@ namespace sysOrder
             FieldManager.instance.ArmorChar(character, armorNum, user);
         }
     }
+    public class ArmorCharMulti : Order
+    {
+        int armorNum;
+        CharFilter[] filters;
+        CharData user;
+        public ArmorCharMulti(CharFilter[] _filters, int armor, CharData _user = null)
+        {
+            filters = _filters;
+            armorNum = armor;
+            user = _user;
+        }
+
+        public override void Execution()
+        {
+            CharData[] chars = FieldManager.instance.GetConditionChar(filters);
+            foreach (CharData chara in chars)
+                FieldManager.instance.ArmorChar(chara, armorNum, user);
+        }
+    }
+
+    public class HealOrder : Order
+    {
+        int healNum;
+        CharData character;
+        CharData user;
+        public HealOrder(CharData chara, int _healNum, CharData _user = null)
+        {
+            character = chara;
+            healNum = _healNum;
+            user = _user;
+        }
+
+        public override void Execution()
+        {
+            FieldManager.instance.HealChar(character, healNum, user);
+        }
+    }
+    public class HealOrderMulti : Order
+    {
+        int healNum;
+        CharFilter[] filters;
+        CharData user;
+        public HealOrderMulti(CharFilter[] _filters, int _healNum, CharData _user = null)
+        {
+            filters = _filters;
+            healNum = _healNum;
+            user = _user;
+        }
+
+        public override void Execution()
+        {
+            CharData[] chars = FieldManager.instance.GetConditionChar(filters);
+            foreach (CharData chara in chars)
+                FieldManager.instance.HealChar(chara, healNum, user);
+        }
+    }
+    public class HealRandom : Order
+    {
+        int healNum;
+        CharFilter[] filters;
+        CharData user;
+        public HealRandom(CharFilter[] _filters, int _healNum, CharData _user = null)
+        {
+            filters = _filters;
+            healNum = _healNum;
+            user = _user;
+        }
+
+        public override void Execution()
+        {
+            CharData chara = FieldManager.instance.GetRandomChar(filters);
+            if(chara!=null)
+                FieldManager.instance.HealChar(chara, healNum, user);
+        }
+    }
     public class GainEnergy : Order
     {
         public int energy;
@@ -316,6 +489,21 @@ namespace sysOrder
         public override void Execution()
         {
             FieldManager.instance.GainEnergy(character,energy);
+        }
+    }
+    public class GainPower : Order
+    {
+        public int power;
+        public CharData character;
+        public GainPower(CharData chara, int powerNum)
+        {
+            power = powerNum;
+            character = chara;
+        }
+
+        public override void Execution()
+        {
+            FieldManager.instance.GainPower(character, power);
         }
     }
     public class GiveCharStatus : Order
@@ -391,6 +579,53 @@ namespace sysOrder
                     CardManager.instance.CardMove(card, CardPos.Deck);
                 }
             }
+        }
+    }
+    public class NewCardToHand : Order
+    {
+        public int cardNo;
+        public NewCardToHand(int _cardNo)
+        {
+            cardNo = _cardNo;
+        }
+
+        public override void Execution()
+        {
+            CardData card = CardCreator.CreateCard(cardNo);
+            if (card != null)
+            {
+                CardManager.instance.CardMove(card, CardPos.Hand);
+            }
+        }
+    }
+    public class MoveCard : Order
+    {
+        CardData card;
+        CardPos to;
+        public MoveCard(CardData _card,CardPos _to)
+        {
+            card = _card;
+            to = _to;
+        }
+
+        public override void Execution()
+        {
+            CardManager.instance.CardMove(card, to);
+        }
+    }
+    public class CardCostAdjust : Order
+    {
+        public int adjustNum;
+        public CardData card;
+        public CardCostAdjust(CardData _card,int _adjustNum)
+        {
+            adjustNum = _adjustNum;
+            card = _card;
+        }
+
+        public override void Execution()
+        {
+            card.CostAdjust(adjustNum);
         }
     }
 

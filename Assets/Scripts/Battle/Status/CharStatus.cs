@@ -9,6 +9,7 @@ namespace nCharStatus
         DamageInfo dif;
         public DamageToZero(int _time)
         {
+            statusShowName = "絕對和平";
             statusName = "Invincible";
             byTime = true;
             time = _time;
@@ -44,6 +45,7 @@ namespace nCharStatus
         DamageInfo dif;
         public Fragile(int _time)
         {
+            statusShowName = "脆弱";
             statusName = "Fragile";
             byTime = true;
             time = _time;
@@ -70,4 +72,38 @@ namespace nCharStatus
             //throw new System.NotImplementedException();
         }
     }
+
+    public class Weak : CharStatus
+    {
+        DamageInfo dif;
+        public Weak(int _time)
+        {
+            statusShowName = "虛弱";
+            statusName = "Weak";
+            byTime = true;
+            time = _time;
+        }
+        public override void Enter()
+        {
+            dif = SetSubscription<DamageInfo>(TriggerType.DamageTotalCheck, 1);
+        }
+        public override void Trigger1()
+        {
+            if (dif.damagerChar == character)
+            {
+                dif.extraDamageValue -= dif.damageValue / 2;
+            }
+        }
+
+        public override void Exit()
+        {
+            // throw new System.NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+
 }

@@ -38,13 +38,15 @@ public class GameData : MonoBehaviour
         deck.Add(13);
         deck.Add(13);
         deck.Add(14);
-        deck.Add(14);
+        deck.Add(23);
+        deck.Add(32);
+        deck.Add(30);
 
         handCardNum = 4;
         //===
-        front = new CharacterDataPack("", 0, 0,0);
-        middle = new CharacterDataPack("", 0, 0,0);
-        back = new CharacterDataPack("", 0, 0,0);
+        //front = new CharacterDataPack("", 0, 0,0);
+        //middle = new CharacterDataPack("", 0, 0,0);
+        //back = new CharacterDataPack("", 0, 0,0);
     }
 
     public List<int> deck;
@@ -58,15 +60,24 @@ public class GameData : MonoBehaviour
 
 public class CharacterDataPack
 {
-    public CharacterDataPack(string name, int cd1, int cd2,int hp)
+    public CharacterDataPack(string name, int cd1, int cd2,int maxHp,int hp)
     {
         heroName = name;
         skillCD1 = cd1;
         skillCD2 = cd2;
+        maxHealth = maxHp;
         currentHealth = hp;
     }
     public string heroName;
     public int skillCD1;
     public int skillCD2;
+
     public int currentHealth;
+    public int maxHealth;
+    public int power;
+    public int magic;
+    public int armor;
+    public int agility;
+    public int naxEnergy;
+
 }

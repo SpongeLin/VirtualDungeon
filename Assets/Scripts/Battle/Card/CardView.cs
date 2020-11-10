@@ -102,7 +102,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     {
         //StopTween();
         //tween = transform.DOMove(pos, CardManager.instance.cardSpeed).SetEase(Ease.OutQuad);
-        if (posTween == null)
+        if (posTween != null)
         {
             posTween.Kill();
             posTween = null;

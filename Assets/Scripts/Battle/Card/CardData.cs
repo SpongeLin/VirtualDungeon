@@ -24,17 +24,23 @@ public class CardData
     public int setCost = -1;
     public int oriCost;
 
+    public bool canBurst;
+    public int oriMagicConsume;
+    public bool oriExhasut;
+    public int oriOverLoad;
+    public bool oriSoulLink;
+
     public bool canUse;
     public int banCount;
     public int exhasutCount;
 
-    public int magicConsume;
     public bool magicCheck;
-    public bool canBurst;
     public int burst;
 
     public CharData linkChar;
     public bool linkCheck;
+
+    public bool negativeCard;
 
     public bool isSelectTarget;
     public CharData targetChar;

@@ -12,6 +12,14 @@ public static class CardCreator
         card.cardNo = cardNo;
 
         Create(card, cardNo);
+        if(card.oriOverLoad>0)
+            card.cardStatusControl.EnterStatus(new nCardStatus.Overload(card.oriOverLoad));
+        if(card.oriExhasut)
+            card.cardStatusControl.EnterStatus(new nCardStatus.OriExhasut());
+        if(card.oriSoulLink)
+            card.cardStatusControl.EnterStatus(new nCardStatus.SoulLink());
+
+
         foreach (CardEffect effect in card.cardEffects)
             effect.card = card;
         //cardImage...
@@ -33,12 +41,12 @@ public static class CardCreator
                 card.cardShowName = "TEST2";
                 card.cardDescription = "敵方";
                 card.oriCost = 2;
+                card.oriExhasut = true;
+                card.oriOverLoad = 2;
                 card.charFilters.Add(new CharFilter("Camps", 2));
                 card.isSelectTarget = true;
 
                 card.cardEffects.Add(new nCardEffect.DamageEffectSelect(20));
-                card.cardStatusControl.EnterStatus(new nCardStatus.Overload(2));
-                card.cardStatusControl.EnterStatus(new nCardStatus.OriExhasut());
                 break;
             case 3:
                 card.cardShowName = "TEST3";
@@ -59,7 +67,7 @@ public static class CardCreator
                 break;
             case 5:
                 card.cardShowName = "TEST4";
-                card.cardDescription = "狀態賦予";
+                card.cardDescription = "賦予絕對和平狀態3回合";
                 card.oriCost = 1;
                 card.isSelectTarget = true;
 
@@ -134,14 +142,14 @@ public static class CardCreator
                 card.cardShowName = "防禦";
                 card.cardDescription = "自身獲得30點護盾。超載(1)";
                 card.oriCost = 1;
+                card.oriOverLoad = 1;
                 card.cardEffects.Add(new nCardEffect.ArmorSelf(30));
-                card.cardStatusControl.EnterStatus(new nCardStatus.Overload(1));
                 break;
             case 19:
                 card.cardShowName = "防禦";
                 card.cardDescription = "對自身造成10點傷害，獲得2點AP。消耗";
                 card.oriCost = 0;
-                card.cardStatusControl.EnterStatus(new nCardStatus.OriExhasut());
+                card.oriExhasut = true;
                 card.cardEffects.Add(new nCardEffect.DamageSelf(10));
                 card.cardEffects.Add(new nCardEffect.GainEnergy(2));
                 break;
@@ -149,7 +157,7 @@ public static class CardCreator
                 card.cardShowName = "防禦";
                 card.cardDescription = "對一個敵方角色造成15點傷害。魔力(1):再造成一次傷害";
                 card.oriCost = 1;
-                card.magicConsume = 1;
+                card.oriMagicConsume = 1;
                 card.isSelectTarget = true;
                 card.charFilters.Add(new CharFilter("Camps", 2));
                 card.cardEffects.Add(new nCardEffect.DamageEffectSelect(15));
@@ -159,7 +167,7 @@ public static class CardCreator
                 card.cardShowName = "防禦";
                 card.cardDescription = "對所有敵方角色造成15點傷害。魔力(2):歸還AP";
                 card.oriCost = 2;
-                card.magicConsume = 2;
+                card.oriMagicConsume = 2;
                 card.cardEffects.Add(new nCardEffect.DamageAllEnemy(15));
                 card.cardEffects.Add(new nCardEffect.BackEnergyIfMagic());
                 break;
@@ -167,11 +175,11 @@ public static class CardCreator
                 card.cardShowName = "符文射擊";
                 card.cardDescription = "對一個敵方角色造成40點傷害。連結：歸還能量";
                 card.oriCost = 3;
+                card.oriSoulLink = true;
                 card.isSelectTarget = true;
                 card.charFilters.Add(new CharFilter("Camps", 2));
                 card.cardEffects.Add(new nCardEffect.DamageEffectSelect(40));
                 card.cardEffects.Add(new nCardEffect.BackEnergyIfLink());
-                card.cardStatusControl.EnterStatus(new nCardStatus.SoulLink());
                 break;
             case 23:
                 card.cardShowName = "重新整理";
@@ -199,10 +207,64 @@ public static class CardCreator
             case 26:
                 card.cardShowName = "魔力閃燃";
                 card.cardDescription = "對一個隨機敵方角色造成8點傷害。魔力(1):複製一張此卡放到你牌庫頂";
-                card.oriCost = 1;
-                card.magicConsume = 1;
+                card.oriCost = 0;
+                card.oriMagicConsume = 1;
                 card.cardEffects.Add(new nCardEffect.DamageRandomEnemy(8));
                 card.cardEffects.Add(new nCardEffect.CopySelfToDeckMagic());
+                break;
+            case 27:
+                card.cardShowName = "貪婪之盾";
+                card.cardDescription = "對一個其他友方角色造成15點傷害，自身獲得35點護盾";
+                card.oriCost = 1;
+                card.isSelectTarget = true;
+                card.charFilters.Add(new CharFilter("Camps", 1));
+                card.charFilters.Add(new CharFilter("NotCurrent"));
+                card.cardEffects.Add(new nCardEffect.DamageEffectSelect(15));
+                card.cardEffects.Add(new nCardEffect.ArmorSelf(35));
+                break;
+            case 28:
+                card.cardShowName = "緊急守備";
+                card.cardDescription = "所有友方角色獲得20點護盾。超載(2)";
+                card.oriCost = 0;
+                card.oriOverLoad = 2;
+                card.cardEffects.Add(new nCardEffect.ArmorAllAlly(20));
+                break;
+            case 29:
+                card.cardShowName = "魯莽";
+                card.cardDescription = "對所有敵人造成17點傷害，放一張「記憶斷片」到你手中。";
+                card.oriCost = 1;
+                card.cardEffects.Add(new nCardEffect.DamageAllEnemy(17));
+                card.cardEffects.Add(new nCardEffect.NewCardToHand(700));
+                break;
+            case 30:
+                card.cardShowName = "野獸之舞";
+                card.cardDescription = "此卡在手牌區時，自身卡牌傷害+10";
+                card.oriCost = 0;
+                card.cardStatusControl.EnterStatus(new nCardStatus.BeastDance(10));
+                break;
+            case 31:
+                card.cardShowName = "踏入險境";
+                card.cardDescription = "你的手牌消耗降低(1)，放2張阻礙到你的牌庫中";
+                card.oriCost = 0;
+                card.cardEffects.Add(new nCardEffect.NewCardToHand(700));
+                card.cardEffects.Add(new nCardEffect.NewCardToHand(700));
+                break;
+            case 32:
+                card.cardShowName = "雷神之觸";
+                card.cardDescription = "對最前方角色造成15點傷害，自身移動到最前方";
+                card.oriCost = 1;
+                card.cardEffects.Add(new nCardEffect.DamageFront(15));
+                card.cardEffects.Add(new nCardEffect.ChangeToFront());
+                break;
+
+
+
+            case 700:
+                card.cardShowName = "記憶斷片";
+                card.cardDescription = "無效果。消耗";
+                card.oriCost = 1;
+                card.oriExhasut = true;
+                card.negativeCard = true;
                 break;
 
         }

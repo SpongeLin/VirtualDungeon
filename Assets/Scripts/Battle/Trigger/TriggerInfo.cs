@@ -145,29 +145,43 @@ public class SkillInfo : TriggerInfo
 public class CharInfo : TriggerInfo
 {
     public CharData character;
-    public bool dealth;
-    public int gainMagic;
+    public int argument1;
+    public bool argument2;
+    public CharData argumentChar;
+
     public CharInfo() : base()
     {
 
     }
+    public void SetInfo(CharData _chara)
+    {
+        character = _chara;
 
-    public void SetInfo(CharData _chara,bool _dealth)
-    {
-        character = _chara;
-        dealth = _dealth;
+        argument1 = 0;
+        argument2 = false;
+        argumentChar = null;
     }
-    public void SetInfo(CharData _chara, int _magic)
+    public void SetInfo(CharData _chara, int _argument1, bool _argument2 = false)
     {
         character = _chara;
-        gainMagic = _magic;
+        argument1 = _argument1;
+        argument2 = _argument2;
+
+        argumentChar = null;
+    }
+    public void SetInfo(CharData _chara, int _argument1, CharData _char)
+    {
+        character = _chara;
+        argument1 = _argument1;
+        argumentChar = _char;
+
+        argument2 = false;
     }
 }
 public class CardInfo : TriggerInfo
 {
     public CardData card;
     public int burstNum;
-    public bool exhaust;
     public CardPos from;
     public CardPos to;
 
@@ -179,15 +193,13 @@ public class CardInfo : TriggerInfo
     {
         card = _card;
         burstNum = _burstNum;
-        exhaust = false;
         from = CardPos.Null;
         to = CardPos.Null;
     }
-    public void SetInfo(CardData _card, bool _exhaust)
+    public void SetInfo(CardData _card)
     {
         card = _card;
         burstNum = 0;
-        exhaust = _exhaust;
         from = CardPos.Null;
         to = CardPos.Null;
     }
@@ -195,7 +207,6 @@ public class CardInfo : TriggerInfo
     {
         card = _card;
         burstNum = 0;
-        exhaust = false;
         from = _form;
         to = _to;
     }

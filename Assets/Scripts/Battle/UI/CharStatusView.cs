@@ -13,6 +13,9 @@ public class CharStatusView : MonoBehaviour
     public void SetCharStatusView(CharStatus cs)
     {
         gameObject.SetActive(true);
+        Sprite s = Resources.Load<Sprite>("CharStatus/" + cs.statusName);
+        statusImage.sprite = s;
+
         charStatus = cs;
     }
     public void ViewUpdate()
