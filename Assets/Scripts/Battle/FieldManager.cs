@@ -69,12 +69,12 @@ public class FieldManager : MonoBehaviour
         OrderManager.instance.AddOrder(new sysOrder.WaitOrder(0.84f));
 
 
-        CharCreate(new CharacterDataPack("A", 0, 0,64,0), TeamPos.Front, false);
-        CharCreate(new CharacterDataPack("B", 0, 0,100,0), TeamPos.Middle, false);
-        CharCreate(new CharacterDataPack("C", 0, 0,75,0), TeamPos.Back, false);
-        CharCreate(new CharacterDataPack("NovitiateKnight", 0, 0,75,0), TeamPos.Front, true);
-        CharCreate(new CharacterDataPack("NovitiateMage", 0, 0,60,0), TeamPos.Middle, true);
-        CharCreate(new CharacterDataPack("NovitiateLancer", 0, 0,70,0), TeamPos.Back, true);
+        CharCreate(GameData.instance.front, TeamPos.Front, false);
+        CharCreate(GameData.instance.middle, TeamPos.Middle, false);
+        CharCreate(GameData.instance.back, TeamPos.Back, false);
+        CharCreate(GameData.instance.frontEnemy, TeamPos.Front, true);
+        CharCreate(GameData.instance.middleEnemy, TeamPos.Middle, true);
+        CharCreate(GameData.instance.backEnemy, TeamPos.Back, true);
 
         //for (int i = 0; i < handCardNum; i++)
         //    OrderManager.instance.AddOrder(new sysOrder.DrawOrder());
@@ -447,6 +447,16 @@ public class FieldManager : MonoBehaviour
         CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
         cif.SetInfo(chara, magicNum);
         cif.GoTrigger(TriggerType.GainMagic);
+    }
+    public void CharLoseMagic(CharData character,int loseNum,bool noTrigger = false)
+    {
+        if (loseNum <= 0) return;
+        character.magicPoint -= loseNum;
+
+        if (!noTrigger)
+        {
+
+        }
     }
     //---------------------------------------------------
     public void ArmorChar(CharData chara ,int armorNum,CharData user=null)

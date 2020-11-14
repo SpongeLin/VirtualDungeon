@@ -5,8 +5,8 @@ using UnityEngine.UI;
 public class IntroViewControl : MonoBehaviour
 {
     public GameObject introView;
-    public Text IntroName;
-    public Text IntroText;
+    public Text introName;
+    public Text introText;
     bool viewActive;
     // Start is called before the first frame update
     void Start()
@@ -27,7 +27,8 @@ public class IntroViewControl : MonoBehaviour
     }
     public void OpenIntroView(IntroViewContent content,bool right)
     {
-        IntroName.text = content.GetName();
+        introName.text = content.GetName();
+        introText.text = content.GetDescription();
         if (right)
             introView.transform.GetComponent<RectTransform>().pivot = new Vector2(0, 0);
         else

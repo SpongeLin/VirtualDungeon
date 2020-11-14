@@ -55,6 +55,7 @@ public abstract class Skill : Subscriber
 {
     public string skillName;
     public string skillShowName;
+    public string skillDescription;
 
     public bool talent;
 
@@ -70,6 +71,18 @@ public abstract class Skill : Subscriber
 
     public SkillTarget target = SkillTarget.All;
 
+    public string GetName()
+    {
+        string showName = skillShowName;
+        if(!talent)
+            showName += "" + actionPoint + "AP " + coolDown + "CD";
+
+        return showName;
+    }
+    public string GetDescription()
+    {
+        return skillDescription;
+    }
 
     public Skill(int ap,int cd)
     {
@@ -111,10 +124,10 @@ namespace nSkill
         int num = 0;
         public MagicLight( int ap, int cd) : base( ap, cd)
         {
-            skillShowName = "星輝光芒";
+            skillShowName = "星輝";
             talent = true;
             skillName = "MagicLight";
-
+            skillDescription = "你每打出3張牌，獲得1點魔莉。";
         }
 
         public override void Excite(CharData target)
@@ -151,9 +164,10 @@ namespace nSkill
     {
         public StarLose(int ap, int cd) : base( ap, cd)
         {
-            skillShowName = "星塵殞落";
+            skillShowName = "星塵";
             target = SkillTarget.Self;
             skillName = "StarLose";
+            skillDescription = "丟棄手中所有牌";
         }
 
         public override void Excite(CharData target)
@@ -185,10 +199,12 @@ namespace nSkill
             skillShowName = "星光指引";
             target = SkillTarget.Self;
             skillName = "StarGuide";
+            skillDescription = "一張隨機手牌花費減少(1)。魔導(3)：所有手牌花費減少(1)";
         }
 
         public override void Excite(CharData target)
         {
+            if (CardManager.instance.handCards.Count == 0) return;
             if (FieldManager.instance.currentActionCharacter.magicPoint < 3)
             {
                 CardData[] cards = CardManager.instance.handCards.ToArray();
@@ -197,7 +213,7 @@ namespace nSkill
             }
             else
             {
-                FieldManager.instance.currentActionCharacter.magicPoint -= 3;
+                FieldManager.instance.CharLoseMagic(FieldManager.instance.currentActionCharacter, 3);
                 CardData[] cards = CardManager.instance.handCards.ToArray();
                 foreach(CardData card in cards)
                     OrderManager.instance.AddOrder(new sysOrder.CardCostAdjust(card, -1));
@@ -226,6 +242,7 @@ namespace nSkill
             skillShowName = "內功";
             talent = true;
             skillName = "InsidePower";
+            skillDescription = "當你抽出強化牌時，為其強化2次。";
         }
 
         public override void Excite(CharData target)
@@ -263,6 +280,7 @@ namespace nSkill
             skillShowName = "筋骨神功";
             target = SkillTarget.Self;
             skillName = "Bone";
+            skillDescription = "本賽局獲得5點力量";
         }
 
         public override void Excite(CharData target)
@@ -290,6 +308,8 @@ namespace nSkill
             skillShowName = "拍掌";
             target = SkillTarget.Self;
             skillName = "Clap";
+
+            skillDescription = "消耗你手中所有負面卡牌";
         }
 
         public override void Excite(CharData target)
@@ -326,6 +346,8 @@ namespace nSkill
             skillShowName = "羊奶";
             talent = true;
             skillName = "GoatMilk";
+
+            skillDescription = "當你賦予其他友方角色護盾時，為其治療5點生命值";
         }
 
         public override void Excite(CharData target)
@@ -362,6 +384,7 @@ namespace nSkill
             skillShowName = "魔族加護";
             target = SkillTarget.Allies;
             skillName = "DemonArmor";
+            skillDescription = "賦予一個友方角色10點護盾。魔導(1)：賦予的護盾量加倍";
         }
 
         public override void Excite(CharData target)
@@ -372,9 +395,38 @@ namespace nSkill
             }
             else
             {
-                FieldManager.instance.currentActionCharacter.magicPoint -= 1;
+                FieldManager.instance.CharLoseMagic(FieldManager.instance.currentActionCharacter, 1);
                 OrderManager.instance.AddOrder(new sysOrder.ArmorChar(target, 20, character));
             }
+        }
+
+        public override void Update()
+        {
+
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    public class Same : Skill
+    {
+        public Same(int ap, int cd) : base(ap, cd)
+        {
+            skillShowName = "鯊魚的祝福";
+            target = SkillTarget.Allies;
+            skillName = "Same";
+            skillDescription = "賦予一個友方角色40點護盾以及守護直到他回合結束";
+        }
+
+        public override void Excite(CharData target)
+        {
+            OrderManager.instance.AddOrder(new sysOrder.ArmorChar(target, 40, character));
+            OrderManager.instance.AddOrder(new sysOrder.GiveCharStatus(target, "Gaurd", 1));
         }
 
         public override void Update()

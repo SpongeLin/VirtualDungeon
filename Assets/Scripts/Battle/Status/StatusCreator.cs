@@ -14,6 +14,8 @@ public static class StatusCreator
                 return new nCharStatus.Fragile(statusNum);
             case "Weak":
                 return new nCharStatus.Weak(statusNum);
+            case "Guard":
+                return new nCharStatus.Guard(statusNum);
         }
 
         Debug.LogWarning("This charStatus is not exist.");

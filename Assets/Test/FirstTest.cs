@@ -188,10 +188,6 @@ public class TestStatus : CharStatus
         dif.damageValue/=2;
         Debug.Log("TRIGGER DAMAGE :" + dif.damageValue + " To " + dif.damagedChar);
     }
-    public override string GetDescription()
-    {
-        throw new System.NotImplementedException();
-    }
 
     public override void Update()
     {
@@ -214,10 +210,6 @@ public class TestStatus2 : CharStatus
     public override void Trigger1()
     {
         dif.damageValue -= 10;
-    }
-    public override string GetDescription()
-    {
-        throw new System.NotImplementedException();
     }
 
     public override void Update()

@@ -92,7 +92,7 @@ public class CharViewUI : MonoBehaviour
                     isShow = true;
                     break;
                 }
-            if (!isShow)
+            if (!isShow && !cs.notDisplay)
             {
                 CharStatusView newView = GetView();
                 if (newView != null)

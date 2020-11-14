@@ -39,10 +39,15 @@ public class BattleSkillView : MonoBehaviour
             ap.text = "";
             cd.text = "";
             SetActiveSkill(false);
+            skillImage.sprite = null;
+            costMask.fillAmount = 0;
 
             return;
         }
         skill = _skill;
+        skillImage.sprite = Resources.Load<Sprite>("Skill/" + skill.skillName);
+
+
         SetSkillNum();
         SetActiveSkill(true);
     }

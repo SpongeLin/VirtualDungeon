@@ -50,6 +50,7 @@ public static class CharacterCreator
                 charData.agility = 28;
                 charData.skillControl.EnterSkill(0, new nSkill.GoatMilk(0, 0));
                 charData.skillControl.EnterSkill(1, new nSkill.DemonArmor(1, 1));
+                charData.skillControl.EnterSkill(1, new nSkill.Same(0, 5));
                 break;
             case "X":
                 charData.charShowName = "敵人X";

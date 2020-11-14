@@ -93,7 +93,7 @@ public class CardManager : MonoBehaviour
         FieldManager.instance.currentActionCharacter.ReduceEnergy(card.cardCost);
         if (FieldManager.instance.currentActionCharacter.magicPoint >= card.oriMagicConsume)
         {
-            FieldManager.instance.currentActionCharacter.magicPoint -= card.oriMagicConsume;
+            FieldManager.instance.CharLoseMagic(FieldManager.instance.currentActionCharacter, card.oriMagicConsume);
             card.magicCheck = true;
         }
         if(FieldManager.instance.currentActionCharacter == card.linkChar && card.linkChar != null)

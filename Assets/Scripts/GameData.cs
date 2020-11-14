@@ -11,6 +11,7 @@ public class GameData : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            TestChar();
         }
         else
         {
@@ -56,6 +57,20 @@ public class GameData : MonoBehaviour
     public CharacterDataPack middle;
     public CharacterDataPack back;
 
+    public CharacterDataPack frontEnemy;
+    public CharacterDataPack middleEnemy;
+    public CharacterDataPack backEnemy;
+
+    public void TestChar()
+    {
+        front = new CharacterDataPack("A", 0, 0, 64, 0);
+        middle = new CharacterDataPack("B", 0, 0, 100, 0);
+        back = new CharacterDataPack("C", 0, 0, 75, 0);
+
+        frontEnemy = new CharacterDataPack("NovitiateKnight", 0, 0, 75, 0);
+        middleEnemy = new CharacterDataPack("NovitiateMage", 0, 0, 60, 0);
+        backEnemy = new CharacterDataPack("NovitiateLancer", 0, 0, 70, 0);
+    }
 }
 
 public class CharacterDataPack
@@ -78,6 +93,6 @@ public class CharacterDataPack
     public int magic;
     public int armor;
     public int agility;
-    public int naxEnergy;
+    public int maxEnergy;
 
 }

@@ -6,6 +6,7 @@ public abstract class Status : Subscriber
 {
     public string statusName;
     public string statusShowName;
+    public string statusDescription;
     public int time = 1;
     public int num = 1;
 
@@ -32,7 +33,17 @@ public abstract class Status : Subscriber
 
     public string statusImage;
     //public string showName;
-    public virtual string GetDescription(){return "";}
+    public string GetDescription(){return statusDescription; }
+    public string GetName()
+    {
+        string showName = statusShowName;
+        if (byNum)
+            showName += num + "層";
+        else if (byTime)
+            showName += time + "回合";
+
+        return showName;
+    }
     public string GetNum()
     {
         if (byNum)
@@ -49,6 +60,7 @@ public abstract class Status : Subscriber
 // Character Status
 public abstract class CharStatus : Status
 {
+    public bool notDisplay;
     public CharData character;
 
 

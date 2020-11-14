@@ -13,6 +13,7 @@ namespace nCharStatus
             statusName = "Invincible";
             byTime = true;
             time = _time;
+            statusDescription = "所有傷害歸零";
         }
         public override void Enter()
         {
@@ -30,11 +31,6 @@ namespace nCharStatus
             
         }
 
-        public override string GetDescription()
-        {
-            return "受到的所有傷害降至0。";
-        }
-
         public override void Update()
         {
             
@@ -49,6 +45,7 @@ namespace nCharStatus
             statusName = "Fragile";
             byTime = true;
             time = _time;
+            statusDescription = "受到的傷害提高50%";
         }
         public override void Enter()
         {
@@ -82,6 +79,7 @@ namespace nCharStatus
             statusName = "Weak";
             byTime = true;
             time = _time;
+            statusDescription = "造成的傷害減少50%";
         }
         public override void Enter()
         {
@@ -97,6 +95,33 @@ namespace nCharStatus
 
         public override void Exit()
         {
+            // throw new System.NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //throw new System.NotImplementedException();
+        }
+    }
+    public class Guard : CharStatus
+    {
+        public Guard(int _time)
+        {
+            statusShowName = "守護";
+            statusName = "Guard";
+            byTime = true;
+            time = _time;
+            statusDescription = "必須優先選擇這個角色";
+
+            notDisplay = true;
+        }
+        public override void Enter()
+        {
+            character.guardCount++;
+        }
+        public override void Exit()
+        {
+            character.guardCount--;
             // throw new System.NotImplementedException();
         }
 
