@@ -10,7 +10,9 @@ public class StatusControl : Subscriber
     {
         isWorking = true;
         statusList = new List<Status>();
-        TriggerManager.instance.AddUpdateList(this);
+        if (TriggerManager.instance != null)
+            TriggerManager.instance.AddUpdateList(this);
+        else Debug.Log("not update");
 
         SetSubscription<TurnInfo>(TriggerType.TurnEnding, 1);
     }

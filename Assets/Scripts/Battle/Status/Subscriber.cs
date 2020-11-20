@@ -12,6 +12,12 @@ public abstract class Subscriber
 
     public T SetSubscription<T>(TriggerType type, int port) where T : TriggerInfo
     {
+        if (TriggerManager.instance == null)
+        {
+            Debug.Log("Subscription Error");
+            return null;
+        }
+            
         return (T)TriggerManager.instance.GetTriggerInfo<T>().SubscriptionButton(type, port, this);
     }
 

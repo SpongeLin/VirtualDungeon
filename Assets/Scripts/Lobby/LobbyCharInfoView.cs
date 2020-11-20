@@ -8,6 +8,7 @@ public class LobbyCharInfoView : MonoBehaviour
     public CharacterDataPack charPack;
 
     public Image charHead;
+    public Text charName;
     public Image healthBar;
     public Text health;
 
@@ -33,17 +34,39 @@ public class LobbyCharInfoView : MonoBehaviour
     public void UpdateCharInfo()
     {
         if (charPack == null) return;
+        CharData chara = CharacterCreator.TestCreat(charPack);
+
+        charName.text = chara.charShowName;
+
         health.text = charPack.currentHealth + "/" + charPack.maxHealth;
         healthBar.fillAmount = (float)charPack.currentHealth / charPack.maxHealth;
 
         power.text = charPack.power.ToString();
         magic.text = charPack.magic.ToString();
-        energy.text = charPack.maxEnergy.ToString();
+        energy.text = (charPack.maxEnergy+chara.maxEnergy).ToString();
         armor.text = charPack.armor.ToString();
-        agility.text = charPack.agility.ToString();
+        agility.text = (charPack.agility+chara.agility).ToString();
 
-        skillCD1.text = charPack.skillCD1.ToString();
-        skillCD2.text = charPack.skillCD2.ToString();
+        if (charPack.skillCD1 == 0)
+        {
+            skillCD1.text = "";
+        }
+        else
+        {
+            skillCD1.text = charPack.skillCD1.ToString();
+        }
+        if (charPack.skillCD2 == 0)
+        {
+            skillCD2.text = "";
+        }
+        else
+        {
+            skillCD2.text = charPack.skillCD2.ToString();
+        }
+
+        skill1.sprite = Resources.Load<Sprite>("Skill/" + chara.skillControl.skill1.skillName);
+        skill2.sprite = Resources.Load<Sprite>("Skill/" + chara.skillControl.skill2.skillName);
+        skill3.sprite = Resources.Load<Sprite>("Skill/" + chara.skillControl.skill3.skillName);
 
     }
 

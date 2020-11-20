@@ -192,7 +192,7 @@ namespace nCardStatus
         }
         public override void Enter()
         {
-            cif = SetSubscription<CardInfo>(TriggerType.UseCardCheck, 1);
+            cif = SetSubscription<CardInfo>(TriggerType.CardBurst, 1);
         }
         public override void Trigger1()
         {

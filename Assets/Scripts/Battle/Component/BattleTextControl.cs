@@ -8,6 +8,7 @@ public enum TextType
 {
     Damage,
     Heal,
+    Armor,
     Null,
     Critical
 }
@@ -23,9 +24,12 @@ public class BattleTextControl : MonoBehaviour
     public Color damageColor2;
     public Color healColor1;
     public Color healColor2;
+    public Color armorColor1;
+    public Color armorColor2;
 
     public float floatX;
     public float floatY;
+    public float closeTime;
 
     // Start is called before the first frame update
     void Awake()
@@ -52,9 +56,12 @@ public class BattleTextControl : MonoBehaviour
         }else if (type == TextType.Heal)
         {
             currentText.SetColor(healColor1, healColor2);
+        }else if (type == TextType.Armor)
+        {
+            currentText.SetColor(armorColor1, armorColor2);
         }
 
-        currentText.OpenText();
+        currentText.OpenText(closeTime);
         currentText.transform.SetAsLastSibling();
         currentText.transform.DOPunchScale(new Vector3(1.2f, 1.2f, 1), 0.5f,5,1.3f);
     }

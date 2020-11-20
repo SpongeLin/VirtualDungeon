@@ -16,7 +16,9 @@ public class SkillControl : Subscriber
     {
         character = _chara;
         isWorking = true;
-        TriggerManager.instance.AddUpdateList(this);
+        if (TriggerManager.instance != null)
+            TriggerManager.instance.AddUpdateList(this);
+        else Debug.Log("not update");
     }
     public void EnterSkill(int skillSlot,Skill skill,int _currentCoolDown=0)
     {
@@ -35,6 +37,11 @@ public class SkillControl : Subscriber
             skill2 = skill;
             skill2.Enter();
         }
+    }
+    public void SetCurrentCoolDown(int skillCD1,int skillCD2)
+    {
+        if (skill2 != null) skill2.currentCoolDown = skillCD1;
+        if (skill3 != null) skill3.currentCoolDown = skillCD2;
     }
 
     public override void Update()

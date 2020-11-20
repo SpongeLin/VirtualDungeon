@@ -633,6 +633,21 @@ namespace sysOrder
 
 namespace nOrder
 {
+    public class HandCardCostAdjust : Order
+    {
+        int adjustNum;
+        public HandCardCostAdjust(int _adjustNum)
+        {
+            adjustNum = _adjustNum;
+        }
+        public override void Execution()
+        {
+            foreach(CardData card in CardManager.instance.handCards)
+            {
+                OrderManager.instance.AddOrder(new sysOrder.CardCostAdjust(card, adjustNum));
+            }
+        }
+    }
     public class GainMagicIfTargetDie : Order
     {
         int magic;

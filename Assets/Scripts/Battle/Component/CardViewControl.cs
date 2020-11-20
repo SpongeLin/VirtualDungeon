@@ -110,7 +110,7 @@ public class CardViewControl : MonoBehaviour
     Vector3 GetHandCardPos(int i)
     {
         float dis = handCardEndPos.transform.position.x - handCardPlace.transform.position.x;
-        Debug.Log(dis);
+        //Debug.Log(dis);
         dis = dis / handCard.Count;
 
         return new Vector3(handCardPlace.transform.position.x + dis * i, handCardPlace.transform.position.y, handCardPlace.transform.position.z);

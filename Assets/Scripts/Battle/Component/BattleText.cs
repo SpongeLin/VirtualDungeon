@@ -8,6 +8,7 @@ public class BattleText : MonoBehaviour
     Text text;
     TextGradient textGradient;
     public bool isWorking = false;
+    float closeTime = 1f;
 
     private void Awake()
     {
@@ -24,9 +25,10 @@ public class BattleText : MonoBehaviour
         textGradient.topColor = top;
         textGradient.bottomColor = bottom;
     }
-    public void OpenText()
+    public void OpenText(float _closeTime = 0.9f)
     {
         isWorking = true;
+        closeTime = _closeTime;
         StartCoroutine(Close());
     }
 
@@ -38,7 +40,7 @@ public class BattleText : MonoBehaviour
 
     IEnumerator Close()
     {
-        yield return new WaitForSeconds(1.05f);
+        yield return new WaitForSeconds(closeTime);
         CloseText();
     }
 }

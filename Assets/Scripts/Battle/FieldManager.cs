@@ -18,6 +18,8 @@ public class FieldManager : MonoBehaviour
 
     public FieldStatusControl fieldStatusControl;
 
+    public GameOverContorl gameOverContorl;
+
     public bool playerTurn;
     public bool isWorking = false;
     public bool gameStart = false;
@@ -93,7 +95,7 @@ public class FieldManager : MonoBehaviour
     {
         GameObject go = Instantiate(charViewObject, heroPlace);
         CharView cv = go.GetComponent<CharView>();
-        CharacterCreator.TestCreat(cv, cdp);
+        CharacterCreator.TestCreat( cdp, cv);
 
         GameObject avatar = Resources.Load<GameObject>("CharAvatar/" + cdp.heroName);
         GameObject avatarInstance = Instantiate(avatar, cv.transform);
@@ -111,6 +113,7 @@ public class FieldManager : MonoBehaviour
         {
             CardManager.instance.deck.Add(CardCreator.CreateCard(cardNo));
         }
+        CardManager.instance.Shuffle();
         handCardNum = GameData.instance.handCardNum;
 
         foreach (CharData chara in allChar)
@@ -155,9 +158,9 @@ public class FieldManager : MonoBehaviour
         battleHubControl.Gameupdate();
 
         if (CheckTeamLose(true))
-            Debug.Log("Player is Win！！！");
+            GameOver(true);
         else if (CheckTeamLose(false))
-            Debug.Log("Player is Lose！！！");
+            GameOver(false);
 
     }
 
@@ -467,6 +470,7 @@ public class FieldManager : MonoBehaviour
         CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
         cif.SetInfo(chara, armorNum,user);
         cif.GoTrigger(TriggerType.Armor);
+        battleTextControl.ShowDamageText(chara, armorNum, TextType.Armor);
     }
     public void HealChar(CharData chara, int healNum, CharData user = null)
     {
@@ -476,6 +480,7 @@ public class FieldManager : MonoBehaviour
         CharInfo cif = TriggerManager.instance.GetTriggerInfo<CharInfo>();
         cif.SetInfo(chara, healNum, user);
         cif.GoTrigger(TriggerType.Heal);
+        battleTextControl.ShowDamageText(chara, healNum, TextType.Heal);
     }
     public void GainEnergy(CharData character,int energyNum)
     {
@@ -588,7 +593,7 @@ public class FieldManager : MonoBehaviour
             if (chara == charTeam.front)
                 return true;
         if (charTeam.front.isDie)
-            if (chara == charTeam.middle)
+            if (chara == charTeam.middle && !chara.isDie)
                 return true;
         if (charTeam.front.isDie)
             if (charTeam.middle.isDie)
@@ -756,4 +761,36 @@ public class FieldManager : MonoBehaviour
         }
     }
 
+
+    void GameOver(bool win)
+    {
+        isWorking = false;
+        string content = "";
+        if (win)
+        {
+            content = "Win";
+            GameData.instance.battleResult = true;
+        }
+        else
+        {
+            content = "lose";
+            GameData.instance.battleResult = true;
+        }
+
+        WriteCharToGameData(heros.front);
+        WriteCharToGameData(heros.middle);
+        WriteCharToGameData(heros.back);
+
+        gameOverContorl.Open(content);
+    }
+    void WriteCharToGameData(CharData chara)
+    {
+        if (chara.characterDataPack == null) return;
+        chara.characterDataPack.currentHealth = chara.health;
+        if (chara.characterDataPack.currentHealth <= 0)
+            chara.characterDataPack.currentHealth = 1;
+        chara.characterDataPack.skillCD1 = chara.skillControl.skill2.currentCoolDown;
+        chara.characterDataPack.skillCD2 = chara.skillControl.skill3.currentCoolDown;
+
+    }
 }

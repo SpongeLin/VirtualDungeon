@@ -7,10 +7,21 @@ public class LobbyManager : MonoBehaviour
 {
     public static LobbyManager instance { get; private set; }
 
+    public LobbyHubControl hub;
+    public DealControl deal;
+    public DeckDisplay deckDisplay;
 
     public void Awake()
     {
         instance = this;
+    }
+
+    public void Start()
+    {
+        hub.LobbyStart();
+
+        if (GameData.instance.battleResult)
+            deal.StartPickUp();
     }
 
     // Update is called once per frame
@@ -20,5 +31,13 @@ public class LobbyManager : MonoBehaviour
         {
             SceneManager.LoadScene("Battle",LoadSceneMode.Single);
         }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            deal.StartPickUp();
+        }
+    }
+    public void DeckDisplayOpen()
+    {
+        deckDisplay.Open();
     }
 }

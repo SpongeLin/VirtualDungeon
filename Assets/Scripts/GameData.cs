@@ -33,9 +33,9 @@ public class GameData : MonoBehaviour
         deck.Add(15);
         deck.Add(22);
         deck.Add(25);
-        deck.Add(10);
-        deck.Add(11);
-        deck.Add(12);
+        //deck.Add(10);
+        //deck.Add(11);
+        deck.Add(24);
         deck.Add(13);
         deck.Add(13);
         deck.Add(14);
@@ -52,6 +52,10 @@ public class GameData : MonoBehaviour
 
     public List<int> deck;
     public int handCardNum;
+    public int money;
+
+    public bool battleResult;
+    public bool moneyReward;
 
     public CharacterDataPack front;
     public CharacterDataPack middle;
@@ -63,9 +67,9 @@ public class GameData : MonoBehaviour
 
     public void TestChar()
     {
-        front = new CharacterDataPack("A", 0, 0, 64, 0);
-        middle = new CharacterDataPack("B", 0, 0, 100, 0);
-        back = new CharacterDataPack("C", 0, 0, 75, 0);
+        front = new CharacterDataPack("Iro", 0, 0, 64, 0);
+        middle = new CharacterDataPack("Nao", 0, 0, 100, 0);
+        back = new CharacterDataPack("ShouMe", 0, 0, 75, 0);
 
         frontEnemy = new CharacterDataPack("NovitiateKnight", 0, 0, 75, 0);
         middleEnemy = new CharacterDataPack("NovitiateMage", 0, 0, 60, 0);
@@ -81,7 +85,7 @@ public class CharacterDataPack
         skillCD1 = cd1;
         skillCD2 = cd2;
         maxHealth = maxHp;
-        currentHealth = hp;
+        currentHealth = hp == 0 ? maxHp : hp;
     }
     public string heroName;
     public int skillCD1;

@@ -38,6 +38,9 @@ public class CharData
     public int power;
 
 
+    public CharacterDataPack characterDataPack;
+
+
 
     public void HealHealth(int heal)
     {

@@ -24,6 +24,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     Tween posTween = null;
 
     public int costStatus = 0;
+    ViewMode viewMode = ViewMode.Battle;
 
 
     public void SetCard(CardData setCard)
@@ -53,7 +54,7 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     {
         description.text = card.cardDescription;
         if (card.burst >= 1)
-            description.text += "\n<color=#ff0000   >強化：" + card.burst.ToString()+ "</color>";
+            description.text += "\n<color=#FF0000>強化：" + card.burst.ToString()+ "</color>";
         if (card.linkChar != null)
             description.text += "\n<color=#0000E3>連結：" + card.linkChar.charShowName.ToString() + "</color>";
 
@@ -146,11 +147,27 @@ public class CardView : MonoBehaviour,IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!enable) return;
-        if (!card.canUse) return;
-        //Debug.Log(card.cardName + " down now  ");
+        if (viewMode == ViewMode.Battle)
+        {
+            if (!enable) return;
+            if (!card.canUse) return;
+            //Debug.Log(card.cardName + " down now  ");
 
-        CardManager.instance.MouseDownCard(this);
-        return;
+            CardManager.instance.MouseDownCard(this);
+        }
+        else
+        {
+
+        }
+    }
+    public void LobbyMode()
+    {
+        viewMode = ViewMode.Lobby;
+    }
+
+    enum ViewMode
+    {
+        Battle,
+        Lobby
     }
 }

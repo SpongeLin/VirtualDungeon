@@ -324,4 +324,16 @@ namespace nCardEffect
             OrderManager.instance.AddOrder(new sysOrder.ChangeToFront(FieldManager.instance.currentActionCharacter));
         }
     }
+    public class HandCardCostAdjust : CardEffect
+    {
+        int adjustNum;
+        public HandCardCostAdjust(int _adjustNum)
+        {
+            adjustNum = _adjustNum;
+        }
+        public override void UseCardEffect()
+        {
+            OrderManager.instance.AddOrder(new nOrder.HandCardCostAdjust(adjustNum));
+        }
+    }
 }
