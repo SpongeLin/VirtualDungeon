@@ -66,7 +66,9 @@ public class CardData
         burst = 0;
         linkChar = null;
         linkCheck = false;
-        //cardStatus clear!!
+
+        setCost = -1;
+        extraCost = 0;
     }
 
     public void Burst()

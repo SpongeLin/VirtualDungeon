@@ -27,10 +27,10 @@ public class DeckDisplay : MonoBehaviour
         foreach (CardView card in cards)
             card.gameObject.SetActive(false);
         int i = 0;
-        foreach(int cardNo in GameData.instance.deck)
+        foreach(CardData card in LobbyManager.instance.decksData)
         {
             cards[i].gameObject.SetActive(true);
-            cards[i].SetCard(CardCreator.CreateCard(cardNo));
+            cards[i].SetCard(card);
             i++;
         }
     }

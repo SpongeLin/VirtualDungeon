@@ -8,10 +8,24 @@ public class PickUpDeal : MonoBehaviour
     public CardView cardView1;
     public CardView cardView2;
     public CardView cardView3;
+    public PickCardSelector selector1;
+    public PickCardSelector selector2;
+    public PickCardSelector selector3;
 
     int c1 = 10;
     int c2 = 11;
     int c3 = 12;
+
+
+    private void Awake()
+    {
+        selector1.SetCardView(cardView1);
+        selector1.SetDeal(this);
+        selector2.SetCardView(cardView2);
+        selector2.SetDeal(this);
+        selector3.SetCardView(cardView3);
+        selector3.SetDeal(this);
+    }
 
     public void StartPickUp()
     {
@@ -26,18 +40,11 @@ public class PickUpDeal : MonoBehaviour
     }
     public void Click(int result)
     {
-        if (result == 1)
-        {
-            GameData.instance.deck.Add(c1);
-        }else if (result == 2)
-        {
-            GameData.instance.deck.Add(c2);
-        }
-        else if (result == 3)
-        {
-            GameData.instance.deck.Add(c3);
-        }
+        LobbyManager.instance.AddCardToDeck(result);
+
 
         LobbyManager.instance.deal.Close();
+        gameObject.SetActive(false);
     }
+
 }

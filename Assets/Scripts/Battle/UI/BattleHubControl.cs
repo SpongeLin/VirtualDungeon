@@ -19,6 +19,7 @@ public class BattleHubControl : MonoBehaviour
 
     public void Update()
     {
+        /*
         if (arrowIsWorking)
         {
             if (CardManager.instance.currentDragCard == null) return;
@@ -30,7 +31,7 @@ public class BattleHubControl : MonoBehaviour
             arrowImage.transform.rotation = Quaternion.LookRotation(r);
             arrowImage.transform.Rotate(0, 90, 0);
 
-        }
+        }*/
     }
 
     public void Gameupdate()

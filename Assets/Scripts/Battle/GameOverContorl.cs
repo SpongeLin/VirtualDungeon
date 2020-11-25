@@ -19,4 +19,9 @@ public class GameOverContorl : MonoBehaviour
     {
         SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
     }
+    public void TestDirectionWin()
+    {
+        FieldManager.instance.TestWin();
+        Over();
+    }
 }

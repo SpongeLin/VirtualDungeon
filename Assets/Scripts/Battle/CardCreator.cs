@@ -10,8 +10,16 @@ public static class CardCreator
     {
         CardData card = new CardData();
         card.cardNo = cardNo;
-
         Create(card, cardNo);
+
+        card.cardImage = Resources.Load<Sprite>("Card/" + card.cardName);
+
+        if (FieldManager.instance == null)
+        {
+            Debug.Log("OnlySHow");
+            return card;
+        }
+
         if(card.oriOverLoad>0)
             card.cardStatusControl.EnterStatus(new nCardStatus.Overload(card.oriOverLoad));
         if(card.oriExhasut)
@@ -19,7 +27,6 @@ public static class CardCreator
         if(card.oriSoulLink)
             card.cardStatusControl.EnterStatus(new nCardStatus.SoulLink());
 
-        card.cardImage = Resources.Load<Sprite>("Card/" + card.cardName);
 
         foreach (CardEffect effect in card.cardEffects)
             effect.card = card;
@@ -101,7 +108,7 @@ public static class CardCreator
                 card.cardEffects.Add(new nCardEffect.DamageEffectSelect(23));
                 break;
             case 12:
-                card.cardName = "Defense";
+                card.cardName = "Armor";
                 card.cardShowName = "防禦";
                 card.cardDescription = "自身獲得15護盾";
                 card.oriCost = 1;

@@ -48,6 +48,27 @@ public class GameData : MonoBehaviour
         //front = new CharacterDataPack("", 0, 0,0);
         //middle = new CharacterDataPack("", 0, 0,0);
         //back = new CharacterDataPack("", 0, 0,0);
+        eventCards = new List<EventCardDataPack>();
+        eventCards.Add(new EventCardDataPack(0, 1, ""));
+        eventCards.Add(new EventCardDataPack(1, 1, ""));
+        eventCards.Add(new EventCardDataPack(2, 1, ""));
+        eventCards.Add(new EventCardDataPack(3, 1, ""));
+        eventCards.Add(new EventCardDataPack(4, 2, ""));
+        eventCards.Add(new EventCardDataPack(5, 3, ""));
+        eventCards.Add(new EventCardDataPack(6, 2, ""));
+        eventCards.Add(new EventCardDataPack(7, 1, ""));
+        eventCards.Add(new EventCardDataPack(8, 1, ""));
+        eventCards.Add(new EventCardDataPack(9, 1, ""));
+        eventCards.Add(new EventCardDataPack(10, 5, ""));
+        eventCards.Add(new EventCardDataPack(11, 4, ""));
+        eventCards.Add(new EventCardDataPack(12, 3, ""));
+        eventCards.Add(new EventCardDataPack(13, 1, ""));
+        eventCards.Add(new EventCardDataPack(14, 4, ""));
+        eventCards.Add(new EventCardDataPack(15, 1, "", true));
+        fogBeforeNum = 2;
+        eventCurrentNum = 1;
+
+        preEventCardNum = -1;
     }
 
     public List<int> deck;
@@ -64,6 +85,13 @@ public class GameData : MonoBehaviour
     public CharacterDataPack frontEnemy;
     public CharacterDataPack middleEnemy;
     public CharacterDataPack backEnemy;
+
+    public List<EventCardDataPack> eventCards;
+    public int eventCurrentNum;
+    public int eventFogNum;
+    public int fogBeforeNum;
+
+    public int preEventCardNum;
 
     public void TestChar()
     {
@@ -99,4 +127,21 @@ public class CharacterDataPack
     public int agility;
     public int maxEnergy;
 
+}
+
+public class EventCardDataPack
+{
+    public EventCardDataPack(int num, int type, string content,bool _bool = false)
+    {
+        eventCardNum = num;
+        eventType = type;
+        eventContent = content;
+        eventBool = _bool;
+    }
+    public int eventCardNum;
+    public int eventType;
+    public string eventContent;
+    public bool eventBool;
+
+    public bool used;
 }

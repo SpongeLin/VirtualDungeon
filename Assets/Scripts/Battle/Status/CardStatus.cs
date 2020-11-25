@@ -38,7 +38,7 @@ namespace nCardStatus
         public override void Enter()
         {
             cif = SetSubscription<UseCardInfo>(TriggerType.UseCardCheck, 1);
-            FieldManager.instance.overloadNum += energyNum;
+            //FieldManager.instance.overloadNum += energyNum;
         }
         public override void Trigger1()
         {
@@ -50,7 +50,7 @@ namespace nCardStatus
 
         public override void Exit()
         {
-            FieldManager.instance.overloadNum -= energyNum;
+            //FieldManager.instance.overloadNum -= energyNum;
         }
 
         public override void Update()

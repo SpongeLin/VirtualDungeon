@@ -19,6 +19,8 @@ public class FieldManager : MonoBehaviour
     public FieldStatusControl fieldStatusControl;
 
     public GameOverContorl gameOverContorl;
+    public ArrowRenderer arrow;
+    bool arrowActive;
 
     public bool playerTurn;
     public bool isWorking = false;
@@ -58,6 +60,11 @@ public class FieldManager : MonoBehaviour
 
         charLineControl = new CharLineControl();
 
+    }
+    private void Update()
+    {
+        if (arrowActive)
+            ArrowUpdate();
     }
     private void Start()
     {
@@ -404,7 +411,28 @@ public class FieldManager : MonoBehaviour
     //---------------------------------------------------------------
     public void SetArrow(bool active)
     {
-        battleHubControl.SetArrow(active);
+        //battleHubControl.SetArrow(active);
+
+        arrow.gameObject.SetActive(active);
+        arrowActive = active;
+    }
+    void ArrowUpdate()
+    {
+
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = new Vector3(mousePos.x, mousePos.y, 0);
+        Vector3 start = new Vector3(CardManager.instance.currentDragCard.transform.position.x, CardManager.instance.currentDragCard.transform.position.y, 0);
+        if((mousePos - start).magnitude < 1.4f)
+        {
+            if (arrow.gameObject.activeSelf)
+                arrow.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (!arrow.gameObject.activeSelf)
+                arrow.gameObject.SetActive(true);
+            arrow.SetPositions(start, mousePos);
+        }
     }
 
 
@@ -792,5 +820,9 @@ public class FieldManager : MonoBehaviour
         chara.characterDataPack.skillCD1 = chara.skillControl.skill2.currentCoolDown;
         chara.characterDataPack.skillCD2 = chara.skillControl.skill3.currentCoolDown;
 
+    }
+    public void TestWin()
+    {
+        GameOver(true);
     }
 }
