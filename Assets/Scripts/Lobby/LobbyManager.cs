@@ -15,9 +15,14 @@ public class LobbyManager : MonoBehaviour
     public GameEventContorl gameEvent;
     public ShopContorl shop;
 
+    public GameObject blackForEventCard;
+
     public bool isWorling;
 
     public List<CardData> decksData;
+
+
+    public bool currentEventCardBeNotUse = false;
 
     public void Awake()
     {
@@ -35,7 +40,10 @@ public class LobbyManager : MonoBehaviour
 
         if (GameData.instance.battleResult)
         {
-            deal.StartPickUp(true);
+            deal.StartPickUp("EventCard");
+            GameData.instance.money += 35;
+            hub.MoneyUpdate();
+            //GameData.instance.money += GameData.instance.moneyReward;
         }
         else
         {
@@ -59,6 +67,14 @@ public class LobbyManager : MonoBehaviour
         {
             deal.StartPickCard("Delete");
         }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            shop.StartShop();
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            TakeMoney(30);
+        }
     }
 
     public void AddCardToDeck(int cardNo)
@@ -71,6 +87,25 @@ public class LobbyManager : MonoBehaviour
         GameData.instance.deck.Remove(card.cardNo);
         decksData.Remove(card);
     }
+    public void TakeMoney(int money)
+    {
+        GameData.instance.money += money;
+        hub.MoneyUpdate();
+    }
+    public void LoseMoney(int loseMoney)
+    {
+        GameData.instance.money -= loseMoney;
+        hub.MoneyUpdate();
+    }
+    public void HealAllHeroFull()
+    {
+        GameData.instance.front.FullHealth();
+        GameData.instance.middle.FullHealth();
+        GameData.instance.back.FullHealth();
+        hub.LobbyUpdate();
+    }
+
+
 
     public void DeckDisplayOpen()
     {
@@ -89,6 +124,31 @@ public class LobbyManager : MonoBehaviour
 
         SceneManager.LoadScene("Battle", LoadSceneMode.Single);
     }
+    public void OpenShop(int preECNum=-1)
+    {
+        if (preECNum != -1)
+        {
+            SetPreEventCard(preECNum);
+            shop.StartShop("EventCard");
+            return;
+        }
+        shop.StartShop();
+    }
+    public void OpenShop(bool eventNext)
+    {
+        if (eventNext)
+        {
+            shop.StartShop("GameEvent");
+        }
+    }
+    public void OpenGameEvent(string eventName, int preECNum = -1)
+    {
+        gameEvent.StartEvent(eventName);
+        if (preECNum != -1)
+        {
+            SetPreEventCard(preECNum);
+        }
+    }
 
 
     public void EventCardCallBack()
@@ -98,6 +158,10 @@ public class LobbyManager : MonoBehaviour
 
         GameData.instance.preEventCardNum = -1;
     }
+    public void SetBlackForEventCard(bool active)
+    {
+        blackForEventCard.SetActive(active);
+    }
     public void SetPreEventCard(int ecNum)
     {
         GameData.instance.preEventCardNum = ecNum;
@@ -105,5 +169,12 @@ public class LobbyManager : MonoBehaviour
     public void FogCounterRun()
     {
         hub.FogCounterRun();
+    }
+
+
+
+    public void TestGoToEnd()
+    {
+        SceneManager.LoadScene("End", LoadSceneMode.Single);
     }
 }

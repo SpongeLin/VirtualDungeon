@@ -25,6 +25,9 @@ public class LobbyHubControl : MonoBehaviour
         middle.UpdateCharInfo();
         back.UpdateCharInfo();
 
+    }
+    public void MoneyUpdate()
+    {
         money.text = GameData.instance.money.ToString();
     }
 

@@ -64,7 +64,7 @@ public class GameData : MonoBehaviour
         eventCards.Add(new EventCardDataPack(12, 3, ""));
         eventCards.Add(new EventCardDataPack(13, 1, ""));
         eventCards.Add(new EventCardDataPack(14, 4, ""));
-        eventCards.Add(new EventCardDataPack(15, 1, "", true));
+        eventCards.Add(new EventCardDataPack(15, 7, "", true));
         fogBeforeNum = 2;
         eventCurrentNum = 1;
 
@@ -127,6 +127,10 @@ public class CharacterDataPack
     public int agility;
     public int maxEnergy;
 
+    public void FullHealth()
+    {
+        currentHealth = maxHealth;
+    }
 }
 
 public class EventCardDataPack

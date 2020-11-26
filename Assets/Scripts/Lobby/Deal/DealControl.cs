@@ -9,9 +9,9 @@ public class DealControl : MonoBehaviour
     public PickUpDeal pickUpDeal;
     public PickCardDeal pickCardDeal;
 
-    bool eventCardCallBack;
+    string eventCardCallBack;
 
-    public void StartPickUp(bool callBack = false)
+    public void StartPickUp(string callBack = "")
     {
         black.SetActive(true);
         pickUpDeal.gameObject.SetActive(true);
@@ -19,7 +19,7 @@ public class DealControl : MonoBehaviour
 
         eventCardCallBack = callBack;
     }
-    public void StartPickCard(string pickContent)
+    public void StartPickCard(string pickContent, string callBack = "")
     {
         if(pickContent == "Delete")
         {
@@ -33,6 +33,7 @@ public class DealControl : MonoBehaviour
             pickCardDeal.gameObject.SetActive(true);
             pickCardDeal.StartPickCard(new CopyCardExciteComponent());
         }
+        eventCardCallBack = callBack;
     }
     public void StartPickChar(string pickContent)
     {
@@ -44,9 +45,16 @@ public class DealControl : MonoBehaviour
         black.SetActive(false);
 
 
-        if (eventCardCallBack)
+        if (eventCardCallBack == "EventCard")
+        {
             LobbyManager.instance.EventCardCallBack();
-        eventCardCallBack = false;
+            eventCardCallBack = "";
+        }
+        if (eventCardCallBack == "GameEvent")
+        {
+            LobbyManager.instance.gameEvent.Next();
+            eventCardCallBack = "";
+        }
     }
 
 }

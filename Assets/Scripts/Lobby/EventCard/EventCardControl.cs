@@ -125,7 +125,11 @@ public class EventCardControl : MonoBehaviour
     }
     void AfterEventCardUseCheck(int eventCardNum)
     {
-        // if it need to active used
+        if (LobbyManager.instance.currentEventCardBeNotUse)
+        {
+            LobbyManager.instance.currentEventCardBeNotUse = false;
+            return;
+        }
 
         EventCard eCard = null;
         foreach(EventCard ec in eventCards)
@@ -141,6 +145,7 @@ public class EventCardControl : MonoBehaviour
             Debug.LogWarning("Found not eventcard");
             return;
         }
+
         eCard.ShowTip();
         eCard.SetClick(false);
         GetEventCardData(eventCardNum).used = true;
@@ -169,19 +174,22 @@ public class EventCardControl : MonoBehaviour
                 LobbyManager.instance.GoBattle(ec.eventContent,ec.eventCardNum);
                 break;
             case 2:
-                EventUpdate(ec.eventCardNum);
+                LobbyManager.instance.OpenGameEvent("Treasure", ec.eventCardNum);
                 break;
             case 3:
-                EventUpdate(ec.eventCardNum);
+                LobbyManager.instance.OpenGameEvent("HotSpring", ec.eventCardNum);
                 break;
             case 4:
-                EventUpdate(ec.eventCardNum);
+                LobbyManager.instance.OpenGameEvent("Bed", ec.eventCardNum);
                 break;
             case 5:
-                EventUpdate(ec.eventCardNum);
+                LobbyManager.instance.OpenShop(ec.eventCardNum);
                 break;
             case 6:
                 EventUpdate(ec.eventCardNum);
+                break;
+            case 7:
+                LobbyManager.instance.TestGoToEnd();
                 break;
         }
 
