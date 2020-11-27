@@ -26,7 +26,6 @@ public abstract class Status : Subscriber
             num += s.num;
     }
 
-    public bool display = false;
 
     public abstract void Enter();
     public abstract void Exit();
@@ -60,7 +59,8 @@ public abstract class Status : Subscriber
 // Character Status
 public abstract class CharStatus : Status
 {
-    public bool notDisplay;
+    public bool notDisplay = false;
+    public bool negativeStatus;
     public CharData character;
 
 

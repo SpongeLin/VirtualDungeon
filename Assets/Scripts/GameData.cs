@@ -7,6 +7,8 @@ public class GameData : MonoBehaviour
     public static GameData instance { get; private set; }
     public void Awake()
     {
+        eventCurrentNum = 1;
+
         if (instance == null)
         {
             instance = this;
@@ -39,11 +41,12 @@ public class GameData : MonoBehaviour
         deck.Add(13);
         deck.Add(13);
         deck.Add(14);
-        deck.Add(23);
+        deck.Add(18);
+        deck.Add(20);
         deck.Add(32);
         deck.Add(30);
 
-        handCardNum = 4;
+        handCardNum = 5;
         //===
         //front = new CharacterDataPack("", 0, 0,0);
         //middle = new CharacterDataPack("", 0, 0,0);
@@ -65,8 +68,7 @@ public class GameData : MonoBehaviour
         eventCards.Add(new EventCardDataPack(13, 1, ""));
         eventCards.Add(new EventCardDataPack(14, 4, ""));
         eventCards.Add(new EventCardDataPack(15, 7, "", true));
-        fogBeforeNum = 2;
-        eventCurrentNum = 1;
+        fogBeforeNum = 4;
 
         preEventCardNum = -1;
     }

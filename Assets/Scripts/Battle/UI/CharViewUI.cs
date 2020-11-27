@@ -14,7 +14,8 @@ public class CharViewUI : MonoBehaviour
     public Text cardDamage;
     public Text charName;
 
-    public Image currentMark;
+    public Animator currentMarkAnimator;
+    public Animator guardMarkAnimator;
 
     public bool isWorking;
 
@@ -29,6 +30,8 @@ public class CharViewUI : MonoBehaviour
 
     bool canClick = false;
     public Animator targetMark;
+
+    bool guard = false;
 
     public void Awake()
     {
@@ -71,6 +74,17 @@ public class CharViewUI : MonoBehaviour
             targetMark.SetTrigger("NotTarget");
         }
 
+        if(!guard && character.guardCount > 0)
+        {
+            guardMarkAnimator.gameObject.SetActive(true);
+            guard = true;
+        }else if(guard && character.guardCount <= 0)
+        {
+            guardMarkAnimator.gameObject.SetActive(false);
+            guard = false;
+        }
+        
+
 
         if (character.enemyStrategy != null)
         {
@@ -79,7 +93,9 @@ public class CharViewUI : MonoBehaviour
     }
     public void SetCurrentTurnMark(bool active)
     {
-        currentMark.gameObject.SetActive(active);
+        currentMarkAnimator.gameObject.SetActive(active);
+        if (active)
+            currentMarkAnimator.SetTrigger("Enter");
     }
 
     void UpdateCharStatusView()
@@ -103,7 +119,7 @@ public class CharViewUI : MonoBehaviour
         }
         foreach (CharStatusView csv in charStatusViewList)
             if (csv.charStatus != null)
-                if (!csv.charStatus.isWorking)
+                if (!csv.charStatus.isWorking || csv.charStatus.notDisplay)
                     csv.Close();
     }
     void UpdateEnemyIntention()

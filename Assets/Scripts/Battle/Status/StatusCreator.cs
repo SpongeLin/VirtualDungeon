@@ -38,8 +38,8 @@ public static class StatusCreator
     {
         switch (fieldStatusName)
         {
-            case "AllyDownEnergyAtTurnStart":
-                return new nFieldStatus.AllyDownEnergyAtTurnStart(statusNum);
+         //   case "AllyDownEnergyAtTurnStart":
+           //     return new nFieldStatus.AllyDownEnergyAtTurnStart(statusNum);
         }
 
         Debug.LogWarning("This fieldStatus is not exist.");

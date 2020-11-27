@@ -4,6 +4,93 @@ using UnityEngine;
 
 namespace nCharStatus
 {
+    public class PowerDisplay : CharStatus
+    {
+        public PowerDisplay()
+        {
+            statusShowName = "力量";
+            statusName = "PowerDisplay";
+            statusDescription = "力量可以增加你造成的傷害。";
+            eternal = true;
+            original = true;
+            byNum = true;
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+        }
+
+        public override void Update()
+        {
+            num = character.power;
+            if (num == 0)
+                notDisplay = true;
+            else
+                notDisplay = false;
+        }
+    }
+    public class MagicDisplay : CharStatus
+    {
+        public MagicDisplay()
+        {
+            statusShowName = "魔力";
+            statusName = "MagicDisplay";
+            statusDescription = "魔力可以提供給魔導牌，觸發額外的效果。";
+            eternal = true;
+            original = true;
+            byNum = true;
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+        }
+
+        public override void Update()
+        {
+            num = character.magicPoint;
+            if (num == 0)
+                notDisplay = true;
+            else
+                notDisplay = false;
+        }
+    }
+    public class KaleidoScope : CharStatus
+    {
+        public nSkill.MagicLight skill;
+        public KaleidoScope()
+        {
+            statusShowName = "萬華鏡";
+            statusName = "KaleidoScope";
+            statusDescription = "你每打出3張牌，獲得1點魔力。";
+            eternal = true;
+            original = true;
+            byNum = true;
+        }
+        public override void Enter()
+        {
+        }
+
+        public override void Exit()
+        {
+        }
+
+        public override void Update()
+        {
+            if (skill == null) return;
+            num = skill.num;
+            if (num == 0)
+                notDisplay = true;
+            else
+                notDisplay = false;
+        }
+    }
+
     public class DamageToZero : CharStatus
     {
         DamageInfo dif;
@@ -46,6 +133,7 @@ namespace nCharStatus
             byTime = true;
             time = _time;
             statusDescription = "受到的傷害提高50%";
+            negativeStatus = true;
         }
         public override void Enter()
         {
@@ -80,6 +168,7 @@ namespace nCharStatus
             byTime = true;
             time = _time;
             statusDescription = "造成的傷害減少50%";
+            negativeStatus = true;
         }
         public override void Enter()
         {

@@ -15,8 +15,9 @@ public class FieldManager : MonoBehaviour
     public CharLineControl charLineControl;
     public CharLineViewControl charLineViewControl;
     public IntroViewControl introViewControl;
-
     public FieldStatusControl fieldStatusControl;
+
+    public BattleRecorder battleRecorder;
 
     public GameOverContorl gameOverContorl;
     public ArrowRenderer arrow;
@@ -44,6 +45,9 @@ public class FieldManager : MonoBehaviour
     public int handCardNum;
 
 
+    public int overLoadNum;
+
+
 
     public CharTeam heros;
     public CharTeam enemies;
@@ -59,6 +63,8 @@ public class FieldManager : MonoBehaviour
         allChar = new List<CharData>();
 
         charLineControl = new CharLineControl();
+
+        battleRecorder = new BattleRecorder();
 
     }
     private void Update()
@@ -107,9 +113,12 @@ public class FieldManager : MonoBehaviour
         GameObject avatar = Resources.Load<GameObject>("CharAvatar/" + cdp.heroName);
         GameObject avatarInstance = Instantiate(avatar, cv.transform);
         cv.animator = avatarInstance.GetComponent<Animator>();
+        if (isEnemy) avatarInstance.GetComponent<SpriteRenderer>().flipX = true;
 
         SetCharTeamPos(cv.character, pos, isEnemy);
         allChar.Add(cv.character);
+        cv.character.charStatusControl.EnterStatus(new nCharStatus.PowerDisplay());
+        cv.character.charStatusControl.EnterStatus(new nCharStatus.MagicDisplay());
 
         slotControl.SetSlotPos(cv, pos, isEnemy, true); //wait
         //charViewUIControl.OpenCharViewUI(cv);
@@ -184,6 +193,11 @@ public class FieldManager : MonoBehaviour
             character.energy = character.maxEnergy;
             battleHubControl.SetTurnEndButton(true);
 
+            if (overLoadNum > 0)
+            {
+                character.ReduceEnergy(overLoadNum);
+                overLoadNum = 0;
+            }
         }
         else
         {
@@ -221,6 +235,7 @@ public class FieldManager : MonoBehaviour
     }
     public void RealTurnEnd()
     {
+        battleRecorder.ResetTurn();
         currentActionCharacter.TurnEnd();
 
         charViewUIControl.ShowCurrentTurnMark(currentActionCharacter, false);
@@ -479,15 +494,31 @@ public class FieldManager : MonoBehaviour
         cif.SetInfo(chara, magicNum);
         cif.GoTrigger(TriggerType.GainMagic);
     }
-    public void CharLoseMagic(CharData character,int loseNum,bool noTrigger = false)
+    public void CharMagicEffect(CharData character,int loseNum,bool triggerEffect = true)
     {
-        if (loseNum <= 0) return;
+        if (loseNum < 0) return;
         character.magicPoint -= loseNum;
 
-        if (!noTrigger)
+        if (triggerEffect)
         {
-
+            battleRecorder.Magic(loseNum);
+            //Trigger!!
         }
+    }
+    public void OverLoadEffect(int overLoad)
+    {
+        if (overLoadNum < 0) return;
+
+        overLoadNum += overLoad;
+        battleRecorder.OverLoad(overLoad);
+        //Update OverLoad Mark
+
+        //Trigger!!
+    }
+    public void OverLoadEffect()
+    {
+        overLoadNum = 0;
+        //Update OverLoad Mark
     }
     //---------------------------------------------------
     public void ArmorChar(CharData chara ,int armorNum,CharData user=null)
@@ -542,6 +573,9 @@ public class FieldManager : MonoBehaviour
         if (fs != null)
             fieldStatusControl.EnterStatus(fs);
     }
+
+
+
 
     //---------------------------------------------------
 

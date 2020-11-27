@@ -126,15 +126,14 @@ namespace nSkill
 {
     public class MagicLight : Skill
     {
-        int damageValue;
         UseCardInfo ucif;
-        int num = 0;
+        public int num = 0;
         public MagicLight( int ap, int cd) : base( ap, cd)
         {
-            skillShowName = "星輝";
+            skillShowName = "萬華鏡";
             talent = true;
             skillName = "MagicLight";
-            skillDescription = "你每打出3張牌，獲得1點魔莉。";
+            skillDescription = "你每打出3張牌，獲得1點魔力。";
         }
 
         public override void Excite(CharData target)
@@ -160,6 +159,9 @@ namespace nSkill
         public override void Enter()
         {
             ucif = SetSubscription<UseCardInfo>(TriggerType.UseCardAfter, 1);
+            nCharStatus.KaleidoScope cs = new nCharStatus.KaleidoScope();
+            cs.skill = this;
+            character.charStatusControl.EnterStatus(cs);
         }
 
         public override void Exit()
@@ -171,19 +173,19 @@ namespace nSkill
     {
         public StarLose(int ap, int cd) : base( ap, cd)
         {
-            skillShowName = "星塵";
-            target = SkillTarget.Self;
+            skillShowName = "燦爛一束";
+            target = SkillTarget.Enemies;
             skillName = "StarLose";
-            skillDescription = "丟棄手中所有牌";
+            skillDescription = "對所有敵人造成5點傷害。若本回合你觸發過魔導效果，放一張「緋光輝輝」到你手中";
         }
 
         public override void Excite(CharData target)
         {
-            CardData[] cards = CardManager.instance.handCards.ToArray();
-            foreach (CardData card in cards)
+            if (FieldManager.instance.battleRecorder.magicThisTurn > 0)
             {
-                OrderManager.instance.AddOrder(new sysOrder.DiscardOrder(card));
+                OrderManager.instance.AddOrder(new sysOrder.NewCardToHand(501));
             }
+            OrderManager.instance.AddOrder(new sysOrder.DamagePapareMulti(new CharFilter[] { new CharFilter("Camps", 2) }, 5, DamageType.Normal, character));
         }
 
         public override void Update()
@@ -220,7 +222,7 @@ namespace nSkill
             }
             else
             {
-                FieldManager.instance.CharLoseMagic(FieldManager.instance.currentActionCharacter, 3);
+                FieldManager.instance.CharMagicEffect(FieldManager.instance.currentActionCharacter, 3);
                 CardData[] cards = CardManager.instance.handCards.ToArray();
                 foreach(CardData card in cards)
                     OrderManager.instance.AddOrder(new sysOrder.CardCostAdjust(card, -1));
@@ -316,7 +318,7 @@ namespace nSkill
             target = SkillTarget.Self;
             skillName = "Clap";
 
-            skillDescription = "消耗你手中所有負面卡牌";
+            skillDescription = "將你手中所有負面卡牌放入除外區";
         }
 
         public override void Excite(CharData target)
@@ -402,7 +404,7 @@ namespace nSkill
             }
             else
             {
-                FieldManager.instance.CharLoseMagic(FieldManager.instance.currentActionCharacter, 1);
+                FieldManager.instance.CharMagicEffect(FieldManager.instance.currentActionCharacter, 1);
                 OrderManager.instance.AddOrder(new sysOrder.ArmorChar(target, 20, character));
             }
         }
@@ -433,7 +435,7 @@ namespace nSkill
         public override void Excite(CharData target)
         {
             OrderManager.instance.AddOrder(new sysOrder.ArmorChar(target, 40, character));
-            OrderManager.instance.AddOrder(new sysOrder.GiveCharStatus(target, "Gaurd", 1));
+            OrderManager.instance.AddOrder(new sysOrder.GiveCharStatus(target, "Guard", 1));
         }
 
         public override void Update()

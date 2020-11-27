@@ -68,6 +68,7 @@ public class LobbyCharInfoView : MonoBehaviour
         skill2.sprite = Resources.Load<Sprite>("Skill/" + chara.skillControl.skill2.skillName);
         skill3.sprite = Resources.Load<Sprite>("Skill/" + chara.skillControl.skill3.skillName);
 
+        charHead.sprite = Resources.Load<Sprite>("Character/" + chara.charName);
     }
 
 }

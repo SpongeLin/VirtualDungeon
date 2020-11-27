@@ -42,7 +42,7 @@ public class CharViewUIControl : MonoBehaviour
         cvu.isWorking = false;
 
         //temp
-        cvu.currentMark.gameObject.SetActive(false);
+        cvu.currentMarkAnimator.gameObject.SetActive(false);
     }
 
     CharViewUI GetView()

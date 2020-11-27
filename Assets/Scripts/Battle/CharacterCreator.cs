@@ -35,14 +35,14 @@ public static class CharacterCreator
                 charData.maxEnergy = 3;
                 charData.agility = 23;
                 charData.skillControl.EnterSkill(0,new nSkill.MagicLight( 0, 0));
-                charData.skillControl.EnterSkill(1, new nSkill.StarLose(0, 5));
+                charData.skillControl.EnterSkill(1, new nSkill.StarLose(1, 3));
                 charData.skillControl.EnterSkill(2, new nSkill.StarGuide(0, 3));
                 break;
             case "Nao":
                 charData.charShowName = "奈央";
                 charData.energy = 2;
-                charData.maxEnergy = 4;
-                charData.agility = 15;
+                charData.maxEnergy = 3;
+                charData.agility = 21;
                 charData.skillControl.EnterSkill(0, new nSkill.InsidePower(0, 0));
                 charData.skillControl.EnterSkill(1, new nSkill.Bone(2, 1));
                 charData.skillControl.EnterSkill(2, new nSkill.Clap(0, 3));
@@ -53,7 +53,7 @@ public static class CharacterCreator
                 charData.charShowName = "翔咩";
                 charData.energy = 2;
                 charData.maxEnergy = 3;
-                charData.agility = 28;
+                charData.agility = 27;
                 charData.skillControl.EnterSkill(0, new nSkill.GoatMilk(0, 0));
                 charData.skillControl.EnterSkill(1, new nSkill.DemonArmor(1, 1));
                 charData.skillControl.EnterSkill(2, new nSkill.Same(0, 5));
@@ -84,7 +84,7 @@ public static class CharacterCreator
                 break;
             case "NovitiateLancer":
                 charData.charShowName = "見習槍兵";
-                charData.agility = 21;
+                charData.agility = 23;
                 charData.enemyStrategy = new EnemyStrategy();
                 charData.enemyStrategy.AddAction(new nEnemyAction.DamageAllHero(12));
                 charData.enemyStrategy.AddAction(new nEnemyAction.DamageRandomTimes(7,3));

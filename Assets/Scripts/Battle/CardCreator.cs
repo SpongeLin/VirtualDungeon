@@ -46,6 +46,10 @@ public static class CardCreator
     {
         switch (cardNo)
         {
+            case 0:
+                card.cardShowName = "Bug";
+                card.cardDescription = "看到這張卡代表BUG，請回報！！！";
+                break;
             case 1:
                 card.cardShowName = "TEST1";
                 card.cardDescription = "無目標";
@@ -300,11 +304,18 @@ public static class CardCreator
                 break;
 
 
+            case 501:
+                card.cardName = "RedLightLight";
+                card.cardShowName = "";
+                card.cardDescription = "獲得一點能量。消耗";
+                card.oriCost = 0;
+                card.oriExhasut = true;
+                card.cardEffects.Add(new nCardEffect.GainEnergy(1));
+                break;
 
             case 700:
                 card.cardName = "MemoryFragment";
                 card.cardShowName = "記憶斷片";
-                card.cardName = "Memory Fragment";
                 card.cardDescription = "無效果。消耗";
                 card.oriCost = 1;
                 card.oriExhasut = true;

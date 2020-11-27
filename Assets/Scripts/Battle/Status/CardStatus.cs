@@ -44,7 +44,8 @@ namespace nCardStatus
         {
             if (cif.card == card)
             {
-                FieldManager.instance.GiveFieldStatus("AllyDownEnergyAtTurnStart",energyNum);
+                //FieldManager.instance.GiveFieldStatus("AllyDownEnergyAtTurnStart",energyNum);
+                FieldManager.instance.OverLoadEffect(energyNum);
             }
         }
 

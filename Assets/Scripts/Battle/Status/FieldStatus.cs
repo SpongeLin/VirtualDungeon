@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace nFieldStatus
 {
+    /*
     public class AllyDownEnergyAtTurnStart : FieldStatus
     {
         TurnInfo tif;
@@ -37,4 +38,5 @@ namespace nFieldStatus
             //throw new System.NotImplementedException();
         }
     }
+    */
 }

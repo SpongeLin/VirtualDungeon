@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5678153042802233077}
   - component: {fileID: 3940133609969419153}
   m_Layer: 0
-  m_Name: C
+  m_Name: ShouMe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 628d1bc4e77212c4ea9fee86f3319c6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c363aca507f54f48ac5fdc5fd63ad38, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

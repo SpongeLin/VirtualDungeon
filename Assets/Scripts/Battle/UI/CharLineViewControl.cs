@@ -70,6 +70,7 @@ public class CharLineViewControl : MonoBehaviour
         for(int i=0;i<viewNumber;i++)
         {
             charLineViewList[i].charName.text = slotResult[i].chara.charShowName;
+            charLineViewList[i].charImage.sprite = Resources.Load<Sprite>("Character/" + slotResult[i].chara.charName);
         }
 
         string log = "";
