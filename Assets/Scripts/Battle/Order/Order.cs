@@ -58,6 +58,21 @@ namespace sysOrder
             Debug.Log(text);
         }
     }
+    public class CharMoveOrder : Order
+    {
+
+        public CharMoveOrder()
+        {
+        }
+        public override void Execution()
+        {
+            FieldManager.instance.CurrentCharMove();
+        }
+    }
+
+
+
+    //=======================================================
     public class DamagePrepare : Order
     {
         CharData character;

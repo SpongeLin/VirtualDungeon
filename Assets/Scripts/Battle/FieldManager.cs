@@ -37,7 +37,6 @@ public class FieldManager : MonoBehaviour
 
     public CharData currentMouseOverCharacter;
 
-    public int overloadNum;
 
     //public List<CharData> heros;
     //public List<CharData> enemies;
@@ -113,7 +112,7 @@ public class FieldManager : MonoBehaviour
         GameObject avatar = Resources.Load<GameObject>("CharAvatar/" + cdp.heroName);
         GameObject avatarInstance = Instantiate(avatar, cv.transform);
         cv.animator = avatarInstance.GetComponent<Animator>();
-        if (isEnemy) avatarInstance.GetComponent<SpriteRenderer>().flipX = true;
+        if (isEnemy) avatarInstance.transform.localScale = new Vector3(-1, 1, 1);
 
         SetCharTeamPos(cv.character, pos, isEnemy);
         allChar.Add(cv.character);
@@ -246,9 +245,17 @@ public class FieldManager : MonoBehaviour
         CharTurnStart(charLineControl.Next());
     }
 
-    public void UpdateCharLineView()
+    public void UpdateCharLineView(bool anima=false)
     {
-        charLineViewControl.UpdateCharLineView();
+        if (anima)
+        {
+            charLineViewControl.AnimaNext();
+        }
+        else
+        {
+            charLineViewControl.UpdateCharLineView();
+        }
+
     }
 
     //---------------------------------------------------------------------
@@ -420,6 +427,7 @@ public class FieldManager : MonoBehaviour
 
         sif.GoTrigger(TriggerType.UseSkillAfter);
         OrderManager.instance.AddOrder(new sysOrder.UseSkillOrder(useSkill, chara));
+        OrderManager.instance.AddOrder(new sysOrder.CharMoveOrder());
         sif.GoTrigger(TriggerType.UseSkillBefore);
 
     }
@@ -483,6 +491,7 @@ public class FieldManager : MonoBehaviour
         charViewUIControl.CloseCharViewUI(character.charView);
         charLineControl.RemoveChar(character);
         character.charStatusControl.ExitAll();
+        character.charView.CharDie();
         //skillControl.???
     }
     public void CharGainMagic(CharData chara,int magicNum)
@@ -584,6 +593,16 @@ public class FieldManager : MonoBehaviour
 
 
         return true;
+    }
+
+
+    public void CharMove(CharData chara,bool isEnemy)
+    {
+        chara.charView.CharMove(isEnemy);
+    }
+    public void CurrentCharMove()
+    {
+        currentActionCharacter.charView.CharMove(currentActionCharacter.isEnemy);
     }
 
     //=================================================

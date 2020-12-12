@@ -67,7 +67,7 @@ public class CharLineControl
                 lp.timeLine -= leastPack.timeLine;
             leastPack.ResetLine();
 
-            UpdateCharLineView();
+            UpdateCharLineView(true);
             return leastPack.character;
         }
 
@@ -81,10 +81,10 @@ public class CharLineControl
 
         return null;
     }
-    void UpdateCharLineView()
+    void UpdateCharLineView(bool anima = false)
     {
         //slot
-        FieldManager.instance.UpdateCharLineView();
+        FieldManager.instance.UpdateCharLineView(anima);
     }
 
 

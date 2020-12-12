@@ -115,6 +115,7 @@ public class CardManager : MonoBehaviour
 
         cif.GoTrigger(TriggerType.UseCardAfter);
         OrderManager.instance.AddOrder(new sysOrder.UseCardOrder(card));
+        OrderManager.instance.AddOrder(new sysOrder.CharMoveOrder());
         cif.GoTrigger(TriggerType.UseCardBefore);
 
         //OrderManager.instance.AddOrder(new sysOrder.DiscardOrder(card));
@@ -247,6 +248,18 @@ public class CardManager : MonoBehaviour
     }
 
 
+
+    public int GetCardShowNum(CardData card, CardShowNumType type)
+    {
+        int extraNum = 0;
+        if (type == CardShowNumType.Damage && !FieldManager.instance.currentActionCharacter.isEnemy)
+            extraNum += FieldManager.instance.currentActionCharacter.power;
+        if (card.cardShowNumFilter != null)
+            extraNum += card.cardShowNumFilter.GetNumFilter(card);
+
+
+        return extraNum + card.oriCardShowNum;
+    }
 
     public CardPos GetCardPosition(CardData card)
     {

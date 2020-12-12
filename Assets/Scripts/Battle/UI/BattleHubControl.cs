@@ -8,6 +8,9 @@ public class BattleHubControl : MonoBehaviour
     public Text cardInfo;
     public Text energyInfo;
 
+    public Image overLoadImage;
+    public Text overLoadNum;
+
     public GameObject turnEndButton;
 
     public BattleSkillView skillView1;
@@ -16,6 +19,8 @@ public class BattleHubControl : MonoBehaviour
 
     public GameObject arrowImage;
     bool arrowIsWorking;
+
+    bool overLoadIsWorking;
 
     public void Update()
     {
@@ -48,6 +53,18 @@ public class BattleHubControl : MonoBehaviour
             else
                 energyInfo.text = "XXX";
         }
+        if(FieldManager.instance.overLoadNum!=0 && !overLoadIsWorking)
+        {
+            overLoadImage.gameObject.SetActive(true);
+            overLoadIsWorking = true;
+        }
+        else if (FieldManager.instance.overLoadNum==0 && overLoadNum)
+        {
+            overLoadImage.gameObject.SetActive(false);
+            overLoadIsWorking = false;
+        }
+        if (overLoadIsWorking)
+            overLoadNum.text = FieldManager.instance.overLoadNum.ToString();
     }
 
     public void SetCharSkill(CharData character)

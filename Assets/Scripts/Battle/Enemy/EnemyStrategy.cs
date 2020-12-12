@@ -36,6 +36,7 @@ public class EnemyStrategy
         OrderManager.instance.AddOrder(new pOrder.TurnEndButton());
         OrderManager.instance.AddOrder(new sysOrder.WaitOrder(0.5f));
         OrderManager.instance.AddOrder(new pOrder.EnemyActionOrder(currentAction));
+        OrderManager.instance.AddOrder(new sysOrder.CharMoveOrder());
         OrderManager.instance.AddOrder(new sysOrder.WaitOrder(0.5f));
         currentAction = currentAction.next;
 
@@ -53,7 +54,12 @@ public abstract class EnemyAction
     public EnemyAction next;
     public string actionImage;
     public string actionContent;
-    public string actionDescription;
+
+    public string actionName;
+    public virtual string GetDescription()
+    {
+        return "無說明";
+    }
     public abstract void Action();
 }
 namespace nEnemyAction
@@ -274,6 +280,7 @@ namespace nEnemyAction
     }
     public class Test : EnemyAction
     {
+        public string actionDescription;
         public Test(string text)
         {
             actionDescription = text;
@@ -281,6 +288,10 @@ namespace nEnemyAction
         public override void Action()
         {
             Debug.Log("testText");
+        }
+        public override string GetDescription()
+        {
+            return actionDescription;
         }
     }
 }

@@ -7,6 +7,8 @@ public class IntroViewContent : MonoBehaviour, IPointerEnterHandler, IPointerExi
 {
     CharStatusView statusView;
     BattleSkillView skillView;
+    [HideInInspector]
+    public EnemyAction enemyAction;
 
     public void Awake()
     {
@@ -37,6 +39,10 @@ public class IntroViewContent : MonoBehaviour, IPointerEnterHandler, IPointerExi
             if (skillView.skill != null)
                 return skillView.skill.GetName();
         }
+        if (enemyAction != null)
+        {
+            return enemyAction.actionName;
+        }
         return "";
     }
     public string GetDescription()
@@ -50,6 +56,10 @@ public class IntroViewContent : MonoBehaviour, IPointerEnterHandler, IPointerExi
         {
             if (skillView.skill != null)
                 return skillView.skill.GetDescription();
+        }
+        if (enemyAction != null)
+        {
+            return enemyAction.GetDescription();
         }
         return "";
     }

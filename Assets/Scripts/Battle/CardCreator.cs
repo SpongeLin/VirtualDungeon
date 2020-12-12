@@ -96,7 +96,8 @@ public static class CardCreator
             case 10:
                 card.cardName = "Attack";
                 card.cardShowName = "打擊";
-                card.cardDescription = "對一個敵方角色造成17點傷害";
+                card.cardDescription = "對一個敵方角色造成@D點傷害";
+                card.oriCardShowNum = 17;
                 card.oriCost = 1;
                 card.isSelectTarget = true;
                 card.charFilters.Add(new CharFilter("Camps", 2));
@@ -105,7 +106,8 @@ public static class CardCreator
             case 11:
                 card.cardName = "HeroicAttack";
                 card.cardShowName = "英勇突擊";
-                card.cardDescription = "對最前方角色造成23點傷害";
+                card.cardDescription = "對最前方角色造成@D點傷害";
+                card.oriCardShowNum = 23;
                 card.oriCost = 1;
                 card.isSelectTarget = true;
                 card.charFilters.Add(new CharFilter("Front"));
@@ -114,14 +116,16 @@ public static class CardCreator
             case 12:
                 card.cardName = "Armor";
                 card.cardShowName = "防禦";
-                card.cardDescription = "自身獲得15護盾";
+                card.cardDescription = "自身獲得@A護盾";
+                card.oriCardShowNum = 15;
                 card.oriCost = 1;
                 card.cardEffects.Add(new nCardEffect.ArmorSelf(15));
                 break;
             case 13:
                 card.cardName = "Bash";
                 card.cardShowName = "重擊";
-                card.cardDescription = "對一個敵方角色造成25點傷害，脆弱一回合";
+                card.cardDescription = "對一個敵方角色造成@D點傷害，脆弱一回合";
+                card.oriCardShowNum = 25;
                 card.oriCost = 2;
                 card.isSelectTarget = true;
                 card.charFilters.Add(new CharFilter("Camps",2));
@@ -131,7 +135,8 @@ public static class CardCreator
             case 14:
                 card.cardName = "MagicScurrying";
                 card.cardShowName = "法力亂竄";
-                card.cardDescription = "對隨機一個敵人造成17傷害，自身獲得一點魔力";
+                card.cardDescription = "對隨機一個敵人造成@D傷害，自身獲得一點魔力";
+                card.oriCardShowNum = 17;
                 card.oriCost = 1;
                 card.cardEffects.Add(new nCardEffect.DamageRandomEnemy(17));
                 card.cardEffects.Add(new nCardEffect.MagicSelf(1));
@@ -139,7 +144,8 @@ public static class CardCreator
             case 15:
                 card.cardName = "MagicSiphon";
                 card.cardShowName = "法力虹吸";
-                card.cardDescription = "對一個敵方角色造成25點傷害。若擊殺目標，自身獲得一點魔力";
+                card.cardDescription = "對一個敵方角色造成@D點傷害。若擊殺目標，自身獲得一點魔力";
+                card.oriCardShowNum = 25;
                 card.oriCost = 2;
                 card.isSelectTarget = true;
                 card.charFilters.Add(new CharFilter("Camps", 2));
@@ -149,7 +155,8 @@ public static class CardCreator
             case 16:
                 card.cardName = "CurseArmor";
                 card.cardShowName = "詛咒之盾";
-                card.cardDescription = "對自身造成10點傷害，自身獲得30點護盾";
+                card.cardDescription = "對自身造成@D點傷害，自身獲得30點護盾";
+                card.oriCardShowNum = 10;
                 card.oriCost = 1;
                 card.cardEffects.Add(new nCardEffect.DamageSelf(10));
                 card.cardEffects.Add(new nCardEffect.ArmorSelf(30));
@@ -157,7 +164,8 @@ public static class CardCreator
             case 17:
                 card.cardName = "WaveFist";
                 card.cardShowName = "波動拳";
-                card.cardDescription = "對一個敵方角色造成16點傷害。強化:+4點傷害";
+                card.cardDescription = "對一個敵方角色造成@D點傷害。強化:+4點傷害";
+                card.oriCardShowNum = 16;
                 card.oriCost = 1;
                 card.canBurst = true;
                 card.isSelectTarget = true;
@@ -167,7 +175,8 @@ public static class CardCreator
             case 18:
                 card.cardName = "DeterminationArmor";
                 card.cardShowName = "決心之盾";
-                card.cardDescription = "自身獲得30點護盾。超載(1)";
+                card.cardDescription = "自身獲得@A點護盾。超載(1)";
+                card.oriCardShowNum = 30;
                 card.oriCost = 1;
                 card.oriOverLoad = 1;
                 card.cardEffects.Add(new nCardEffect.ArmorSelf(30));
@@ -183,7 +192,8 @@ public static class CardCreator
             case 20:
                 card.cardName = "MagicArrow";
                 card.cardShowName = "魔導箭";
-                card.cardDescription = "對一個敵方角色造成15點傷害。魔導(1):再造成一次傷害";
+                card.cardDescription = "對一個敵方角色造成@D點傷害。魔導(1):再造成一次傷害";
+                card.oriCardShowNum = 15;
                 card.oriCost = 1;
                 card.oriMagicConsume = 1;
                 card.isSelectTarget = true;
@@ -194,7 +204,8 @@ public static class CardCreator
             case 21:
                 card.cardName = "Wish";
                 card.cardShowName = "心願";
-                card.cardDescription = "對所有敵方角色造成10點傷害。魔導(2):歸還能量";
+                card.cardDescription = "對所有敵方角色造成@D點傷害。魔導(2):歸還能量";
+                card.oriCardShowNum = 10;
                 card.oriCost = 2;
                 card.oriMagicConsume = 2;
                 card.cardEffects.Add(new nCardEffect.DamageAllEnemy(10));
@@ -203,7 +214,8 @@ public static class CardCreator
             case 22:
                 card.cardName = "ConcentratedBreathing";
                 card.cardShowName = "集中呼吸";
-                card.cardDescription = "自身獲得10點護盾。連結:歸還能量";
+                card.cardDescription = "自身獲得@A點護盾。連結:歸還能量";
+                card.oriCardShowNum = 10;
                 card.oriCost = 1;
                 card.oriSoulLink = true;
                 card.cardEffects.Add(new nCardEffect.ArmorSelf(10));
@@ -219,16 +231,19 @@ public static class CardCreator
             case 24:
                 card.cardName = "Battery";
                 card.cardShowName = "電池";
-                card.cardDescription = "自身獲得1點能量。強化:再獲得1點能量";
+                card.cardDescription = "自身獲得@O點能量。強化:再獲得1點能量";
+                card.oriCardShowNum = 1;
                 card.oriCost = 0;
                 card.canBurst = true;
                 card.cardEffects.Add(new nCardEffect.GainEnergy(1));
                 card.cardEffects.Add(new nCardEffect.GainEnergyBurst(1));
+                card.cardShowNumFilter = new nCardShowNumFilter.PerBurst(1);
                 break;
             case 25:
                 card.cardName = "EnergyPulse";
                 card.cardShowName = "能量脈衝";
-                card.cardDescription = "對所有敵方角色造成10點傷害，脆弱一回合。強化:此卡花費減少(1)";
+                card.cardDescription = "對所有敵方角色造成@D點傷害，脆弱一回合。強化:此卡花費減少(1)";
+                card.oriCardShowNum = 10;
                 card.oriCost = 3;
                 card.canBurst = true;
                 card.cardEffects.Add(new nCardEffect.DamageAllEnemy(10));
@@ -238,7 +253,8 @@ public static class CardCreator
             case 26:
                 card.cardName = "MagicFlash";
                 card.cardShowName = "法力閃燃";
-                card.cardDescription = "對一個隨機敵方角色造成8點傷害。魔導(1):複製一張此卡放到你牌庫頂";
+                card.cardDescription = "對一個隨機敵方角色造成@D點傷害。魔導(1):複製一張此卡放到你牌庫頂";
+                card.oriCardShowNum = 8;
                 card.oriCost = 0;
                 card.oriMagicConsume = 1;
                 card.cardEffects.Add(new nCardEffect.DamageRandomEnemy(8));
@@ -247,7 +263,8 @@ public static class CardCreator
             case 27:
                 card.cardName = "GreedyArmor";
                 card.cardShowName = "貪婪之盾";
-                card.cardDescription = "對一個其他友方角色造成15點傷害，自身獲得35點護盾";
+                card.cardDescription = "對一個其他友方角色造成@D點傷害，自身獲得35點護盾";
+                card.oriCardShowNum = 15;
                 card.oriCost = 1;
                 card.isSelectTarget = true;
                 card.charFilters.Add(new CharFilter("Camps", 1));
@@ -258,7 +275,8 @@ public static class CardCreator
             case 28:
                 card.cardName = "LimitedWill";
                 card.cardShowName = "極限意志";
-                card.cardDescription = "所有友方角色獲得20點護盾。超載(2)";
+                card.cardDescription = "所有友方角色獲得@A點護盾。超載(2)";
+                card.oriCardShowNum = 20;
                 card.oriCost = 1;
                 card.oriOverLoad = 2;
                 card.cardEffects.Add(new nCardEffect.ArmorAllAlly(20));
@@ -266,7 +284,8 @@ public static class CardCreator
             case 29:
                 card.cardName = "RotationDistance";
                 card.cardShowName = "迴轉距離";
-                card.cardDescription = "對所有敵人造成17點傷害，放一張「記憶斷片」到你手中";
+                card.cardDescription = "對所有敵人造成@D點傷害，放一張「記憶斷片」到你手中";
+                card.oriCardShowNum = 17;
                 card.oriCost = 1;
                 card.cardEffects.Add(new nCardEffect.DamageAllEnemy(17));
                 card.cardEffects.Add(new nCardEffect.NewCardToHand(700));
@@ -290,7 +309,8 @@ public static class CardCreator
             case 32:
                 card.cardName = "ThunderTouch";
                 card.cardShowName = "雷神";
-                card.cardDescription = "對最前方角色造成15點傷害，自身移動到最前方";
+                card.cardDescription = "對最前方角色造成@D點傷害，自身移動到最前方";
+                card.oriCardShowNum = 15;
                 card.oriCost = 1;
                 card.cardEffects.Add(new nCardEffect.DamageFront(15));
                 card.cardEffects.Add(new nCardEffect.ChangeToFront());

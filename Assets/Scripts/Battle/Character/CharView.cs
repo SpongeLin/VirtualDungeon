@@ -28,7 +28,15 @@ public class CharView : MonoBehaviour
             }
         }
     }
+    public void CharMove(bool isEnemy)
+    {
+        animator.SetTrigger("Move");
+    }
 
+    public void CharDie()
+    {
+        animator.SetTrigger("Die");
+    }
     void MouseDown()
     {
         if (!canClick) return;

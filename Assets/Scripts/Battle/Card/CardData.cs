@@ -30,6 +30,8 @@ public class CardData
     public int oriOverLoad;
     public bool oriSoulLink;
 
+    public int oriCardShowNum;
+
     public bool canUse;
     public int banCount;
     public int exhasutCount;
@@ -44,6 +46,8 @@ public class CardData
 
     public bool isSelectTarget;
     public CharData targetChar;
+
+    public CardShowNumFilter cardShowNumFilter;
 
     public List<CardEffect> cardEffects;
     public List<CharFilter> charFilters;
@@ -84,4 +88,35 @@ public class CardData
         setCost = costNum;
     }
 
+}
+
+public enum CardShowNumType
+{
+    Null,
+    Damage,
+    Armor,
+    Other,
+}
+
+public abstract class CardShowNumFilter
+{
+    public abstract int GetNumFilter(CardData card);
+}
+namespace nCardShowNumFilter
+{
+    public class PerBurst : CardShowNumFilter
+    {
+        int changeNum;
+        public PerBurst(int change)
+        {
+            changeNum = change;
+        }
+        public override int GetNumFilter(CardData card)
+        {
+            if (card.burst == 0)
+                return 0;
+            return changeNum * card.burst;
+            
+        }
+    }
 }

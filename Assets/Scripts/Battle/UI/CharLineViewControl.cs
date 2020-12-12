@@ -34,12 +34,18 @@ public class CharLineViewControl : MonoBehaviour
 
 
     public List<CharLineView> charLineViewList;
+    public Animator charLineViewsAnim;
     public float viewDistance;
     public int viewNumber;
     // Start is called before the first frame update
     public void Awake()
     {
         charLinePackList = new List<CharLinePack>();
+    }
+
+    public void AnimaNext()
+    {
+        charLineViewsAnim.SetTrigger("Next");
     }
 
     public void UpdateCharLineView()

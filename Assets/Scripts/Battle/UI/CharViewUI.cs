@@ -10,8 +10,6 @@ public class CharViewUI : MonoBehaviour
     public Image health;
     public Text healthPoint;
     public Text armor;
-    public Text magic;
-    public Text cardDamage;
     public Text charName;
 
     public Animator currentMarkAnimator;
@@ -56,8 +54,7 @@ public class CharViewUI : MonoBehaviour
         health.fillAmount = rate;
         healthPoint.text = character.health.ToString() + "/" + character.maxHealth.ToString();
         armor.text = character.armor.ToString();
-        magic.text = "魔力" + character.magicPoint.ToString();
-        cardDamage.text = "力量" + character.power.ToString();
+
         charName.text = character.charShowName;
 
         //actionPoint.text = character.energy.ToString()+"/"+character.maxEnergy.ToString() ;

@@ -19,6 +19,16 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     public bool CanUseHighLight;
     public GameObject highLight;
 
+    public Image burstImage;
+    public Text burstText;
+    bool burstIsWorking;
+    public Image linkImage;
+    public Text linkText;
+    bool linkIsWorking;
+
+    CardShowNumType showNumType;
+    int currentShowNum = -1;
+
     //Tween tween = null;
     Tween scaleTween = null;
     Tween posTween = null;
@@ -32,7 +42,8 @@ public class CardView : MonoBehaviour,IPointerDownHandler
         card = setCard;
         cardImage.sprite = card.cardImage;
         cardName.text = card.cardShowName;
-        description.text = card.cardDescription;
+        //description.text = card.cardDescription;
+        SetDescriptionFrist();
         cost.text = card.cardCost.ToString();
 
         enable = true;
@@ -52,11 +63,14 @@ public class CardView : MonoBehaviour,IPointerDownHandler
     }
     public void GameUpdate()
     {
-        description.text = card.cardDescription;
+        //description.text = card.cardDescription;
+        SetDescription();
+        /*
         if (card.burst >= 1)
             description.text += "\n<color=#FF0000>強化：" + card.burst.ToString()+ "</color>";
         if (card.linkChar != null)
             description.text += "\n<color=#0000E3>連結：" + card.linkChar.charShowName.ToString() + "</color>";
+        */
 
         cost.text = card.cardCost.ToString();
 
@@ -96,7 +110,95 @@ public class CardView : MonoBehaviour,IPointerDownHandler
             }
         }
 
+        if(card.linkChar!=null && !linkIsWorking)
+        {
+            linkImage.gameObject.SetActive(true);
+            linkIsWorking = true;
+        }else if(card.linkChar==null && linkIsWorking)
+        {
+            linkImage.gameObject.SetActive(false);
+            linkIsWorking = false;
+        }
+        if (card.linkChar != null)
+        {
+            linkText.text = "" + card.linkChar.charShowName[0];
+        }
+
+        if(card.burst!=0 && !burstIsWorking)
+        {
+            burstImage.gameObject.SetActive(true);
+            burstIsWorking = true;
+        }else if(card.burst==0 && burstIsWorking)
+        {
+            burstImage.gameObject.SetActive(false);
+            burstIsWorking = false;
+        }
+        if (card.burst != 0)
+        {
+            burstText.text = card.burst.ToString();
+        }
+
     }
+
+    void SetDescriptionFrist()
+    {
+        int index = card.cardDescription.IndexOf("@");
+        if (index != -1)
+        {
+            char type = card.cardDescription[index + 1];
+            SetShowType(type);
+            string newDescription = card.cardDescription.Replace("@" + type, card.oriCardShowNum.ToString());
+            description.text = newDescription;
+
+            currentShowNum = card.oriCardShowNum;
+        }
+        else
+        {
+            description.text = card.cardDescription;
+        }
+    }
+    void SetDescription()
+    {
+        if(showNumType == CardShowNumType.Null)
+        {
+            //description.text = card.cardDescription;
+            return;
+        }
+        int newShowNum = CardManager.instance.GetCardShowNum(card, showNumType);
+        if (currentShowNum == newShowNum)
+        {
+            return;
+        }
+
+        int index = card.cardDescription.IndexOf("@");
+        char type = card.cardDescription[index + 1];
+        currentShowNum = newShowNum;
+
+        string newShowNumText = currentShowNum.ToString();
+        if (card.oriCardShowNum != currentShowNum)
+        {
+            newShowNumText = "<color=#007500>" + newShowNumText + "*</color>";
+        }
+
+        string newDescription = card.cardDescription.Replace("@" + type, newShowNumText);
+        description.text = newDescription;
+    }
+    void SetShowType(char c)
+    {
+        if(c=='D' || c == 'd')
+        {
+            showNumType = CardShowNumType.Damage;
+        }
+        if (c == 'A' || c == 'a')
+        {
+            showNumType = CardShowNumType.Armor;
+        }
+        if (c == 'O' || c == 'o')
+        {
+            showNumType = CardShowNumType.Other;
+        }
+    }
+
 
 
     public void SetPos(Vector3 pos,bool anim=false,bool fast=false)
